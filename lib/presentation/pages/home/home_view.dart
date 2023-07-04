@@ -236,58 +236,61 @@ class HomeView extends StatelessWidget {
   Flexible buildCategories() {
     return Flexible(
       flex: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Text('Categories',
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(18),
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    buildCategoryItem(AppIcons.lifestyle(), 'Active Lifestyle'),
-                    buildCategoryItem(
-                        AppIcons.entertainment(), 'Entertainment'),
-                    buildCategoryItem(AppIcons.dining(), 'Dining'),
-                    buildCategoryItem(AppIcons.relationship(), 'Relationship'),
-                    buildCategoryItem(AppIcons.art(), 'Personal Development'),
-                    buildCategoryItem(AppIcons.urbanLife(), 'Urban Life'),
-                    buildCategoryItem(AppIcons.health(), 'Health'),
-                    buildCategoryItem(AppIcons.literature(), 'Literature'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    buildCategoryItem(AppIcons.art(), 'Art'),
-                    buildCategoryItem(AppIcons.business(), 'Business'),
-                    buildCategoryItem(AppIcons.community(), 'Community'),
-                    buildCategoryItem(AppIcons.fashion(), 'Fashion'),
-                    buildCategoryItem(AppIcons.festivities(), 'Festivities'),
-                    buildCategoryItem(AppIcons.technology(), 'Technology'),
-                    buildCategoryItem(
-                        AppIcons.memorableEvents(), 'Memorable Events'),
-                    buildCategoryItem(AppIcons.travel(), 'Travel'),
-                    buildCategoryItem(
-                        AppIcons.onlinePresence(), 'Online Presence'),
-                  ],
-                ),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text('Categories',
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(18),
+                    fontWeight: FontWeight.bold,
+                  )),
             ),
-          )
-        ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      buildCategoryItem(AppIcons.lifestyle(), 'Active Lifestyle'),
+                      buildCategoryItem(
+                          AppIcons.entertainment(), 'Entertainment'),
+                      buildCategoryItem(AppIcons.dining(), 'Dining'),
+                      buildCategoryItem(AppIcons.relationship(), 'Relationship'),
+                      buildCategoryItem(AppIcons.art(), 'Personal Development'),
+                      buildCategoryItem(AppIcons.urbanLife(), 'Urban Life'),
+                      buildCategoryItem(AppIcons.health(), 'Health'),
+                      buildCategoryItem(AppIcons.literature(), 'Literature'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      buildCategoryItem(AppIcons.art(), 'Art'),
+                      buildCategoryItem(AppIcons.business(), 'Business'),
+                      buildCategoryItem(AppIcons.community(), 'Community'),
+                      buildCategoryItem(AppIcons.fashion(), 'Fashion'),
+                      buildCategoryItem(AppIcons.festivities(), 'Festivities'),
+                      buildCategoryItem(AppIcons.technology(), 'Technology'),
+                      buildCategoryItem(
+                          AppIcons.memorableEvents(), 'Memorable Events'),
+                      buildCategoryItem(AppIcons.travel(), 'Travel'),
+                      buildCategoryItem(
+                          AppIcons.onlinePresence(), 'Online Presence'),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

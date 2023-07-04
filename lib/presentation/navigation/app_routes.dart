@@ -7,4 +7,7 @@ class AppRoutes {
   static const String signInEmail = '/sign_in_email';
   static const String signUp = '/sign_up';
   static const String signUpEmail = '/sign_up_email';
+  //profile
+  static const String editProfile = '/edit_profile';
+
 }

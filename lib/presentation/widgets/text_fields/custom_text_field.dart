@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final int? errorMaxLines;
   final String? aboveText;
+  final String? initialValue;
 
   const CustomTextField({
     super.key,
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.errorMaxLines = 1,
     this.aboveText,
+    this.initialValue,
   });
 
   @override
@@ -46,6 +48,7 @@ class CustomTextField extends StatelessWidget {
               ),
             ),
           TextFormField(
+            initialValue: initialValue,
             validator: validator,
             obscureText: obscureText,
             controller: controller,

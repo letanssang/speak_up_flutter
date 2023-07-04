@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
+import 'package:speak_up/presentation/pages/edit_profile/edit_profile_view.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/onboarding/onboarding_view.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_view.dart';
@@ -52,6 +53,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const SignUpEmailView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.editProfile:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const EditProfileView(),
             settings: settings,
           );
         }
