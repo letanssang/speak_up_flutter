@@ -1,0 +1,1 @@
+enum PreferenceKey { isDarkTheme }

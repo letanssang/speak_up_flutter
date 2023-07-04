@@ -1,0 +1,65 @@
+name: speak_up
+description: A new Flutter project.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.3 <4.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.3.6
+  freezed: ^2.3.5
+  flutter_screenutil: ^5.8.4
+  flutter_svg: ^2.0.7
+  dots_indicator: ^2.1.1
+  shared_preferences: ^2.2.0
+  get_it: ^7.6.0
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  firebase_core: ^2.14.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  build_runner: ^2.4.5
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/icons/
+    - assets/icons/categories/
+    - assets/images/
+    - assets/images/logos/
+
+  fonts:
+    - family: SF Pro Display
+      fonts:
+        - asset: assets/fonts/sf_pro_display/SF-Pro-Display-Regular.otf
+        - asset: assets/fonts/sf_pro_display/SF-Pro-Display-Semibold.otf
+          weight: 600
+        - asset: assets/fonts/sf_pro_display/SF-Pro-Display-Bold.otf
+          weight: 700
