@@ -10,7 +10,7 @@ class AccountSettingsRepository {
     return isDarkTheme ?? false;
   }
 
-  Future<void> switchAppThemeMode(bool value) async {
+  Future<void> switchAppTheme(bool value) async {
     await _sharedPreferencesManager.saveIsDarkTheme(param: value);
   }
 }
