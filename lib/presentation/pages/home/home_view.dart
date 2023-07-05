@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/presentation/navigation/app_router.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
         height: ScreenUtil().screenHeight * 1.5,
         width: ScreenUtil().screenWidth,
         child: Column(
@@ -57,9 +62,9 @@ class HomeView extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: EdgeInsets.all(1),
+                                padding: const EdgeInsets.all(1),
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF311A6B),
+                                  color: const Color(0xFF311A6B),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: IconButton(
@@ -86,8 +91,8 @@ class HomeView extends StatelessWidget {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(16),
                               ),
-                              child: Center(
-                                child: const TextField(
+                              child: const Center(
+                                child: TextField(
                                   decoration: InputDecoration(
                                     hintText: 'Search',
                                     prefixIcon: Icon(Icons.search),
@@ -101,7 +106,7 @@ class HomeView extends StatelessWidget {
                             margin: EdgeInsets.symmetric(
                               horizontal: ScreenUtil().setWidth(16),
                             ),
-                            padding: EdgeInsets.all(1),
+                            padding: const EdgeInsets.all(1),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16),
@@ -114,10 +119,13 @@ class HomeView extends StatelessWidget {
                     ],
                   )),
             ),
+            buildCategories(ref.watch(themeProvider), context, (){
+              ref.read(appNavigatorProvider).navigateTo(AppRoutes.categories);
+            }),
+
             buildCurrentCourses(),
-            buildCategories(),
             Expanded(
-              flex: 4,
+              flex: 3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +241,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Flexible buildCategories() {
+  Flexible buildCategories(bool isDarkTheme, BuildContext context, Function()? onPressed) {
     return Flexible(
       flex: 2,
       child: Padding(
@@ -243,13 +251,27 @@ class HomeView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text('Categories',
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(18),
-                    fontWeight: FontWeight.bold,
-                  )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Text('Categories',
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(18),
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+                TextButton(
+                    onPressed: onPressed,
+                    child: Text(
+                      'View all',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    )
+                )
+              ],
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -259,31 +281,65 @@ class HomeView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      buildCategoryItem(AppIcons.lifestyle(), 'Active Lifestyle'),
+                      buildCategoryItem(AppIcons.lifestyle(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Active Lifestyle', isDarkTheme),
                       buildCategoryItem(
-                          AppIcons.entertainment(), 'Entertainment'),
-                      buildCategoryItem(AppIcons.dining(), 'Dining'),
-                      buildCategoryItem(AppIcons.relationship(), 'Relationship'),
-                      buildCategoryItem(AppIcons.art(), 'Personal Development'),
-                      buildCategoryItem(AppIcons.urbanLife(), 'Urban Life'),
-                      buildCategoryItem(AppIcons.health(), 'Health'),
-                      buildCategoryItem(AppIcons.literature(), 'Literature'),
+                          AppIcons.entertainment(
+                            color: isDarkTheme ? Colors.white : Colors.black,
+                          ), 'Entertainment', isDarkTheme),
+                      buildCategoryItem(AppIcons.dining(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Dining', isDarkTheme),
+                      buildCategoryItem(AppIcons.relationship(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Relationship', isDarkTheme),
+                      buildCategoryItem(AppIcons.personalDevelopment(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Personal Development', isDarkTheme),
+                      buildCategoryItem(AppIcons.urbanLife(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Urban Life', isDarkTheme),
+                      buildCategoryItem(AppIcons.health(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Health', isDarkTheme),
+                      buildCategoryItem(AppIcons.literature(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Literature', isDarkTheme),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      buildCategoryItem(AppIcons.art(), 'Art'),
-                      buildCategoryItem(AppIcons.business(), 'Business'),
-                      buildCategoryItem(AppIcons.community(), 'Community'),
-                      buildCategoryItem(AppIcons.fashion(), 'Fashion'),
-                      buildCategoryItem(AppIcons.festivities(), 'Festivities'),
-                      buildCategoryItem(AppIcons.technology(), 'Technology'),
+                      buildCategoryItem(AppIcons.art(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Art', isDarkTheme),
+                      buildCategoryItem(AppIcons.business(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Business', isDarkTheme),
+                      buildCategoryItem(AppIcons.community(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Community', isDarkTheme),
+                      buildCategoryItem(AppIcons.fashion(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Fashion', isDarkTheme),
+                      buildCategoryItem(AppIcons.festivities(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Festivities', isDarkTheme),
+                      buildCategoryItem(AppIcons.technology(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Technology', isDarkTheme),
                       buildCategoryItem(
-                          AppIcons.memorableEvents(), 'Memorable Events'),
-                      buildCategoryItem(AppIcons.travel(), 'Travel'),
+                          AppIcons.memorableEvents(
+                            color: isDarkTheme ? Colors.white : Colors.black,
+                          ), 'Memorable Events', isDarkTheme),
+                      buildCategoryItem(AppIcons.travel(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ), 'Travel', isDarkTheme),
                       buildCategoryItem(
-                          AppIcons.onlinePresence(), 'Online Presence'),
+                          AppIcons.onlinePresence(
+                            color: isDarkTheme ? Colors.white : Colors.black,
+                          ), 'Online Presence', isDarkTheme),
                     ],
                   ),
                 ],
@@ -295,14 +351,14 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget buildCategoryItem(Widget icon, String title) {
+  Widget buildCategoryItem(Widget icon, String title, bool isDarkTheme) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32),
         border: Border.all(color: Colors.black54),
-        color: Colors.white,
+        color: isDarkTheme ? const Color(0xFF605F5F) : Colors.white,
       ),
       child: Row(
         children: [
@@ -312,7 +368,7 @@ class HomeView extends StatelessWidget {
           ),
           Text(
             title,
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: isDarkTheme ? Colors.white :Colors.black),
           ),
         ],
       ),

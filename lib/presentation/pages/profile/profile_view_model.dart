@@ -15,4 +15,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     _switchAppThemeUseCase.run(isDarkMode);
     state = state.copyWith(isDarkMode: isDarkMode);
   }
+  void switchNotification(bool enableNotification) {
+    state = state.copyWith(enableNotification: enableNotification);
+  }
 }

@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ProfileState {
   bool get isDarkMode => throw _privateConstructorUsedError;
+  bool get enableNotification => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileStateCopyWith<ProfileState> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $ProfileStateCopyWith<$Res> {
           ProfileState value, $Res Function(ProfileState) then) =
       _$ProfileStateCopyWithImpl<$Res, ProfileState>;
   @useResult
-  $Res call({bool isDarkMode});
+  $Res call({bool isDarkMode, bool enableNotification});
 }
 
 /// @nodoc
@@ -46,11 +47,16 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
   @override
   $Res call({
     Object? isDarkMode = null,
+    Object? enableNotification = null,
   }) {
     return _then(_value.copyWith(
       isDarkMode: null == isDarkMode
           ? _value.isDarkMode
           : isDarkMode // ignore: cast_nullable_to_non_nullable
+              as bool,
+      enableNotification: null == enableNotification
+          ? _value.enableNotification
+          : enableNotification // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -64,7 +70,7 @@ abstract class _$$_ProfileStateCopyWith<$Res>
       __$$_ProfileStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isDarkMode});
+  $Res call({bool isDarkMode, bool enableNotification});
 }
 
 /// @nodoc
@@ -79,11 +85,16 @@ class __$$_ProfileStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isDarkMode = null,
+    Object? enableNotification = null,
   }) {
     return _then(_$_ProfileState(
       isDarkMode: null == isDarkMode
           ? _value.isDarkMode
           : isDarkMode // ignore: cast_nullable_to_non_nullable
+              as bool,
+      enableNotification: null == enableNotification
+          ? _value.enableNotification
+          : enableNotification // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -92,15 +103,19 @@ class __$$_ProfileStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ProfileState implements _ProfileState {
-  const _$_ProfileState({this.isDarkMode = false});
+  const _$_ProfileState(
+      {this.isDarkMode = false, this.enableNotification = false});
 
   @override
   @JsonKey()
   final bool isDarkMode;
+  @override
+  @JsonKey()
+  final bool enableNotification;
 
   @override
   String toString() {
-    return 'ProfileState(isDarkMode: $isDarkMode)';
+    return 'ProfileState(isDarkMode: $isDarkMode, enableNotification: $enableNotification)';
   }
 
   @override
@@ -109,11 +124,13 @@ class _$_ProfileState implements _ProfileState {
         (other.runtimeType == runtimeType &&
             other is _$_ProfileState &&
             (identical(other.isDarkMode, isDarkMode) ||
-                other.isDarkMode == isDarkMode));
+                other.isDarkMode == isDarkMode) &&
+            (identical(other.enableNotification, enableNotification) ||
+                other.enableNotification == enableNotification));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isDarkMode);
+  int get hashCode => Object.hash(runtimeType, isDarkMode, enableNotification);
 
   @JsonKey(ignore: true)
   @override
@@ -123,10 +140,13 @@ class _$_ProfileState implements _ProfileState {
 }
 
 abstract class _ProfileState implements ProfileState {
-  const factory _ProfileState({final bool isDarkMode}) = _$_ProfileState;
+  const factory _ProfileState(
+      {final bool isDarkMode, final bool enableNotification}) = _$_ProfileState;
 
   @override
   bool get isDarkMode;
+  @override
+  bool get enableNotification;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileStateCopyWith<_$_ProfileState> get copyWith =>

@@ -17,10 +17,14 @@ PODS:
     - GoogleUtilities/Environment
   - "GoogleUtilities/NSData+zlib (7.11.1)"
   - PromisesObjC (2.2.0)
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `Flutter`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -35,6 +39,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   Flutter:
     :path: Flutter
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
   Firebase: facd334e557a979bd03a0b58d90fd56b52b8aba0
@@ -44,6 +50,7 @@ SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
 
 PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
 

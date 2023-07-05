@@ -7,6 +7,7 @@ import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_cas
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
+import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/profile/profile_state.dart';
 import 'package:speak_up/presentation/pages/profile/profile_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
@@ -33,18 +34,64 @@ class ProfileViewState extends ConsumerState<ProfileView> {
       ref.read(profileViewModelProvider.notifier).getThemeData();
     });
   }
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text(
+            'Are you sure you want to logout?',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          actions: <Widget>[
 
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Yes',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref.read(appNavigatorProvider).navigateTo(AppRoutes.onboarding, shouldClearStack: true);
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
+
     final state = ref.watch(profileViewModelProvider);
     return Scaffold(
         appBar: AppBar(
-          leading: const BackButton(),
+          leading: BackButton(
+            onPressed: () {
+              ref.read(mainMenuViewModelProvider.notifier).changeTab(0);
+            },
+          ),
           title: const Text('Account Settings'),
         ),
         body: SingleChildScrollView(
           child: SizedBox(
-            height: ScreenUtil().screenHeight * 0.8,
+            height: ScreenUtil().screenHeight * 0.9,
             width: ScreenUtil().screenWidth,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,9 +128,21 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                       buildListTile(AppIcons.avatar(size: 48), 'Edit profile', onTap: (){
                         ref.read(appNavigatorProvider).navigateTo(AppRoutes.editProfile);
                       }),
-                      buildListTile(AppIcons.changePassword(size: 48), 'Change password'),
+                      buildListTile(AppIcons.changePassword(size: 48), 'Change password',
+                      onTap: (){
+                        ref.read(appNavigatorProvider).navigateTo(AppRoutes.changePassword);
+                      }),
                       buildListTile(
-                          AppIcons.notification(size: 48), 'Notification'),
+                          AppIcons.notification(size: 48), 'Notification',
+                          trailing: Switch(
+                            value: state.enableNotification,
+                            onChanged: (value){
+                              ref
+                                  .read(profileViewModelProvider.notifier)
+                                  .switchNotification(value);
+                            },
+                          )
+                      ),
                       buildListTile(AppIcons.darkMode(size: 48), 'Dark mode',
                           trailing: Switch(
                             value: state.isDarkMode,
@@ -94,8 +153,16 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                               ref.read(themeProvider.notifier).state = value;
                             },
                           )),
-                      buildListTile(AppIcons.about(size: 48), 'About'),
-                      buildListTile(AppIcons.logout(size: 48), 'Logout'),
+                      buildListTile(AppIcons.about(size: 48), 'About',
+                      onTap: (){
+                        ref.read(appNavigatorProvider).navigateTo(AppRoutes.about);
+                      }
+                      ),
+                      buildListTile(AppIcons.logout(size: 48), 'Logout',
+                        onTap: () async {
+                          await _dialogBuilder(context);
+                        }
+                      ),
                     ],
                   ),
                 )

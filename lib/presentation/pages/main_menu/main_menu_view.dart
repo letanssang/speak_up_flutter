@@ -6,7 +6,7 @@ import 'package:speak_up/presentation/pages/profile/profile_view.dart';
 import 'main_menu_state.dart';
 import 'main_menu_viewmodel.dart';
 
-final homeViewModelProvider =
+final mainMenuViewModelProvider =
 StateNotifierProvider<MainMenuViewModel, MainMenuState>(
       (ref) => MainMenuViewModel(),
 );
@@ -17,13 +17,13 @@ class MainMenuView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(homeViewModelProvider);
+    final state = ref.watch(mainMenuViewModelProvider);
     return Scaffold(
         body: _pageOptions[state.currentTabIndex],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: state.currentTabIndex,
           onTap: (index) {
-            ref.read(homeViewModelProvider.notifier).changeTab(index);
+            ref.read(mainMenuViewModelProvider.notifier).changeTab(index);
           },
           items: const [
             BottomNavigationBarItem(

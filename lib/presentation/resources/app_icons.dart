@@ -88,7 +88,7 @@ class AppIcons {
     double? size,
   }) {
     return SvgIcon.from(
-      '$_categoriesIconPath/lifestyle.svg',
+      '$_categoriesIconPath/active_lifestyle.svg',
       color: color,
       size: size,
     );
@@ -198,7 +198,7 @@ class AppIcons {
     double? size,
   }) {
     return SvgIcon.from(
-      '$_categoriesIconPath/memorable.svg',
+      '$_categoriesIconPath/memorable_events.svg',
       color: color,
       size: size,
     );
@@ -220,7 +220,7 @@ class AppIcons {
     double? size,
   }) {
     return SvgIcon.from(
-      '$_categoriesIconPath/presence.svg',
+      '$_categoriesIconPath/online_presence.svg',
       color: color,
       size: size,
     );

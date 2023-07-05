@@ -4,5 +4,6 @@ part 'profile_state.freezed.dart';
 class ProfileState with _$ProfileState {
   const factory ProfileState({
     @Default(false) bool isDarkMode ,
+    @Default(false) bool enableNotification,
   }) = _ProfileState;
 }
