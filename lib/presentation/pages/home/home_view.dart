@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/presentation/navigation/app_router.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
+import 'package:speak_up/presentation/utilities/constant/categories.dart';
 
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
@@ -26,7 +26,9 @@ class HomeView extends ConsumerWidget {
                     horizontal: ScreenUtil().setWidth(16),
                   ),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                     borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(16),
                         bottomRight: Radius.circular(16)),
@@ -119,7 +121,7 @@ class HomeView extends ConsumerWidget {
                     ],
                   )),
             ),
-            buildCategories(ref.watch(themeProvider), context, (){
+            buildCategories(ref.watch(themeProvider), context, () {
               ref.read(appNavigatorProvider).navigateTo(AppRoutes.categories);
             }),
 
@@ -147,7 +149,10 @@ class HomeView extends ConsumerWidget {
                             height: ScreenUtil().screenHeight * 0.15,
                             width: ScreenUtil().screenWidth * 0.4,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
@@ -158,7 +163,10 @@ class HomeView extends ConsumerWidget {
                             height: ScreenUtil().screenHeight * 0.15,
                             width: ScreenUtil().screenWidth * 0.4,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
@@ -170,7 +178,10 @@ class HomeView extends ConsumerWidget {
                             height: ScreenUtil().screenHeight * 0.15,
                             width: ScreenUtil().screenWidth * 0.4,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
@@ -181,7 +192,10 @@ class HomeView extends ConsumerWidget {
                             height: ScreenUtil().screenHeight * 0.15,
                             width: ScreenUtil().screenWidth * 0.4,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
@@ -219,9 +233,10 @@ class HomeView extends ConsumerWidget {
             SizedBox(
               height: ScreenUtil().screenHeight * 0.2,
               child: ListView.separated(
-                  separatorBuilder: (context, index) => SizedBox(
-                    width: ScreenUtil().setWidth(16),
-                  ),
+                  separatorBuilder: (context, index) =>
+                      SizedBox(
+                        width: ScreenUtil().setWidth(16),
+                      ),
                   itemCount: 3,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
@@ -229,7 +244,10 @@ class HomeView extends ConsumerWidget {
                       height: ScreenUtil().screenHeight * 0.16,
                       width: ScreenUtil().screenWidth * 0.6,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .primary,
                         borderRadius: BorderRadius.circular(16),
                       ),
                     );
@@ -241,7 +259,8 @@ class HomeView extends ConsumerWidget {
     );
   }
 
-  Flexible buildCategories(bool isDarkTheme, BuildContext context, Function()? onPressed) {
+  Flexible buildCategories(bool isDarkTheme, BuildContext context,
+      Function()? onPressed) {
     return Flexible(
       flex: 2,
       child: Padding(
@@ -256,21 +275,26 @@ class HomeView extends ConsumerWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Text('Categories',
-                      style: TextStyle(
-                        fontSize: ScreenUtil().setSp(18),
-                        fontWeight: FontWeight.bold,
-                      )),
+                  child: Text(
+                    'Categories',
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(18),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 TextButton(
-                    onPressed: onPressed,
-                    child: Text(
-                      'View all',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    )
-                )
+                  onPressed: onPressed,
+                  child: Text(
+                    'View all',
+                    style: TextStyle(
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .primary,
+                    ),
+                  ),
+                ),
               ],
             ),
             SingleChildScrollView(
@@ -280,71 +304,14 @@ class HomeView extends ConsumerWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      buildCategoryItem(AppIcons.lifestyle(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Active Lifestyle', isDarkTheme),
-                      buildCategoryItem(
-                          AppIcons.entertainment(
-                            color: isDarkTheme ? Colors.white : Colors.black,
-                          ), 'Entertainment', isDarkTheme),
-                      buildCategoryItem(AppIcons.dining(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Dining', isDarkTheme),
-                      buildCategoryItem(AppIcons.relationship(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Relationship', isDarkTheme),
-                      buildCategoryItem(AppIcons.personalDevelopment(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Personal Development', isDarkTheme),
-                      buildCategoryItem(AppIcons.urbanLife(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Urban Life', isDarkTheme),
-                      buildCategoryItem(AppIcons.health(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Health', isDarkTheme),
-                      buildCategoryItem(AppIcons.literature(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Literature', isDarkTheme),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      buildCategoryItem(AppIcons.art(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Art', isDarkTheme),
-                      buildCategoryItem(AppIcons.business(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Business', isDarkTheme),
-                      buildCategoryItem(AppIcons.community(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Community', isDarkTheme),
-                      buildCategoryItem(AppIcons.fashion(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Fashion', isDarkTheme),
-                      buildCategoryItem(AppIcons.festivities(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Festivities', isDarkTheme),
-                      buildCategoryItem(AppIcons.technology(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Technology', isDarkTheme),
-                      buildCategoryItem(
-                          AppIcons.memorableEvents(
-                            color: isDarkTheme ? Colors.white : Colors.black,
-                          ), 'Memorable Events', isDarkTheme),
-                      buildCategoryItem(AppIcons.travel(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ), 'Travel', isDarkTheme),
-                      buildCategoryItem(
-                          AppIcons.onlinePresence(
-                            color: isDarkTheme ? Colors.white : Colors.black,
-                          ), 'Online Presence', isDarkTheme),
-                    ],
+                    children: List<Widget>.generate(categories.length, (index) {
+                      return buildCategoryItem(
+                         categoryIcons[index], categories[index].name, isDarkTheme);
+                    }),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -368,7 +335,7 @@ class HomeView extends ConsumerWidget {
           ),
           Text(
             title,
-            style: TextStyle(color: isDarkTheme ? Colors.white :Colors.black),
+            style: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
           ),
         ],
       ),

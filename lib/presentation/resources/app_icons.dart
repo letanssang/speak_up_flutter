@@ -83,7 +83,7 @@ class AppIcons {
     );
   }
 
-  static Widget lifestyle({
+  static Widget activeLifestyle({
     Color? color,
     double? size,
   }) {
