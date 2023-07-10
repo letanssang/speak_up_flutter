@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/constant/categories.dart';
 class CategoriesView extends ConsumerWidget {
   const CategoriesView({Key? key}) : super(key: key);

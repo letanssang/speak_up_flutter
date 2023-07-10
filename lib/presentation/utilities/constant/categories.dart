@@ -42,7 +42,25 @@ List<Widget> categoryIcons = [
   AppIcons.technology(),
   AppIcons.travel(),
   AppIcons.urbanLife(),
-
+];
+List<Widget> categoryDarkIcons = [
+  AppIcons.activeLifestyle(color: Colors.white),
+  AppIcons.art( color: Colors.white),
+  AppIcons.business( color: Colors.white),
+  AppIcons.community( color: Colors.white),
+  AppIcons.dining(  color: Colors.white),
+  AppIcons.entertainment( color: Colors.white),
+  AppIcons.fashion( color: Colors.white),
+  AppIcons.festivities( color: Colors.white),
+  AppIcons.health(  color: Colors.white),
+  AppIcons.literature(  color: Colors.white),
+  AppIcons.memorableEvents( color: Colors.white),
+  AppIcons.onlinePresence(  color: Colors.white),
+  AppIcons.personalDevelopment(color: Colors.white),
+  AppIcons.relationship(  color: Colors.white),
+  AppIcons.technology(  color: Colors.white),
+  AppIcons.travel(  color: Colors.white),
+  AppIcons.urbanLife( color: Colors.white),
 ];
 const List<Category> categories = [
   Category(id: 0,

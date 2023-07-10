@@ -261,6 +261,7 @@ class HomeView extends ConsumerWidget {
 
   Flexible buildCategories(bool isDarkTheme, BuildContext context,
       Function()? onPressed) {
+    final icons = isDarkTheme ? categoryDarkIcons : categoryIcons;
     return Flexible(
       flex: 2,
       child: Padding(
@@ -304,14 +305,34 @@ class HomeView extends ConsumerWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    children: List<Widget>.generate(categories.length - 3, (index) {
+                      if (index % 2 == 0) {
+                        // Chỉ số chẵn
+                        return buildCategoryItem(
+                            icons[index], categories[index].name, isDarkTheme);
+                      } else {
+                        // Chỉ số lẻ
+                        return SizedBox(); // Chỗ này để trống nếu bạn không muốn hiển thị phần tử ở chỉ số lẻ
+                      }
+                    }),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: List<Widget>.generate(categories.length, (index) {
-                      return buildCategoryItem(
-                         categoryIcons[index], categories[index].name, isDarkTheme);
+                      if (index % 2 != 0) {
+                        // Chỉ số lẻ
+                        return buildCategoryItem(
+                            icons[index], categories[index].name, isDarkTheme);
+                      } else {
+                        // Chỉ số chẵn
+                        return SizedBox(); // Chỗ này để trống nếu bạn không muốn hiển thị phần tử ở chỉ số chẵn
+                      }
                     }),
                   ),
                 ],
               ),
             ),
+
           ],
         ),
       ),
