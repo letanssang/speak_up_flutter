@@ -22,8 +22,8 @@ class _SignInEmailViewState extends State<SignInEmailView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
+              const Padding(
+                padding: EdgeInsets.all(20.0),
                 child: Center(
                   child: Text(
                     'Sign in to your account',
@@ -37,19 +37,19 @@ class _SignInEmailViewState extends State<SignInEmailView> {
               CustomTextField(
                 aboveText: 'Email address',
                 hintText: 'Enter your email address',
-                suffixIcon: Icon(Icons.email),
+                suffixIcon: const Icon(Icons.email),
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailTextEditingController,
               ),
               CustomTextField(
                 aboveText: 'Password',
                 hintText: 'Enter your password',
-                suffixIcon: Icon(Icons.remove_red_eye),
+                suffixIcon: const Icon(Icons.remove_red_eye),
                 keyboardType: TextInputType.visiblePassword,
                 controller: _passwordTextEditingController,
                 errorMaxLines: 2,
               ),
-              Center(
+              const Center(
                 child: CustomButton(
                   marginVertical: 30,
                   text: 'Sign in',

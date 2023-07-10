@@ -20,19 +20,19 @@ class EditProfileView extends StatelessWidget {
           child: Image.asset('assets/images/avatar.png'),
         ),
       ),
-      CustomTextField(
+      const CustomTextField(
         aboveText: 'Full Name',
         initialValue: 'Sang',
       ),
-      CustomTextField(
+      const CustomTextField(
         aboveText: 'Email',
         initialValue: 'user@email.com'
       ),
-      CustomTextField(
+      const CustomTextField(
         aboveText: 'Phone Number',
         initialValue: '0123456789'
       ),
-      CustomButton(
+      const CustomButton(
         marginVertical: 32,
         text: 'Save', )
     ],

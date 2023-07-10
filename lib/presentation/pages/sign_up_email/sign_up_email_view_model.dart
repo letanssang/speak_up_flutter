@@ -1,10 +1,20 @@
-import 'package:flutter/widgets.dart';
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
+import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 import 'sign_up_email_state.dart';
 
 class SignUpEmailViewModel extends StateNotifier<SignUpEmailState> {
-  SignUpEmailViewModel() : super(const SignUpEmailState());
+  final CreateUserWithEmailAndPasswordUseCase _createUserWithEmailAndPassword;
+
+  SignUpEmailViewModel(
+    this._createUserWithEmailAndPassword,
+  ) : super(const SignUpEmailState());
+
   void onPasswordChanged(String password) {
     state = state.copyWith(
       password: password,
@@ -23,55 +33,46 @@ class SignUpEmailViewModel extends StateNotifier<SignUpEmailState> {
     );
   }
 
-  String? validateEmail(String? email) {
-    if (email == null || email.isEmpty) {
-      return 'Email is required';
-    }
-    const String regex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-    final RegExp regExp = RegExp(regex);
-    if (!regExp.hasMatch(email)) {
-      return 'Enter a valid email address';
-    }
-    return null;
-  }
-
-  String? validateUserName(String? userName) {
-    if (userName == null || userName.isEmpty) {
-      return 'User name is required';
-    }
-    if (userName.length < 6) {
-      return 'User name must be at least 6 characters';
-    }
-    return null;
-  }
-
-  String? validatePassword(String? password) {
-    if (password == null || password.isEmpty) {
-      return 'Password is required';
-    }
-    const String regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$';
-    final RegExp regExp = RegExp(regex);
-    if (!regExp.hasMatch(password)) {
-      return 'Password must contain at least 1 uppercase letter, 1 lowercase letter and 1 number';
-    }
-    return null;
-  }
-
-  String? validateConfirmPassword(String? confirmPassword) {
-    if (confirmPassword == null || confirmPassword.isEmpty) {
-      return 'Confirm password is required';
-    }
-    if (confirmPassword != state.password) {
-      return 'Password not match';
-    }
-    return null;
+  void onPasswordVisibilityPressed() {
+    state = state.copyWith(
+      isPasswordVisible: !state.isPasswordVisible,
+    );
   }
 
   Future<void> onSignUpButtonPressed(formKey) async {
     if (formKey.currentState!.validate()) {
-      debugPrint('User name: ${state.userName}');
-      debugPrint('Email: ${state.email}');
-      debugPrint('Password: ${state.password}');
+      state = state.copyWith(
+        loadingStatus: LoadingStatus.inProgress,
+      );
+      try {
+        await _createUserWithEmailAndPassword.run(
+          email: state.email,
+          password: state.password,
+        );
+        state = state.copyWith(
+          loadingStatus: LoadingStatus.success,
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'email-already-in-use') {
+          state = state.copyWith(
+            loadingStatus: LoadingStatus.error,
+            errorMessage: 'Email address is already in use',
+          );
+        } else {
+          state = state.copyWith(
+            loadingStatus: LoadingStatus.error,
+            errorMessage: 'Something went wrong',
+          );
+        }
+        debugPrint(e.message);
+      } catch (e) {
+        state = state.copyWith(
+          loadingStatus: LoadingStatus.error,
+          errorMessage: 'Something went wrong',
+        );
+        debugPrint(e.toString());
+      }
     }
   }
+
 }

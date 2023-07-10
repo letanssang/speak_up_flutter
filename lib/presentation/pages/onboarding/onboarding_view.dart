@@ -30,6 +30,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
       }
     });
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
           child: Column(
             children: [

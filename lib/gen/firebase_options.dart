@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+            'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -45,16 +48,6 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDbcQhlqcJnXdlx5GGZQ8sdFXSj6Iprg_k',
-    appId: '1:313680244954:web:2eade422188692397035e3',
-    messagingSenderId: '313680244954',
-    projectId: 'speak-up-flutter',
-    authDomain: 'speak-up-flutter.firebaseapp.com',
-    storageBucket: 'speak-up-flutter.appspot.com',
-    measurementId: 'G-6GPHJ1L8YG',
-  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyArAMp8-VzUuVWnuk1i6t-Byjjns7lMn9E',

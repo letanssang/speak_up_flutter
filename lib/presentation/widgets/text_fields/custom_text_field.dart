@@ -12,6 +12,7 @@ class CustomTextField extends StatelessWidget {
   final int? errorMaxLines;
   final String? aboveText;
   final String? initialValue;
+  final void Function()? onSuffixIconTap;
 
   const CustomTextField({
     super.key,
@@ -25,6 +26,7 @@ class CustomTextField extends StatelessWidget {
     this.errorMaxLines = 1,
     this.aboveText,
     this.initialValue,
+    this.onSuffixIconTap,
   });
 
   @override
@@ -57,6 +59,9 @@ class CustomTextField extends StatelessWidget {
             onTapOutside: (focusNode) {
               FocusScope.of(context).unfocus();
             },
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(18),
+            ),
             textAlign: TextAlign.start,
             decoration: InputDecoration(
               errorMaxLines: errorMaxLines,
@@ -67,7 +72,9 @@ class CustomTextField extends StatelessWidget {
               hintStyle: TextStyle(
                 fontSize: ScreenUtil().setSp(16),
               ),
-              suffixIcon: suffixIcon,
+              suffixIcon: InkWell(
+                onTap: onSuffixIconTap,
+                  child: suffixIcon),
               suffixIconColor: Theme.of(context).iconTheme.color,
             ),
           ),
