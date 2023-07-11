@@ -43,4 +43,11 @@ class AppNavigator {
       arguments: arguments,
     );
   }
+  void pop(){
+    final currentState = navigatorKey.currentState;
+    if (currentState == null) {
+      return;
+    }
+    currentState.pop();
+  }
 }

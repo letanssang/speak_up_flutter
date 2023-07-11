@@ -58,7 +58,11 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: ScreenUtil().screenHeight * 0.1,
+              ),
               Expanded(
+
                 child: PageView.builder(
                     itemCount: 3,
                     controller: _pageController,
@@ -68,7 +72,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                     }),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: DotsIndicator(
                   dotsCount: 3,
                   position: _currentIndex,
@@ -83,26 +87,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 ),
               ),
               CustomButton(
+                height: 60,
                   text: 'Get Started',
                   onTap: () {
                     ref.read(appNavigatorProvider).navigateTo(
-                      AppRoutes.signUp,
+                      AppRoutes.signIn,
                     );
                   }),
-              CustomButton(
-                text: 'I have an account',
-                buttonColor: Colors.white,
-                textColor: Theme.of(context).primaryColor,
-                onTap: () {
-                  ref.read(appNavigatorProvider).navigateTo(
-                    AppRoutes.signIn,
-                  );
-                },
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1,
-                ),
-              ),
               SizedBox(
                 height: ScreenUtil().screenHeight * 0.1,
               ),

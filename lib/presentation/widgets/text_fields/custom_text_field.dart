@@ -44,7 +44,7 @@ class CustomTextField extends StatelessWidget {
               EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(8)),
               child: Text(
                 aboveText!,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                 ),
               ),

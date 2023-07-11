@@ -11,22 +11,24 @@ class ChangePasswordView extends StatelessWidget {
         leading: const BackButton(),
         title: const Text('Change Password'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomTextField(
-            aboveText: 'Current Password',
-          ),
-          CustomTextField(
-              aboveText: 'New Password',
-          ),
-          CustomTextField(
-              aboveText: 'Confirm Password',
-          ),
-          CustomButton(
-            marginVertical: 32,
-            text: 'Save', )
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextField(
+              aboveText: 'Current Password',
+            ),
+            CustomTextField(
+                aboveText: 'New Password',
+            ),
+            CustomTextField(
+                aboveText: 'Confirm Password',
+            ),
+            CustomButton(
+              marginVertical: 32,
+              text: 'Save', )
+          ],
+        ),
       ),
     );
   }

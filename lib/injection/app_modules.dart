@@ -6,6 +6,8 @@ import 'package:speak_up/data/services/preference_services/shared_preferences_ma
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/sign_in_with_email_and_password_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class AppModules {
@@ -27,8 +29,8 @@ class AppModules {
         AccountSettingsRepository(injector.get<SharedPreferencesManager>()));
 
     // Authentication repository
-    injector.registerLazySingleton<AuthenticationRepository>(() =>
-        AuthenticationRepository(injector.get<FirebaseAuth>()));
+    injector.registerLazySingleton<AuthenticationRepository>(
+        () => AuthenticationRepository(injector.get<FirebaseAuth>()));
 
     // Get app theme use case
     injector
@@ -39,7 +41,14 @@ class AppModules {
         () => SwitchAppThemeUseCase());
 
     // Create user with email and password use case
-    injector.registerLazySingleton<CreateUserWithEmailAndPasswordUseCase>(()
-        => CreateUserWithEmailAndPasswordUseCase());
+    injector.registerLazySingleton<CreateUserWithEmailAndPasswordUseCase>(
+        () => CreateUserWithEmailAndPasswordUseCase());
+
+    // Sign in with email and password use case
+    injector.registerLazySingleton<SignInWithEmailAndPasswordUseCase>(
+        () => SignInWithEmailAndPasswordUseCase());
+
+    // Sign out use case
+    injector.registerLazySingleton<SignOutUseCase>(() => SignOutUseCase());
   }
 }

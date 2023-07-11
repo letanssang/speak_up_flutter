@@ -11,31 +11,36 @@ class EditProfileView extends StatelessWidget {
         leading: const BackButton(),
         title: const Text('Personal Information'),
       ),
-  body: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      CircleAvatar(
-        radius: 32,
-        child: ClipOval(
-          child: Image.asset('assets/images/avatar.png'),
-        ),
+  body: SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 32,
+            child: ClipOval(
+              child: Image.asset('assets/images/avatar.png'),
+            ),
+          ),
+          CustomTextField(
+            aboveText: 'Full Name',
+            initialValue: 'Sang',
+          ),
+          CustomTextField(
+            aboveText: 'Email',
+            initialValue: 'user@email.com'
+          ),
+          CustomTextField(
+            aboveText: 'Phone Number',
+            initialValue: '0123456789'
+          ),
+          CustomButton(
+            marginVertical: 32,
+            text: 'Save', )
+        ],
       ),
-      const CustomTextField(
-        aboveText: 'Full Name',
-        initialValue: 'Sang',
-      ),
-      const CustomTextField(
-        aboveText: 'Email',
-        initialValue: 'user@email.com'
-      ),
-      const CustomTextField(
-        aboveText: 'Phone Number',
-        initialValue: '0123456789'
-      ),
-      const CustomButton(
-        marginVertical: 32,
-        text: 'Save', )
-    ],
+    ),
   ),
     );
   }

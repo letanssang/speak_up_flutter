@@ -7,8 +7,8 @@ import 'main_menu_state.dart';
 import 'main_menu_viewmodel.dart';
 
 final mainMenuViewModelProvider =
-StateNotifierProvider<MainMenuViewModel, MainMenuState>(
-      (ref) => MainMenuViewModel(),
+    StateNotifierProvider.autoDispose<MainMenuViewModel, MainMenuState>(
+  (ref) => MainMenuViewModel(),
 );
 List<Widget> _pageOptions = <Widget>[const HomeView(), const ProfileView()];
 

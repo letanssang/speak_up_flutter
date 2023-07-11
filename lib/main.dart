@@ -47,7 +47,7 @@ class MyApp extends ConsumerWidget {
             darkTheme: getAppDarkTheme(),
             home: Navigator(
               key: ref.read(appNavigatorProvider).navigatorKey,
-              initialRoute: AppRoutes.splash,
+              initialRoute: AppRoutes.onboarding,
               onGenerateRoute: AppRouter.onGenerateRoute,
             ),
           );

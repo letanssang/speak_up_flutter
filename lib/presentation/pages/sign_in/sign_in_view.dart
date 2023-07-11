@@ -25,7 +25,7 @@ class SignInView extends ConsumerWidget {
               child: Center(
                 child: Text(
                   textAlign: TextAlign.center,
-                  'Welcome back!\nSign in to continue',
+                  'Welcome!\nSign in to continue',
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(28),
                     fontWeight: FontWeight.w600,
@@ -34,36 +34,53 @@ class SignInView extends ConsumerWidget {
               ),
             ),
             CustomButton(
-              text: 'Sign in with Google',
+              text: 'Continue with Google',
               height: 60,
               textColor: Colors.black,
-              buttonColor: Color(0xFFEBECEE),
+              buttonColor: const Color(0xFFEBECEE),
               fontWeight: FontWeight.w600,
               image: AppImages.googleLogo(),
             ),
             CustomButton(
-              text: 'Sign in with Facebook',
+              text: 'Continue with Facebook',
               height: 60,
               textColor: Colors.white,
-              buttonColor: Color(0xFF3B5998),
+              buttonColor: const Color(0xFF3B5998),
               fontWeight: FontWeight.w600,
               image: AppImages.facebookLogo(),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('or',
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(16),
-                    fontWeight: FontWeight.w600,
-                  )),
+            CustomButton(
+              text: 'Sign in with email',
+              height: 60,
+              textColor: Colors.black,
+              buttonColor: const Color(0xFFEBECEE),
+              fontWeight: FontWeight.w600,
+              image: const Icon(
+                Icons.email,
+                color: Colors.black,
+              ),
+              onTap: () {
+                ref.read(appNavigatorProvider).navigateTo(
+                  AppRoutes.signInEmail,
+                );
+              }
             ),
+        SizedBox(
+          height: ScreenUtil().setHeight(32),
+        ),
+        Text('Don\'t have an account?',
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(16),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
             TextButton(
                 onPressed: () {
                   ref.read(appNavigatorProvider).navigateTo(
-                    AppRoutes.signInEmail,
+                    AppRoutes.signUpEmail,
                   );
                 },
-                child: Text('Sign in with email',
+                child: Text('Sign up',
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(16),
                       fontWeight: FontWeight.w600,

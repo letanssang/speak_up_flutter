@@ -5,6 +5,7 @@ import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
@@ -15,8 +16,10 @@ import 'package:speak_up/presentation/resources/app_images.dart';
 
 final profileViewModelProvider =
     StateNotifierProvider<ProfileViewModel, ProfileState>((ref) =>
-        ProfileViewModel(injector.get<GetAppThemeUseCase>(),
-            injector.get<SwitchAppThemeUseCase>()));
+        ProfileViewModel(
+            injector.get<GetAppThemeUseCase>(),
+            injector.get<SwitchAppThemeUseCase>(),
+            injector.get<SignOutUseCase>()));
 
 class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
@@ -34,6 +37,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
       ref.read(profileViewModelProvider.notifier).getThemeData();
     });
   }
+
   Future<void> _dialogBuilder(BuildContext context) {
     return showDialog<void>(
       context: context,
@@ -47,19 +51,22 @@ class ProfileViewState extends ConsumerState<ProfileView> {
             ),
           ),
           actions: <Widget>[
-
             TextButton(
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Yes',
+              child: const Text(
+                'Yes',
                 style: TextStyle(
                   color: Colors.red,
                 ),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                ref.read(appNavigatorProvider).navigateTo(AppRoutes.onboarding, shouldClearStack: true);
+                ref.read(profileViewModelProvider.notifier).signOut();
+                ref
+                    .read(appNavigatorProvider)
+                    .navigateTo(AppRoutes.onboarding, shouldClearStack: true);
               },
             ),
             TextButton(
@@ -76,9 +83,9 @@ class ProfileViewState extends ConsumerState<ProfileView> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
-
     final state = ref.watch(profileViewModelProvider);
     return Scaffold(
         appBar: AppBar(
@@ -125,28 +132,33 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      buildListTile(AppIcons.avatar(size: 48), 'Edit profile', onTap: (){
-                        ref.read(appNavigatorProvider).navigateTo(AppRoutes.editProfile);
+                      buildListTile(AppIcons.avatar(size: 48), 'Edit profile',
+                          onTap: () {
+                        ref
+                            .read(appNavigatorProvider)
+                            .navigateTo(AppRoutes.editProfile);
                       }),
-                      buildListTile(AppIcons.changePassword(size: 48), 'Change password',
-                      onTap: (){
-                        ref.read(appNavigatorProvider).navigateTo(AppRoutes.changePassword);
+                      buildListTile(
+                          AppIcons.changePassword(size: 48), 'Change password',
+                          onTap: () {
+                        ref
+                            .read(appNavigatorProvider)
+                            .navigateTo(AppRoutes.changePassword);
                       }),
                       buildListTile(
                           AppIcons.notification(size: 48), 'Notification',
                           trailing: Switch(
                             value: state.enableNotification,
-                            onChanged: (value){
+                            onChanged: (value) {
                               ref
                                   .read(profileViewModelProvider.notifier)
                                   .switchNotification(value);
                             },
-                          )
-                      ),
+                          )),
                       buildListTile(AppIcons.darkMode(size: 48), 'Dark mode',
                           trailing: Switch(
                             value: state.isDarkMode,
-                            onChanged: (value){
+                            onChanged: (value) {
                               ref
                                   .read(profileViewModelProvider.notifier)
                                   .changeThemeData(value);
@@ -154,15 +166,15 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                             },
                           )),
                       buildListTile(AppIcons.about(size: 48), 'About',
-                      onTap: (){
-                        ref.read(appNavigatorProvider).navigateTo(AppRoutes.about);
-                      }
-                      ),
+                          onTap: () {
+                        ref
+                            .read(appNavigatorProvider)
+                            .navigateTo(AppRoutes.about);
+                      }),
                       buildListTile(AppIcons.logout(size: 48), 'Logout',
-                        onTap: () async {
-                          await _dialogBuilder(context);
-                        }
-                      ),
+                          onTap: () async {
+                        await _dialogBuilder(context);
+                      }),
                     ],
                   ),
                 )
@@ -172,7 +184,8 @@ class ProfileViewState extends ConsumerState<ProfileView> {
         ));
   }
 
-  Widget buildListTile(Widget icon, String title, {Widget? trailing, Function()? onTap}) {
+  Widget buildListTile(Widget icon, String title,
+      {Widget? trailing, Function()? onTap}) {
     return Container(
       margin: const EdgeInsets.all(8),
       decoration: const BoxDecoration(),
@@ -180,6 +193,9 @@ class ProfileViewState extends ConsumerState<ProfileView> {
         leading: icon,
         title: Text(
           title,
+          style: const TextStyle(
+            fontSize: 16,
+          ),
         ),
         onTap: onTap,
         trailing: trailing ??

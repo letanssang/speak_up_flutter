@@ -7,6 +7,10 @@ ThemeData getAppLightTheme(){
     textTheme: ThemeData.light().textTheme.apply(
       fontFamily: 'SF Pro Display',
     ),
+    dialogTheme: const DialogTheme(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+    ),
     appBarTheme: const AppBarTheme(
       centerTitle: true,
       titleTextStyle: TextStyle(
@@ -14,9 +18,10 @@ ThemeData getAppLightTheme(){
         fontSize: 18,
         fontFamily: 'SF Pro Display',
       ),
-      backgroundColor: Colors.transparent,
       iconTheme: IconThemeData(color: Colors.black),
       elevation: 0,
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
     ),
     primaryColor: const Color(0xFF50248F),
     colorScheme:
@@ -30,6 +35,10 @@ ThemeData getAppDarkTheme() {
     textTheme: ThemeData.dark().textTheme.apply(
       fontFamily: 'SF Pro Display',
     ),
+    dialogTheme: const DialogTheme(
+      surfaceTintColor: Colors.white,
+    ),
+    dialogBackgroundColor: Colors.black,
     appBarTheme: const AppBarTheme(
       centerTitle: true,
       titleTextStyle: TextStyle(
@@ -37,9 +46,10 @@ ThemeData getAppDarkTheme() {
         fontSize: 18,
         fontFamily: 'SF Pro Display',
       ),
-      backgroundColor: Colors.transparent,
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.white),
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.white,
     ),
     primaryColor: const Color(0xFF50248F),
     colorScheme:
