@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/constant/categories.dart';
+
 class CategoriesView extends ConsumerWidget {
   const CategoriesView({Key? key}) : super(key: key);
 
@@ -31,7 +31,8 @@ class CategoriesView extends ConsumerWidget {
           ),
           itemCount: images.length,
           itemBuilder: (BuildContext context, int index) {
-            return buildCategoryCard(images[index], categories[index].name, isDarkTheme);
+            return buildCategoryCard(
+                images[index], categories[index].name, isDarkTheme);
           },
         ),
       ),

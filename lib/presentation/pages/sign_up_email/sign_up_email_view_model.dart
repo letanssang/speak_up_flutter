@@ -38,7 +38,12 @@ class SignUpEmailViewModel extends StateNotifier<SignUpEmailState> {
       isPasswordVisible: !state.isPasswordVisible,
     );
   }
-
+  void resetError() {
+    state = state.copyWith(
+      loadingStatus: LoadingStatus.initial,
+      errorMessage: '',
+    );
+}
   Future<void> onSignUpButtonPressed(formKey) async {
     if (formKey.currentState!.validate()) {
       state = state.copyWith(

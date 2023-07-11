@@ -17,6 +17,9 @@ String? validateUserName(String? userName) {
   if (userName.length < 6) {
     return 'User name must be at least 6 characters';
   }
+  if(userName.length > 20){
+    return 'User name must not exceed 20 characters';
+  }
   return null;
 }
 

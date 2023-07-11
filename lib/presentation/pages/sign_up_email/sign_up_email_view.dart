@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/sign_up_email/sign_up_email_state.dart';
 import 'package:speak_up/presentation/pages/sign_up_email/sign_up_email_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/validator.dart';
@@ -61,6 +63,18 @@ class _SignUpEmailViewState extends ConsumerState<SignUpEmailView> {
   Widget build(BuildContext context) {
     final state = ref.watch(signUpEmailViewModelProvider);
     addTextEditingListener();
+
+    ref.listen(signUpEmailViewModelProvider.select((value) => value.errorMessage), (previous, next) {
+      if (next.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      ref.read(signUpEmailViewModelProvider.notifier).resetError();
+    });
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
@@ -121,6 +135,21 @@ class _SignUpEmailViewState extends ConsumerState<SignUpEmailView> {
                 text: 'Continue',
                     buttonState: state.loadingStatus.buttonState,
               )),
+              Center(
+                child: Text(
+                  'Already have an account?',
+                ),
+              ),
+              Center(
+                child: TextButton(onPressed: (){
+                  ref.read(appNavigatorProvider).navigateTo(AppRoutes.signIn);
+                }, child: Text('Sign in',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
+                ),)
+                ),
+                ),
             ],
           ),
         ),

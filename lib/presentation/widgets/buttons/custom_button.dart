@@ -53,8 +53,12 @@ class CustomButton extends StatelessWidget {
             children: [
               if (image != null) image!,
               buttonState == ButtonState.loading ?
-                  CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor,
+                  const SizedBox(
+                    height: 15,
+                    width: 15,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
                   )
                   : Text(
                 text,

@@ -4,7 +4,6 @@ import 'package:speak_up/presentation/pages/about/about_view.dart';
 import 'package:speak_up/presentation/pages/categories/categories_view.dart';
 import 'package:speak_up/presentation/pages/change_password/change_password_view.dart';
 import 'package:speak_up/presentation/pages/edit_profile/edit_profile_view.dart';
-import 'package:speak_up/presentation/pages/home/home_view.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/onboarding/onboarding_view.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_view.dart';
@@ -67,21 +66,21 @@ class AppRouter {
             settings: settings,
           );
         }
-        case AppRoutes.changePassword:
+      case AppRoutes.changePassword:
         {
           return MaterialPageRoute(
             builder: (context) => const ChangePasswordView(),
             settings: settings,
           );
         }
-        case AppRoutes.about:
+      case AppRoutes.about:
         {
           return MaterialPageRoute(
             builder: (context) => const AboutView(),
             settings: settings,
           );
         }
-        case AppRoutes.categories:
+      case AppRoutes.categories:
         {
           return MaterialPageRoute(
             builder: (context) => const CategoriesView(),
