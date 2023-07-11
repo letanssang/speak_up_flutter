@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
+import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/sign_up_email/sign_up_email_state.dart';
 import 'package:speak_up/presentation/pages/sign_up_email/sign_up_email_view_model.dart';
+import 'package:speak_up/presentation/utilities/common/validator.dart';
+import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
 
 final signUpEmailViewModelProvider =
     StateNotifierProvider.autoDispose<SignUpEmailViewModel, SignUpEmailState>(
-        (ref) => SignUpEmailViewModel());
+        (ref) => SignUpEmailViewModel(
+          injector.get<CreateUserWithEmailAndPasswordUseCase>(),
+        ));
 
 class SignUpEmailView extends ConsumerStatefulWidget {
   const SignUpEmailView({super.key});
@@ -53,7 +61,20 @@ class _SignUpEmailViewState extends ConsumerState<SignUpEmailView> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(signUpEmailViewModelProvider);
     addTextEditingListener();
+
+    ref.listen(signUpEmailViewModelProvider.select((value) => value.errorMessage), (previous, next) {
+      if (next.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      ref.read(signUpEmailViewModelProvider.notifier).resetError();
+    });
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
@@ -79,41 +100,29 @@ class _SignUpEmailViewState extends ConsumerState<SignUpEmailView> {
                 suffixIcon: const Icon(Icons.person),
                 keyboardType: TextInputType.name,
                 controller: _userNameTextEditingController,
-                validator: ref
-                    .read(signUpEmailViewModelProvider.notifier)
-                    .validateUserName,
+                validator: validateUserName,
               ),
               CustomTextField(
                 hintText: 'Enter your email address',
                 suffixIcon: const Icon(Icons.email),
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailTextEditingController,
-                validator: ref
-                    .read(signUpEmailViewModelProvider.notifier)
-                    .validateEmail,
+                validator: validateEmail,
               ),
               CustomTextField(
                 hintText: 'Enter your password',
-                suffixIcon: const Icon(Icons.remove_red_eye),
+                suffixIcon: Icon(state.isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                onSuffixIconTap: () {
+                  ref
+                      .read(signUpEmailViewModelProvider.notifier)
+                      .onPasswordVisibilityPressed();
+                },
                 keyboardType: TextInputType.visiblePassword,
                 controller: _passwordTextEditingController,
                 obscureText:
-                    ref.watch(signUpEmailViewModelProvider).isPasswordVisible,
-                validator: ref
-                    .read(signUpEmailViewModelProvider.notifier)
-                    .validatePassword,
+                    !ref.watch(signUpEmailViewModelProvider).isPasswordVisible,
+                validator: validatePassword,
                 errorMaxLines: 2,
-              ),
-              CustomTextField(
-                hintText: 'Enter your password again',
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.visiblePassword,
-                controller: _confirmPasswordTextEditingController,
-                obscureText:
-                    ref.watch(signUpEmailViewModelProvider).isPasswordVisible,
-                validator: ref
-                    .read(signUpEmailViewModelProvider.notifier)
-                    .validateConfirmPassword,
               ),
               Center(
                   child: CustomButton(
@@ -124,7 +133,23 @@ class _SignUpEmailViewState extends ConsumerState<SignUpEmailView> {
                       .onSignUpButtonPressed(_formKey);
                 },
                 text: 'Continue',
+                    buttonState: state.loadingStatus.buttonState,
               )),
+              Center(
+                child: Text(
+                  'Already have an account?',
+                ),
+              ),
+              Center(
+                child: TextButton(onPressed: (){
+                  ref.read(appNavigatorProvider).navigateTo(AppRoutes.signIn);
+                }, child: Text('Sign in',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
+                ),)
+                ),
+                ),
             ],
           ),
         ),

@@ -16,11 +16,13 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SignUpEmailState {
+  LoadingStatus get loadingStatus => throw _privateConstructorUsedError;
   bool get isPasswordVisible => throw _privateConstructorUsedError;
   bool get isSignUpButtonEnabled => throw _privateConstructorUsedError;
   String get userName => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
+  String get errorMessage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SignUpEmailStateCopyWith<SignUpEmailState> get copyWith =>
@@ -34,11 +36,13 @@ abstract class $SignUpEmailStateCopyWith<$Res> {
       _$SignUpEmailStateCopyWithImpl<$Res, SignUpEmailState>;
   @useResult
   $Res call(
-      {bool isPasswordVisible,
+      {LoadingStatus loadingStatus,
+      bool isPasswordVisible,
       bool isSignUpButtonEnabled,
       String userName,
       String email,
-      String password});
+      String password,
+      String errorMessage});
 }
 
 /// @nodoc
@@ -54,13 +58,19 @@ class _$SignUpEmailStateCopyWithImpl<$Res, $Val extends SignUpEmailState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? loadingStatus = null,
     Object? isPasswordVisible = null,
     Object? isSignUpButtonEnabled = null,
     Object? userName = null,
     Object? email = null,
     Object? password = null,
+    Object? errorMessage = null,
   }) {
     return _then(_value.copyWith(
+      loadingStatus: null == loadingStatus
+          ? _value.loadingStatus
+          : loadingStatus // ignore: cast_nullable_to_non_nullable
+              as LoadingStatus,
       isPasswordVisible: null == isPasswordVisible
           ? _value.isPasswordVisible
           : isPasswordVisible // ignore: cast_nullable_to_non_nullable
@@ -80,6 +90,10 @@ class _$SignUpEmailStateCopyWithImpl<$Res, $Val extends SignUpEmailState>
       password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      errorMessage: null == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -94,11 +108,13 @@ abstract class _$$_SignUpEmailStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool isPasswordVisible,
+      {LoadingStatus loadingStatus,
+      bool isPasswordVisible,
       bool isSignUpButtonEnabled,
       String userName,
       String email,
-      String password});
+      String password,
+      String errorMessage});
 }
 
 /// @nodoc
@@ -112,13 +128,19 @@ class __$$_SignUpEmailStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? loadingStatus = null,
     Object? isPasswordVisible = null,
     Object? isSignUpButtonEnabled = null,
     Object? userName = null,
     Object? email = null,
     Object? password = null,
+    Object? errorMessage = null,
   }) {
     return _then(_$_SignUpEmailState(
+      loadingStatus: null == loadingStatus
+          ? _value.loadingStatus
+          : loadingStatus // ignore: cast_nullable_to_non_nullable
+              as LoadingStatus,
       isPasswordVisible: null == isPasswordVisible
           ? _value.isPasswordVisible
           : isPasswordVisible // ignore: cast_nullable_to_non_nullable
@@ -139,6 +161,10 @@ class __$$_SignUpEmailStateCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      errorMessage: null == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -147,12 +173,17 @@ class __$$_SignUpEmailStateCopyWithImpl<$Res>
 
 class _$_SignUpEmailState implements _SignUpEmailState {
   const _$_SignUpEmailState(
-      {this.isPasswordVisible = false,
+      {this.loadingStatus = LoadingStatus.initial,
+      this.isPasswordVisible = true,
       this.isSignUpButtonEnabled = false,
       this.userName = '',
       this.email = '',
-      this.password = ''});
+      this.password = '',
+      this.errorMessage = ''});
 
+  @override
+  @JsonKey()
+  final LoadingStatus loadingStatus;
   @override
   @JsonKey()
   final bool isPasswordVisible;
@@ -168,10 +199,13 @@ class _$_SignUpEmailState implements _SignUpEmailState {
   @override
   @JsonKey()
   final String password;
+  @override
+  @JsonKey()
+  final String errorMessage;
 
   @override
   String toString() {
-    return 'SignUpEmailState(isPasswordVisible: $isPasswordVisible, isSignUpButtonEnabled: $isSignUpButtonEnabled, userName: $userName, email: $email, password: $password)';
+    return 'SignUpEmailState(loadingStatus: $loadingStatus, isPasswordVisible: $isPasswordVisible, isSignUpButtonEnabled: $isSignUpButtonEnabled, userName: $userName, email: $email, password: $password, errorMessage: $errorMessage)';
   }
 
   @override
@@ -179,6 +213,8 @@ class _$_SignUpEmailState implements _SignUpEmailState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SignUpEmailState &&
+            (identical(other.loadingStatus, loadingStatus) ||
+                other.loadingStatus == loadingStatus) &&
             (identical(other.isPasswordVisible, isPasswordVisible) ||
                 other.isPasswordVisible == isPasswordVisible) &&
             (identical(other.isSignUpButtonEnabled, isSignUpButtonEnabled) ||
@@ -187,12 +223,14 @@ class _$_SignUpEmailState implements _SignUpEmailState {
                 other.userName == userName) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
-                other.password == password));
+                other.password == password) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isPasswordVisible,
-      isSignUpButtonEnabled, userName, email, password);
+  int get hashCode => Object.hash(runtimeType, loadingStatus, isPasswordVisible,
+      isSignUpButtonEnabled, userName, email, password, errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -203,12 +241,16 @@ class _$_SignUpEmailState implements _SignUpEmailState {
 
 abstract class _SignUpEmailState implements SignUpEmailState {
   const factory _SignUpEmailState(
-      {final bool isPasswordVisible,
+      {final LoadingStatus loadingStatus,
+      final bool isPasswordVisible,
       final bool isSignUpButtonEnabled,
       final String userName,
       final String email,
-      final String password}) = _$_SignUpEmailState;
+      final String password,
+      final String errorMessage}) = _$_SignUpEmailState;
 
+  @override
+  LoadingStatus get loadingStatus;
   @override
   bool get isPasswordVisible;
   @override
@@ -219,6 +261,8 @@ abstract class _SignUpEmailState implements SignUpEmailState {
   String get email;
   @override
   String get password;
+  @override
+  String get errorMessage;
   @override
   @JsonKey(ignore: true)
   _$$_SignUpEmailStateCopyWith<_$_SignUpEmailState> get copyWith =>

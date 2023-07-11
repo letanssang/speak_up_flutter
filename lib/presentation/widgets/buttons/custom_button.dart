@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 
 class CustomButton extends StatelessWidget {
   final double height;
@@ -12,6 +13,7 @@ class CustomButton extends StatelessWidget {
   final FontWeight? fontWeight;
   final Widget? image;
   final double marginVertical;
+  final ButtonState buttonState;
 
   const CustomButton({
     super.key,
@@ -25,12 +27,13 @@ class CustomButton extends StatelessWidget {
     this.onTap,
     this.image,
     this.marginVertical = 10,
+    this.buttonState = ButtonState.normal,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: buttonState == ButtonState.normal  ? onTap : null,
       child: Container(
         margin: EdgeInsets.symmetric(
           horizontal: ScreenUtil().setWidth(8),
@@ -40,7 +43,7 @@ class CustomButton extends StatelessWidget {
         width: width ?? ScreenUtil().screenWidth * 0.8,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: buttonColor,
+          color: buttonState == ButtonState.disabled ? Colors.grey : buttonColor,
           border: border,
         ),
         child: Center(
@@ -49,7 +52,15 @@ class CustomButton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (image != null) image!,
-              Text(
+              buttonState == ButtonState.loading ?
+                  const SizedBox(
+                    height: 15,
+                    width: 15,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  )
+                  : Text(
                 text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
