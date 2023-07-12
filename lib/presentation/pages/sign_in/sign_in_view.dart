@@ -74,9 +74,9 @@ class SignInView extends ConsumerWidget {
                   text: 'Continue with Google',
                   height: 60,
                   textColor: Colors.black,
-                  buttonColor: const Color(0xFFEBECEE),
                   fontWeight: FontWeight.w600,
                   image: AppImages.googleLogo(),
+                  buttonColor: Color(0xFFEBECEE),
                   onTap: () {
                     ref
                         .read(signInViewModelProvider.notifier)
@@ -84,22 +84,13 @@ class SignInView extends ConsumerWidget {
                   },
                 ),
                 CustomButton(
-                  text: 'Continue with Facebook',
-                  height: 60,
-                  textColor: Colors.white,
-                  buttonColor: const Color(0xFF3B5998),
-                  fontWeight: FontWeight.w600,
-                  image: AppImages.facebookLogo(),
-                ),
-                CustomButton(
-                    text: 'Sign in with email',
+                    text: 'Sign in with your email',
                     height: 60,
-                    textColor: Colors.black,
-                    buttonColor: const Color(0xFFEBECEE),
+                    textColor: Colors.white,
                     fontWeight: FontWeight.w600,
                     image: const Icon(
-                      Icons.email,
-                      color: Colors.black,
+                      Icons.email_outlined,
+                      color: Colors.white,
                     ),
                     onTap: () {
                       ref.read(appNavigatorProvider).navigateTo(
@@ -113,7 +104,6 @@ class SignInView extends ConsumerWidget {
                   'Don\'t have an account?',
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(16),
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 TextButton(

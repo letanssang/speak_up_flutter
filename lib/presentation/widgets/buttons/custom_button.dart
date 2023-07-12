@@ -32,43 +32,58 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: buttonState == ButtonState.normal  ? onTap : null,
-      child: Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: ScreenUtil().setWidth(8),
-          vertical: ScreenUtil().setHeight(marginVertical),
-        ),
-        height: height,
-        width: width ?? ScreenUtil().screenWidth * 0.8,
-        decoration: BoxDecoration(
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: ScreenUtil().setWidth(8),
+        vertical: ScreenUtil().setHeight(marginVertical),
+      ),
+      height: height,
+      width: width ?? ScreenUtil().screenWidth * 0.8,
+      decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: buttonState == ButtonState.disabled ? Colors.grey : buttonColor,
+          color:
+              buttonState == ButtonState.disabled ? Colors.grey : buttonColor,
           border: border,
-        ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 0,
+              blurRadius: 4,
+              offset: const Offset(0, 4),
+            ),
+          ]),
+      child: InkWell(
+        onTap: buttonState == ButtonState.normal ? onTap : null,
         child: Center(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: image != null
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (image != null) image!,
-              buttonState == ButtonState.loading ?
-                  const SizedBox(
-                    height: 15,
-                    width: 15,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                    ),
-                  )
-                  : Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: ScreenUtil().setSp(16),
-                  fontWeight: fontWeight,
+              if (image != null)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: ScreenUtil().setWidth(32)),
+                  child: image!,
                 ),
-              ),
+              buttonState == ButtonState.loading
+                  ? const SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      text,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: ScreenUtil().setSp(16),
+                        fontWeight: fontWeight,
+                      ),
+                    ),
             ],
           ),
         ),

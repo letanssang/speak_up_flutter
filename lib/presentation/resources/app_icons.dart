@@ -40,27 +40,17 @@ class AppIcons {
     );
   }
 
-  static Widget logout({
+  static Widget changeLanguage({
     Color? color,
     double? size,
   }) {
     return SvgIcon.from(
-      '$_iconsPath/logout.svg',
+      '$_iconsPath/change_language.svg',
       color: color,
       size: size,
     );
   }
 
-  static Widget changePassword({
-    Color? color,
-    double? size,
-  }) {
-    return SvgIcon.from(
-      '$_iconsPath/change_password.svg',
-      color: color,
-      size: size,
-    );
-  }
   static Widget avatar({
     Color? color,
     double? size,

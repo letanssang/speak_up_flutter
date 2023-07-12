@@ -6,6 +6,7 @@ import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/constant/string.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 
 import '../../widgets/buttons/custom_button.dart';
 
@@ -19,6 +20,7 @@ class OnboardingView extends ConsumerStatefulWidget {
 class _OnboardingViewState extends ConsumerState<OnboardingView> {
   final PageController _pageController = PageController();
   double _currentIndex = 0;
+  Language _language = Language.eng;
 
   @override
   Widget build(BuildContext context) {
@@ -34,31 +36,55 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
       body: Center(
           child: Column(
         children: [
-          Row(
+          Flexible(
+              child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: ScreenUtil().statusBarHeight * 1.5,
-                  right: ScreenUtil().setWidth(16),
+              Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: ScreenUtil().statusBarHeight + 16,
+                    horizontal: 16),
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                child: TextButton(
-                    onPressed: () {
-                      ref
-                          .read(appNavigatorProvider)
-                          .navigateTo(AppRoutes.mainMenu);
-                    },
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(
-                        fontSize: ScreenUtil().setSp(18),
-                        fontWeight: FontWeight.w600,
+                child: InkWell(
+                  onTap: () => setState(() {
+                    if (_language == Language.eng) {
+                      _language = Language.vie;
+                    } else {
+                      _language = Language.eng;
+                    }
+                  }),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(_language == Language.eng ? 'VIE' : 'ENG',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(14),
+                            color: Colors.black,
+                          )),
+                      SizedBox(
+                        width: ScreenUtil().setWidth(8),
                       ),
-                    )),
-              ),
+                      _language == Language.eng
+                          ? AppImages.vietnamFlag(
+                              width: ScreenUtil().setWidth(24),
+                              height: ScreenUtil().setHeight(24),
+                            )
+                          : AppImages.USFlag(
+                              width: ScreenUtil().setWidth(24),
+                              height: ScreenUtil().setHeight(24),
+                            ),
+                    ],
+                  ),
+                ),
+              )
             ],
-          ),
+          )),
           Expanded(
+            flex: 3,
             child: PageView.builder(
                 itemCount: 3,
                 controller: _pageController,

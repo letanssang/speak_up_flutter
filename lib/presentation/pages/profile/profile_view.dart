@@ -98,6 +98,14 @@ class ProfileViewState extends ConsumerState<ProfileView> {
             },
           ),
           title: const Text('Account Settings'),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                await _dialogBuilder(context);
+              },
+              icon: const Icon(Icons.logout, color: Colors.red, size: 24.0),
+            ),
+          ],
         ),
         body: Stack(
           children: [
@@ -144,12 +152,6 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                                 .read(appNavigatorProvider)
                                 .navigateTo(AppRoutes.editProfile);
                           }),
-                          buildListTile(AppIcons.changePassword(size: 48),
-                              'Change password', onTap: () {
-                            ref
-                                .read(appNavigatorProvider)
-                                .navigateTo(AppRoutes.changePassword);
-                          }),
                           buildListTile(
                               AppIcons.notification(size: 48), 'Notification',
                               trailing: Switch(
@@ -172,15 +174,17 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                                       value;
                                 },
                               )),
+                          buildListTile(
+                              AppIcons.changeLanguage(size: 48), 'Language',
+                              trailing: Switch(
+                                value: false,
+                                onChanged: (value) {},
+                              )),
                           buildListTile(AppIcons.about(size: 48), 'About',
                               onTap: () {
                             ref
                                 .read(appNavigatorProvider)
                                 .navigateTo(AppRoutes.about);
-                          }),
-                          buildListTile(AppIcons.logout(size: 48), 'Logout',
-                              onTap: () async {
-                            await _dialogBuilder(context);
                           }),
                         ],
                       ),

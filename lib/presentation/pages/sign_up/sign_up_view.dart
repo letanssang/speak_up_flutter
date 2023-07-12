@@ -147,6 +147,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
               const Center(
                 child: Text(
                   'Already have an account?',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
               ),
               Center(

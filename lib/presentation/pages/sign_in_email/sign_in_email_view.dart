@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_in_with_email_and_password_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
@@ -80,17 +81,15 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
               key: _formKey,
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Padding(
                       padding: EdgeInsets.all(20.0),
-                      child: Center(
-                        child: Text(
-                          'Sign in to your account',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      child: Text(
+                        'Sign in to your account',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -117,20 +116,38 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                             .onPasswordVisibilityPressed();
                       },
                     ),
-                    Center(
-                      child: CustomButton(
-                          marginVertical: 30,
-                          text: 'Sign in',
-                          buttonState: state.loadingStatus.buttonState,
-                          onTap: () {
-                            if (!_formKey.currentState!.validate()) return;
-                            ref
-                                .read(signInEmailViewModelProvider.notifier)
-                                .onSignInButtonPressed(
-                                    _emailTextEditingController.text,
-                                    _passwordTextEditingController.text);
-                          }),
+                    CustomButton(
+                        marginVertical: 30,
+                        text: 'Sign in',
+                        buttonState: state.loadingStatus.buttonState,
+                        onTap: () {
+                          if (!_formKey.currentState!.validate()) return;
+                          ref
+                              .read(signInEmailViewModelProvider.notifier)
+                              .onSignInButtonPressed(
+                                  _emailTextEditingController.text,
+                                  _passwordTextEditingController.text);
+                        }),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(32),
                     ),
+                    Text(
+                      'Don\'t have an account?',
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(16),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          ref.read(appNavigatorProvider).navigateTo(
+                                AppRoutes.signUpEmail,
+                              );
+                        },
+                        child: Text('Sign up',
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(16),
+                              fontWeight: FontWeight.w600,
+                            ))),
                   ],
                 ),
               ),
