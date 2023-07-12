@@ -9,18 +9,6 @@ class SignInEmailViewModel extends StateNotifier<SignInEmailState> {
       : super(const SignInEmailState());
   final SignInWithEmailAndPasswordUseCase _signInWithEmailAndPassword;
 
-  void onPasswordChanged(String password) {
-    state = state.copyWith(
-      password: password,
-    );
-  }
-
-  void onEmailChanged(String email) {
-    state = state.copyWith(
-      email: email,
-    );
-  }
-
   void onPasswordVisibilityPressed() {
     state = state.copyWith(
       isPasswordVisible: !state.isPasswordVisible,
@@ -34,14 +22,14 @@ class SignInEmailViewModel extends StateNotifier<SignInEmailState> {
     );
   }
 
-  Future<void> onSignInButtonPressed() async {
+  Future<void> onSignInButtonPressed(String email, String password) async {
     state = state.copyWith(
       loadingStatus: LoadingStatus.inProgress,
     );
     try {
       SignInWithEmailParams params = SignInWithEmailParams(
-        email: state.email,
-        password: state.password,
+        email: email,
+        password: password,
       );
       await _signInWithEmailAndPassword.run(params);
       state = state.copyWith(

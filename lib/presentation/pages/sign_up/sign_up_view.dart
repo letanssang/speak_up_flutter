@@ -40,24 +40,6 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
     super.dispose();
   }
 
-  void addTextEditingListener() {
-    _userNameTextEditingController.addListener(() {
-      ref
-          .read(signUpViewModelProvider.notifier)
-          .onUserNameChanged(_userNameTextEditingController.text);
-    });
-    _passwordTextEditingController.addListener(() {
-      ref
-          .read(signUpViewModelProvider.notifier)
-          .onPasswordChanged(_passwordTextEditingController.text);
-    });
-    _emailTextEditingController.addListener(() {
-      ref
-          .read(signUpViewModelProvider.notifier)
-          .onEmailChanged(_emailTextEditingController.text);
-    });
-  }
-
   void addFetchingListener(BuildContext context) {
     ref.listen(signUpViewModelProvider.select((value) => value.loadingStatus),
         (previous, next) {
@@ -97,7 +79,6 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(signUpViewModelProvider);
-    addTextEditingListener();
     addFetchingListener(context);
     return Scaffold(
       appBar: AppBar(
@@ -157,7 +138,8 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                   if (!_formKey.currentState!.validate()) return;
                   ref
                       .read(signUpViewModelProvider.notifier)
-                      .onSignUpButtonPressed();
+                      .onSignUpButtonPressed(_emailTextEditingController.text,
+                          _passwordTextEditingController.text);
                 },
                 text: 'Continue',
                 buttonState: state.loadingStatus.buttonState,

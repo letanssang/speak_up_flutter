@@ -13,21 +13,22 @@ class CustomTextField extends StatelessWidget {
   final String? aboveText;
   final String? initialValue;
   final void Function()? onSuffixIconTap;
+  final double? width;
 
-  const CustomTextField({
-    super.key,
-    this.hintText,
-    this.suffixIcon,
-    this.keyboardType,
-    this.textInputAction = TextInputAction.next,
-    this.controller,
-    this.obscureText = false,
-    this.validator,
-    this.errorMaxLines = 1,
-    this.aboveText,
-    this.initialValue,
-    this.onSuffixIconTap,
-  });
+  const CustomTextField(
+      {super.key,
+      this.hintText,
+      this.suffixIcon,
+      this.keyboardType,
+      this.textInputAction = TextInputAction.next,
+      this.controller,
+      this.obscureText = false,
+      this.validator,
+      this.errorMaxLines = 1,
+      this.aboveText,
+      this.initialValue,
+      this.onSuffixIconTap,
+      this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +36,14 @@ class CustomTextField extends StatelessWidget {
       margin: EdgeInsets.symmetric(
           horizontal: ScreenUtil().setWidth(30),
           vertical: ScreenUtil().setHeight(10)),
+      width: width ?? ScreenUtil().screenWidth * 0.8,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (aboveText != null)
             Padding(
               padding:
-              EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(8)),
+                  EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(8)),
               child: Text(
                 aboveText!,
                 style: const TextStyle(
@@ -72,9 +74,7 @@ class CustomTextField extends StatelessWidget {
               hintStyle: TextStyle(
                 fontSize: ScreenUtil().setSp(16),
               ),
-              suffixIcon: InkWell(
-                onTap: onSuffixIconTap,
-                  child: suffixIcon),
+              suffixIcon: InkWell(onTap: onSuffixIconTap, child: suffixIcon),
               suffixIconColor: Theme.of(context).iconTheme.color,
             ),
           ),

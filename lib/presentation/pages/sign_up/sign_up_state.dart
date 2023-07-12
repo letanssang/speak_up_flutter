@@ -8,9 +8,6 @@ class SignUpState with _$SignUpState {
   const factory SignUpState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default(true) bool isPasswordVisible,
-    @Default('') String userName,
-    @Default('') String email,
-    @Default('') String password,
     @Default('') String errorMessage,
   }) = _SignUpState;
 }

@@ -13,24 +13,6 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     this._createUserWithEmailAndPassword,
   ) : super(const SignUpState());
 
-  void onPasswordChanged(String password) {
-    state = state.copyWith(
-      password: password,
-    );
-  }
-
-  void onUserNameChanged(String userName) {
-    state = state.copyWith(
-      userName: userName,
-    );
-  }
-
-  void onEmailChanged(String email) {
-    state = state.copyWith(
-      email: email,
-    );
-  }
-
   void onPasswordVisibilityPressed() {
     state = state.copyWith(
       isPasswordVisible: !state.isPasswordVisible,
@@ -44,14 +26,14 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     );
   }
 
-  Future<void> onSignUpButtonPressed() async {
+  Future<void> onSignUpButtonPressed(String email, String password) async {
     state = state.copyWith(
       loadingStatus: LoadingStatus.inProgress,
     );
     try {
       CreateUserWithEmailParams params = CreateUserWithEmailParams(
-        email: state.email,
-        password: state.password,
+        email: email,
+        password: password,
       );
       await _createUserWithEmailAndPassword.run(params);
       state = state.copyWith(

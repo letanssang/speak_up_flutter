@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
+
 class ChangePasswordView extends StatelessWidget {
   const ChangePasswordView({super.key});
 
@@ -11,25 +12,7 @@ class ChangePasswordView extends StatelessWidget {
         leading: const BackButton(),
         title: const Text('Change Password'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomTextField(
-              aboveText: 'Current Password',
-            ),
-            CustomTextField(
-                aboveText: 'New Password',
-            ),
-            CustomTextField(
-                aboveText: 'Confirm Password',
-            ),
-            CustomButton(
-              marginVertical: 32,
-              text: 'Save', )
-          ],
-        ),
-      ),
+      body: Placeholder(),
     );
   }
 }

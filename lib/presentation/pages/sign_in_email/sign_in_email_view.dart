@@ -37,19 +37,6 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
     super.dispose();
   }
 
-  void addTextEditingListener() {
-    _emailTextEditingController.addListener(() {
-      ref
-          .read(signInEmailViewModelProvider.notifier)
-          .onEmailChanged(_emailTextEditingController.text);
-    });
-    _passwordTextEditingController.addListener(() {
-      ref
-          .read(signInEmailViewModelProvider.notifier)
-          .onPasswordChanged(_passwordTextEditingController.text);
-    });
-  }
-
   void addFetchDataListener() {
     ref.listen(
         signInEmailViewModelProvider.select((value) => value.loadingStatus),
@@ -79,7 +66,6 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(signInEmailViewModelProvider);
-    addTextEditingListener();
     addFetchDataListener();
     return Scaffold(
         appBar: AppBar(
@@ -120,6 +106,11 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                   errorMaxLines: 2,
                   validator: validatePassword,
                   obscureText: !state.isPasswordVisible,
+                  onSuffixIconTap: () {
+                    ref
+                        .read(signInEmailViewModelProvider.notifier)
+                        .onPasswordVisibilityPressed();
+                  },
                 ),
                 Center(
                   child: CustomButton(
@@ -130,7 +121,9 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                         if (!_formKey.currentState!.validate()) return;
                         ref
                             .read(signInEmailViewModelProvider.notifier)
-                            .onSignInButtonPressed();
+                            .onSignInButtonPressed(
+                                _emailTextEditingController.text,
+                                _passwordTextEditingController.text);
                       }),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
+
 class EditProfileView extends StatelessWidget {
   const EditProfileView({super.key});
 
@@ -11,37 +12,7 @@ class EditProfileView extends StatelessWidget {
         leading: const BackButton(),
         title: const Text('Personal Information'),
       ),
-  body: SingleChildScrollView(
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            radius: 32,
-            child: ClipOval(
-              child: Image.asset('assets/images/avatar.png'),
-            ),
-          ),
-          CustomTextField(
-            aboveText: 'Full Name',
-            initialValue: 'Sang',
-          ),
-          CustomTextField(
-            aboveText: 'Email',
-            initialValue: 'user@email.com'
-          ),
-          CustomTextField(
-            aboveText: 'Phone Number',
-            initialValue: '0123456789'
-          ),
-          CustomButton(
-            marginVertical: 32,
-            text: 'Save', )
-        ],
-      ),
-    ),
-  ),
+      body: Placeholder(),
     );
   }
 }

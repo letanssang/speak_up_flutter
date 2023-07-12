@@ -41,7 +41,7 @@ class CategoriesView extends ConsumerWidget {
 
   Card buildCategoryCard(Widget image, String title, bool darkTheme) {
     return Card(
-      color: darkTheme ? Colors.grey[900] : Colors.white,
+      color: darkTheme ? Colors.grey[850] : Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

@@ -1,12 +1,11 @@
-
 import 'package:flutter/material.dart';
 
-ThemeData getAppLightTheme(){
+ThemeData getAppLightTheme() {
   return ThemeData(
     fontFamily: 'SF Pro Display',
     textTheme: ThemeData.light().textTheme.apply(
-      fontFamily: 'SF Pro Display',
-    ),
+          fontFamily: 'SF Pro Display',
+        ),
     dialogTheme: const DialogTheme(
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
@@ -20,21 +19,20 @@ ThemeData getAppLightTheme(){
       ),
       iconTheme: IconThemeData(color: Colors.black),
       elevation: 0,
-      backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
     ),
     primaryColor: const Color(0xFF50248F),
-    colorScheme:
-    ColorScheme.fromSeed(seedColor: const Color(0xFF50248F)),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF50248F)),
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.black),
   );
 }
+
 ThemeData getAppDarkTheme() {
   return ThemeData.dark().copyWith(
     textTheme: ThemeData.dark().textTheme.apply(
-      fontFamily: 'SF Pro Display',
-    ),
+          fontFamily: 'SF Pro Display',
+        ),
     dialogTheme: const DialogTheme(
       surfaceTintColor: Colors.white,
     ),
@@ -52,8 +50,7 @@ ThemeData getAppDarkTheme() {
       surfaceTintColor: Colors.white,
     ),
     primaryColor: const Color(0xFF50248F),
-    colorScheme:
-    ColorScheme.fromSeed(seedColor: const Color(0xFF50248F)),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF50248F)),
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.white),
   );

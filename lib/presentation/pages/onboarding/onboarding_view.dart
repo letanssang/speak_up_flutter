@@ -33,72 +33,68 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
       resizeToAvoidBottomInset: false,
       body: Center(
           child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: ScreenUtil().statusBarHeight * 1.5,
-                      right: ScreenUtil().setWidth(16),
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          ref
-                              .read(appNavigatorProvider)
-                              .navigateTo(AppRoutes.mainMenu);
-                        },
-                        child: Text(
-                          'Skip',
-                          style: TextStyle(
-                            fontSize: ScreenUtil().setSp(18),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: ScreenUtil().screenHeight * 0.1,
-              ),
-              Expanded(
-
-                child: PageView.builder(
-                    itemCount: 3,
-                    controller: _pageController,
-                    itemBuilder: (context, index) {
-                      return buildPageViewItem(
-                          index, splashTitles[index], splashSubtitles[index]);
-                    }),
-              ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: DotsIndicator(
-                  dotsCount: 3,
-                  position: _currentIndex,
-                  decorator: DotsDecorator(
-                    color: Colors.grey,
-                    activeColor: Theme.of(context).primaryColor,
-                    activeShape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(ScreenUtil().setHeight(5)),
-                    ),
-                  ),
+                padding: EdgeInsets.only(
+                  top: ScreenUtil().statusBarHeight * 1.5,
+                  right: ScreenUtil().setWidth(16),
                 ),
-              ),
-              CustomButton(
-                height: 60,
-                  text: 'Get Started',
-                  onTap: () {
-                    ref.read(appNavigatorProvider).navigateTo(
-                      AppRoutes.signIn,
-                    );
-                  }),
-              SizedBox(
-                height: ScreenUtil().screenHeight * 0.1,
+                child: TextButton(
+                    onPressed: () {
+                      ref
+                          .read(appNavigatorProvider)
+                          .navigateTo(AppRoutes.mainMenu);
+                    },
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(18),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )),
               ),
             ],
-          )),
+          ),
+          Expanded(
+            child: PageView.builder(
+                itemCount: 3,
+                controller: _pageController,
+                itemBuilder: (context, index) {
+                  return buildPageViewItem(
+                      index, splashTitles[index], splashSubtitles[index]);
+                }),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: DotsIndicator(
+              dotsCount: 3,
+              position: _currentIndex,
+              decorator: DotsDecorator(
+                color: Colors.grey,
+                activeColor: Theme.of(context).primaryColor,
+                activeShape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(ScreenUtil().setHeight(5)),
+                ),
+              ),
+            ),
+          ),
+          CustomButton(
+              height: 60,
+              text: 'Get Started',
+              onTap: () {
+                ref.read(appNavigatorProvider).navigateTo(
+                      AppRoutes.signIn,
+                    );
+              }),
+          SizedBox(
+            height: ScreenUtil().screenHeight * 0.1,
+          ),
+        ],
+      )),
     );
   }
 
