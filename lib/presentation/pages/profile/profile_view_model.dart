@@ -29,6 +29,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
   }
 
   Future<void> signOut() async {
+    state = state.copyWith(isSigningOut: true);
     await _signOutUseCase.run();
   }
 }

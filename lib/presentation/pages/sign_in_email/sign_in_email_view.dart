@@ -5,10 +5,11 @@ import 'package:speak_up/domain/use_cases/authentication/sign_in_with_email_and_
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_state.dart';
-import 'package:speak_up/presentation/pages/sign_in_email/sign_in_view_model.dart';
+import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/validator.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
+import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
 
 final signInEmailViewModelProvider =
@@ -42,10 +43,12 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
         signInEmailViewModelProvider.select((value) => value.loadingStatus),
         (previous, next) {
       if (next == LoadingStatus.success) {
-        ref.read(appNavigatorProvider).navigateTo(
-              AppRoutes.mainMenu,
-              shouldClearStack: true,
-            );
+        Future.delayed(const Duration(seconds: 1), () {
+          ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.mainMenu,
+                shouldClearStack: true,
+              );
+        });
       }
     });
     ref.listen(
@@ -71,64 +74,70 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
         appBar: AppBar(
           leading: const BackButton(),
         ),
-        body: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Center(
-                    child: Text(
-                      'Sign in to your account',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+        body: Stack(
+          children: [
+            Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Center(
+                        child: Text(
+                          'Sign in to your account',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                CustomTextField(
-                  aboveText: 'Email address',
-                  hintText: 'Enter your email address',
-                  suffixIcon: const Icon(Icons.email),
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _emailTextEditingController,
-                  validator: validateEmail,
-                ),
-                CustomTextField(
-                  aboveText: 'Password',
-                  hintText: 'Enter your password',
-                  suffixIcon: const Icon(Icons.remove_red_eye),
-                  keyboardType: TextInputType.visiblePassword,
-                  controller: _passwordTextEditingController,
-                  errorMaxLines: 2,
-                  validator: validatePassword,
-                  obscureText: !state.isPasswordVisible,
-                  onSuffixIconTap: () {
-                    ref
-                        .read(signInEmailViewModelProvider.notifier)
-                        .onPasswordVisibilityPressed();
-                  },
-                ),
-                Center(
-                  child: CustomButton(
-                      marginVertical: 30,
-                      text: 'Sign in',
-                      buttonState: state.loadingStatus.buttonState,
-                      onTap: () {
-                        if (!_formKey.currentState!.validate()) return;
+                    CustomTextField(
+                      aboveText: 'Email address',
+                      hintText: 'Enter your email address',
+                      suffixIcon: const Icon(Icons.email),
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailTextEditingController,
+                      validator: validateEmail,
+                    ),
+                    CustomTextField(
+                      aboveText: 'Password',
+                      hintText: 'Enter your password',
+                      suffixIcon: const Icon(Icons.remove_red_eye),
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: _passwordTextEditingController,
+                      errorMaxLines: 2,
+                      validator: validatePassword,
+                      obscureText: !state.isPasswordVisible,
+                      onSuffixIconTap: () {
                         ref
                             .read(signInEmailViewModelProvider.notifier)
-                            .onSignInButtonPressed(
-                                _emailTextEditingController.text,
-                                _passwordTextEditingController.text);
-                      }),
+                            .onPasswordVisibilityPressed();
+                      },
+                    ),
+                    Center(
+                      child: CustomButton(
+                          marginVertical: 30,
+                          text: 'Sign in',
+                          buttonState: state.loadingStatus.buttonState,
+                          onTap: () {
+                            if (!_formKey.currentState!.validate()) return;
+                            ref
+                                .read(signInEmailViewModelProvider.notifier)
+                                .onSignInButtonPressed(
+                                    _emailTextEditingController.text,
+                                    _passwordTextEditingController.text);
+                          }),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            if (state.loadingStatus == LoadingStatus.success)
+              const AppLoadingIndicator(),
+          ],
         ));
   }
 }

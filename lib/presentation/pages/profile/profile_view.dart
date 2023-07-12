@@ -13,9 +13,10 @@ import 'package:speak_up/presentation/pages/profile/profile_state.dart';
 import 'package:speak_up/presentation/pages/profile/profile_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
+import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final profileViewModelProvider =
-    StateNotifierProvider<ProfileViewModel, ProfileState>((ref) =>
+    StateNotifierProvider.autoDispose<ProfileViewModel, ProfileState>((ref) =>
         ProfileViewModel(
             injector.get<GetAppThemeUseCase>(),
             injector.get<SwitchAppThemeUseCase>(),
@@ -61,12 +62,14 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                   color: Colors.red,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
-                ref.read(profileViewModelProvider.notifier).signOut();
-                ref
-                    .read(appNavigatorProvider)
-                    .navigateTo(AppRoutes.onboarding, shouldClearStack: true);
+                await ref.read(profileViewModelProvider.notifier).signOut();
+                Future.delayed(Duration(seconds: 1), () {
+                  ref
+                      .read(appNavigatorProvider)
+                      .navigateTo(AppRoutes.onboarding, shouldClearStack: true);
+                });
               },
             ),
             TextButton(
@@ -96,91 +99,98 @@ class ProfileViewState extends ConsumerState<ProfileView> {
           ),
           title: const Text('Account Settings'),
         ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: ScreenUtil().screenHeight * 0.9,
-            width: ScreenUtil().screenWidth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: CircleAvatar(
-                          radius: 32,
-                          child: ClipOval(
-                            child: AppImages.avatar(),
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: SizedBox(
+                height: ScreenUtil().screenHeight * 0.9,
+                width: ScreenUtil().screenWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: CircleAvatar(
+                              radius: 32,
+                              child: ClipOval(
+                                child: AppImages.avatar(),
+                              ),
+                            ),
                           ),
-                        ),
+                          const Text(
+                            'Sang',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      const Text(
-                        'Sang',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    Flexible(
+                      flex: 3,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          buildListTile(
+                              AppIcons.avatar(size: 48), 'Edit profile',
+                              onTap: () {
+                            ref
+                                .read(appNavigatorProvider)
+                                .navigateTo(AppRoutes.editProfile);
+                          }),
+                          buildListTile(AppIcons.changePassword(size: 48),
+                              'Change password', onTap: () {
+                            ref
+                                .read(appNavigatorProvider)
+                                .navigateTo(AppRoutes.changePassword);
+                          }),
+                          buildListTile(
+                              AppIcons.notification(size: 48), 'Notification',
+                              trailing: Switch(
+                                value: state.enableNotification,
+                                onChanged: (value) {
+                                  ref
+                                      .read(profileViewModelProvider.notifier)
+                                      .switchNotification(value);
+                                },
+                              )),
+                          buildListTile(
+                              AppIcons.darkMode(size: 48), 'Dark mode',
+                              trailing: Switch(
+                                value: state.isDarkMode,
+                                onChanged: (value) {
+                                  ref
+                                      .read(profileViewModelProvider.notifier)
+                                      .changeThemeData(value);
+                                  ref.read(themeProvider.notifier).state =
+                                      value;
+                                },
+                              )),
+                          buildListTile(AppIcons.about(size: 48), 'About',
+                              onTap: () {
+                            ref
+                                .read(appNavigatorProvider)
+                                .navigateTo(AppRoutes.about);
+                          }),
+                          buildListTile(AppIcons.logout(size: 48), 'Logout',
+                              onTap: () async {
+                            await _dialogBuilder(context);
+                          }),
+                        ],
                       ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-                Flexible(
-                  flex: 3,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      buildListTile(AppIcons.avatar(size: 48), 'Edit profile',
-                          onTap: () {
-                        ref
-                            .read(appNavigatorProvider)
-                            .navigateTo(AppRoutes.editProfile);
-                      }),
-                      buildListTile(
-                          AppIcons.changePassword(size: 48), 'Change password',
-                          onTap: () {
-                        ref
-                            .read(appNavigatorProvider)
-                            .navigateTo(AppRoutes.changePassword);
-                      }),
-                      buildListTile(
-                          AppIcons.notification(size: 48), 'Notification',
-                          trailing: Switch(
-                            value: state.enableNotification,
-                            onChanged: (value) {
-                              ref
-                                  .read(profileViewModelProvider.notifier)
-                                  .switchNotification(value);
-                            },
-                          )),
-                      buildListTile(AppIcons.darkMode(size: 48), 'Dark mode',
-                          trailing: Switch(
-                            value: state.isDarkMode,
-                            onChanged: (value) {
-                              ref
-                                  .read(profileViewModelProvider.notifier)
-                                  .changeThemeData(value);
-                              ref.read(themeProvider.notifier).state = value;
-                            },
-                          )),
-                      buildListTile(AppIcons.about(size: 48), 'About',
-                          onTap: () {
-                        ref
-                            .read(appNavigatorProvider)
-                            .navigateTo(AppRoutes.about);
-                      }),
-                      buildListTile(AppIcons.logout(size: 48), 'Logout',
-                          onTap: () async {
-                        await _dialogBuilder(context);
-                      }),
-                    ],
-                  ),
-                )
-              ],
+              ),
             ),
-          ),
+            if (state.isSigningOut) const AppLoadingIndicator(),
+          ],
         ));
   }
 
