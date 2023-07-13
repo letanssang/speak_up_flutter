@@ -9,9 +9,9 @@ class AppRoutes {
   static const String signUpEmail = '/sign_up_email';
   // learn
   static const String categories = '/categories';
+  static const String category = '/category';
   //profile
   static const String editProfile = '/edit_profile';
   static const String changePassword = '/change_password';
   static const String about = '/about';
-
 }

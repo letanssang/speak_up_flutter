@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_navigator_provider/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/utilities/constant/categories.dart';
 
 class CategoriesView extends ConsumerWidget {
@@ -31,29 +33,36 @@ class CategoriesView extends ConsumerWidget {
           ),
           itemCount: images.length,
           itemBuilder: (BuildContext context, int index) {
-            return buildCategoryCard(
-                images[index], categories[index].name, isDarkTheme);
+            return buildCategoryCard(index, isDarkTheme, ref);
           },
         ),
       ),
     );
   }
 
-  Card buildCategoryCard(Widget image, String title, bool darkTheme) {
+  Widget buildCategoryCard(int index, bool darkTheme, WidgetRef ref) {
     return Card(
+      elevation: 5,
       color: darkTheme ? Colors.grey[850] : Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          image,
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+      child: InkWell(
+        onTap: () {
+          ref
+              .read(appNavigatorProvider)
+              .navigateTo(AppRoutes.category, arguments: index);
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            images[index],
+            Text(
+              categories[index].name,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
