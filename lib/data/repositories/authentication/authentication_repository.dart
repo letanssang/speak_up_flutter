@@ -35,4 +35,8 @@ class AuthenticationRepository {
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
+
+  bool isSignedIn() {
+    return _firebaseAuth.currentUser != null;
+  }
 }

@@ -25,10 +25,12 @@ dependencies:
   dots_indicator: ^2.1.1
   shared_preferences: ^2.2.0
   get_it: ^7.6.0
+  json_annotation: ^4.8.1
 
   #firebase
   firebase_core: ^2.14.0
   firebase_auth: ^4.6.3
+  cloud_firestore: ^4.8.2
 
   loading_indicator: ^3.1.1
   cupertino_icons: ^1.0.2
@@ -39,6 +41,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   build_runner: ^2.4.5
+  json_serializable: ^6.7.1
 
 
 # For information on the generic Dart part of this file, see the

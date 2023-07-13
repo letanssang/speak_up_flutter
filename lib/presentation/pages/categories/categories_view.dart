@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:speak_up/data/providers/app_navigator_provider/app_navigator_provider.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/utilities/constant/categories.dart';
@@ -48,7 +48,7 @@ class CategoriesView extends ConsumerWidget {
         onTap: () {
           ref
               .read(appNavigatorProvider)
-              .navigateTo(AppRoutes.category, arguments: index);
+              .navigateTo(AppRoutes.category, arguments: categories[index]);
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

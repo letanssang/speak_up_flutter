@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
-import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/utilities/constant/categories.dart';
 
 class HomeView extends ConsumerWidget {
@@ -113,7 +112,7 @@ class HomeView extends ConsumerWidget {
         Text(
           'Hi Sang',
           style: TextStyle(
-            fontSize: ScreenUtil().setSp(18),
+            fontSize: ScreenUtil().setSp(20),
             fontWeight: FontWeight.bold,
           ),
         ),

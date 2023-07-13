@@ -10,11 +10,17 @@ import 'package:speak_up/presentation/pages/onboarding/onboarding_view.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_view.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_view.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_view.dart';
+import 'package:speak_up/presentation/pages/splash/splash_view.dart';
 
 class AppRouter {
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     debugPrint('Navigation: ${settings.name}');
     switch (settings.name) {
+      case AppRoutes.splash:
+        return MaterialPageRoute(
+          builder: (context) => const SplashView(),
+          settings: settings,
+        );
       case AppRoutes.onboarding:
         return MaterialPageRoute(
           builder: (context) => const OnboardingView(),
