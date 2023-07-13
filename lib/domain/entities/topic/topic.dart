@@ -9,7 +9,7 @@ class Topic {
   final String name;
   @JsonKey(name: 'Category ID')
   final int categoryID;
-  @JsonKey(name: 'Category')
+  @JsonKey(name: 'Category Name')
   final String category;
   Topic(
     this.id,

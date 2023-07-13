@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "313680244954",
+    "firebase_url": "https://speak-up-flutter-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "speak-up-flutter",
+    "storage_bucket": "speak-up-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313680244954:android:42a72fdc0b592a2c7035e3",
+        "android_client_info": {
+          "package_name": "com.example.speak_up"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "313680244954-8d56miqncpq6du3h17ri09nvv2k97fkh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.speak_up",
+            "certificate_hash": "15efaba494765c0247df27b173c589be882d3e1f"
+          }
+        },
+        {
+          "client_id": "313680244954-ulradctb5e72fgmu181399fn7gkpm3qp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArAMp8-VzUuVWnuk1i6t-Byjjns7lMn9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "313680244954-s6a45t0pkt2nkspnusqhl1auk17kh3aa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "313680244954-a98380hqbfnds42vtajjahal00bt56pr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tansangle.speakUpFlutter"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313680244954:android:9bd751dd57415e1b7035e3",
+        "android_client_info": {
+          "package_name": "com.tansangle.speak_up_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "313680244954-ulradctb5e72fgmu181399fn7gkpm3qp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArAMp8-VzUuVWnuk1i6t-Byjjns7lMn9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "313680244954-s6a45t0pkt2nkspnusqhl1auk17kh3aa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "313680244954-a98380hqbfnds42vtajjahal00bt56pr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tansangle.speakUpFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

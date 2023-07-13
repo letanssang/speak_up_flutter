@@ -1,4 +1,4 @@
-package com.tansangle.speak_up
+package com.tansangle.speak_up_flutter
 
 import io.flutter.embedding.android.FlutterActivity
 

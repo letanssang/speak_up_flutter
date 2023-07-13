@@ -1,16 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 
-class FireStoreRepository {
+class FirestoreRepository {
   final FirebaseFirestore _firestore;
-  FireStoreRepository(this._firestore);
+  FirestoreRepository(this._firestore);
   Future<List<Topic>> getTopicsFromCategory(int categoryId) async {
     final topicsSnapshot = await _firestore
         .collection('topics')
-        .where(
-          'categoryID',
-          isEqualTo: categoryId,
-        )
         .get();
 
     List<Topic> topics = [];

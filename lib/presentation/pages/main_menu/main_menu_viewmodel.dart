@@ -12,8 +12,4 @@ class MainMenuViewModel extends StateNotifier<MainMenuState> {
   void changeTab(int index) {
     state = state.copyWith(currentTabIndex: index);
   }
-
-  Future<List<Topic>> getTopicListFromCategory(int categoryID) async {
-    return await _getTopicListFromCategoryUseCase.run(categoryID);
-  }
 }

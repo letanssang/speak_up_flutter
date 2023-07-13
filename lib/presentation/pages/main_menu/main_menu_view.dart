@@ -26,7 +26,6 @@ class MainMenuView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(mainMenuViewModelProvider.notifier).getTopicListFromCategory(1);
     final state = ref.watch(mainMenuViewModelProvider);
     return Scaffold(
         body: _pageOptions[state.currentTabIndex],

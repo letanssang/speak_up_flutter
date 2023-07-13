@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
+import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
 import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
@@ -13,7 +14,7 @@ import 'package:speak_up/domain/use_cases/authentication/sign_in_with_email_and_
 import 'package:speak_up/domain/use_cases/authentication/sign_in_with_goole_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
-import 'package:speak_up/gen/firebase_options.dart';
+import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class AppModules {
@@ -47,6 +48,9 @@ class AppModules {
         AuthenticationRepository(
             injector.get<FirebaseAuth>(), injector.get<GoogleSignIn>()));
 
+    // Firestore repository
+    injector.registerLazySingleton<FirestoreRepository>(() =>
+        FirestoreRepository(injector.get<FirebaseFirestore>()));
     // Get app theme use case
     injector
         .registerLazySingleton<GetAppThemeUseCase>(() => GetAppThemeUseCase());

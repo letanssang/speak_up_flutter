@@ -10,12 +10,12 @@ Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
       json['ID'] as int,
       json['Topic Name'] as String,
       json['Category ID'] as int,
-      json['Category'] as String,
+      json['Category Name'] as String,
     );
 
 Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
       'ID': instance.id,
       'Topic Name': instance.name,
       'Category ID': instance.categoryID,
-      'Category': instance.category,
+      'Category Name': instance.category,
     };

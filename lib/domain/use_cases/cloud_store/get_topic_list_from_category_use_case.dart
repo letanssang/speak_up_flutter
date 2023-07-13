@@ -6,6 +6,6 @@ import 'package:speak_up/injection/injector.dart';
 class GetTopicListFromCategoryUseCase extends FutureUseCase<int, List<Topic>> {
   @override
   Future<List<Topic>> run(int input) async {
-    return injector.get<FireStoreRepository>().getTopicsFromCategory(input);
+    return injector.get<FirestoreRepository>().getTopicsFromCategory(input);
   }
 }

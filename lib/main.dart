@@ -5,11 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/app_modules.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/resources/app_theme.dart';
 
-import 'gen/firebase_options.dart';
 import 'injection/injector.dart';
 import 'presentation/navigation/app_router.dart';
 
