@@ -41,7 +41,7 @@ class MyApp extends ConsumerWidget {
         designSize: const Size(375, 812),
         builder: (context, child) {
           return MaterialApp(
-            title: 'Flutter Demo',
+            title: 'Speak Up',
             themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
             theme: getAppLightTheme(),
             darkTheme: getAppDarkTheme(),
