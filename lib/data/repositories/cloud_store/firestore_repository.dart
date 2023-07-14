@@ -7,6 +7,7 @@ class FirestoreRepository {
   Future<List<Topic>> getTopicsFromCategory(int categoryId) async {
     final topicsSnapshot = await _firestore
         .collection('topics')
+        .where('Category ID', isEqualTo: categoryId)
         .get();
 
     List<Topic> topics = [];

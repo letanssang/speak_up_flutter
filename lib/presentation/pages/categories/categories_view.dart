@@ -48,13 +48,14 @@ class CategoriesView extends ConsumerWidget {
         onTap: () {
           ref
               .read(appNavigatorProvider)
-              .navigateTo(AppRoutes.category, arguments: categories[index]);
+              .navigateTo(AppRoutes.category, arguments: index);
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             images[index],
             Text(
+              textAlign: TextAlign.center,
               categories[index].name,
               style: const TextStyle(
                 fontSize: 16,

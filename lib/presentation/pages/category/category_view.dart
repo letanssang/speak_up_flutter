@@ -1,28 +1,119 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/entities/category/category.dart';
+import 'package:speak_up/domain/entities/topic/topic.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
+import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/pages/category/category_state.dart';
+import 'package:speak_up/presentation/pages/category/category_view_model.dart';
+import 'package:speak_up/presentation/utilities/constant/categories.dart';
+import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
-class CategoryView extends StatelessWidget {
+final categoryViewModelProvider =
+    StateNotifierProvider.autoDispose<CategoryViewModel, CategoryState>(
+  (ref) => CategoryViewModel(
+    injector.get<GetTopicListFromCategoryUseCase>(),
+  ),
+);
+
+class CategoryView extends ConsumerStatefulWidget {
   const CategoryView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final category = ModalRoute.of(context)!.settings.arguments as Category;
+  ConsumerState<CategoryView> createState() => _CategoryViewState();
+}
 
+class _CategoryViewState extends ConsumerState<CategoryView> {
+  Category? category;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _init();
+    });
+  }
+
+  Future<void> _init() async {
+    final categoryIndex = ModalRoute.of(context)!.settings.arguments as int;
+    category = categories[categoryIndex];
+    await ref
+        .read(categoryViewModelProvider.notifier)
+        .fetchTopicList(category!.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(categoryViewModelProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text(category.name),
+        title: category != null ? Text(category!.name) : null,
       ),
-      body: Center(
-        child: ListView.builder(
-          itemCount: category.topicIDs!.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(category.topicIDs![index].toString()),
-              subtitle: Text(category.topicIDs![index].toString()),
-            );
-          },
-        ),
+      body: state.loadingStatus == LoadingStatus.success
+          ? buildBodySuccess(state.topics)
+          : state.loadingStatus == LoadingStatus.error
+              ? buildBodyError()
+              : buildBodyInProgress(),
+    );
+  }
+
+  Widget buildBodySuccess(List<Topic> topics) {
+    return Center(
+      child: ListView.builder(
+        itemCount: topics.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Card(
+              elevation: 5,
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        'assets/images/temp_topic.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        topics[index].name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ),
+          );
+        },
       ),
+    );
+  }
+
+  Widget buildBodyInProgress() {
+    return const Center(
+      child: AppLoadingIndicator(),
+    );
+  }
+
+  Widget buildBodyError() {
+    return const Center(
+      child: Text('Something went wrong!'),
     );
   }
 }

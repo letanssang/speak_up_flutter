@@ -13,7 +13,7 @@ class HomeView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
       child: SizedBox(
-        height: ScreenUtil().screenHeight * 1.5,
+        height: ScreenUtil().screenHeight * 2,
         width: ScreenUtil().screenWidth,
         child: Column(
           children: [
@@ -24,7 +24,9 @@ class HomeView extends ConsumerWidget {
             buildCurrentCourses(),
             buildCategories(ref.watch(themeProvider), context, () {
               ref.read(appNavigatorProvider).navigateTo(AppRoutes.categories);
-            }),
+            },
+              ref
+            ),
             Expanded(
               flex: 3,
               child: Column(
@@ -39,57 +41,31 @@ class HomeView extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         )),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        children: [
-                          Container(
-                            height: ScreenUtil().screenHeight * 0.15,
-                            width: ScreenUtil().screenWidth * 0.4,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          SizedBox(
-                            height: ScreenUtil().setHeight(8),
-                          ),
-                          Container(
-                            height: ScreenUtil().screenHeight * 0.15,
-                            width: ScreenUtil().screenWidth * 0.4,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                        ],
+                  GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            height: ScreenUtil().screenHeight * 0.15,
-                            width: ScreenUtil().screenWidth * 0.4,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(16),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.all(8),
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: ScreenUtil().screenWidth * 0.4,
+                          height: ScreenUtil().screenHeight * 0.2,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/images/temp_topic.png',),
+                              fit: BoxFit.cover,
                             ),
+
                           ),
-                          SizedBox(
-                            height: ScreenUtil().setHeight(8),
-                          ),
-                          Container(
-                            height: ScreenUtil().screenHeight * 0.15,
-                            width: ScreenUtil().screenWidth * 0.4,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+                        );
+                      }
+                  )
                 ],
               ),
             ),
@@ -106,7 +82,7 @@ class HomeView extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: CircleAvatar(
             radius: ScreenUtil().setWidth(20),
-            backgroundImage: AssetImage('assets/images/avatar.png'),
+            backgroundImage: const AssetImage('assets/images/avatar.png'),
           ),
         ),
         Text(
@@ -116,7 +92,7 @@ class HomeView extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: IconButton(
@@ -160,6 +136,10 @@ class HomeView extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
                         borderRadius: BorderRadius.circular(16),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/temp_topic.png'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     );
                   }),
@@ -171,7 +151,7 @@ class HomeView extends ConsumerWidget {
   }
 
   Flexible buildCategories(
-      bool isDarkTheme, BuildContext context, Function()? onPressed) {
+      bool isDarkTheme, BuildContext context, Function()? onPressed, WidgetRef ref) {
     final icons = isDarkTheme ? categoryDarkIcons : categoryIcons;
     return Flexible(
       flex: 2,
@@ -218,10 +198,10 @@ class HomeView extends ConsumerWidget {
                       if (index % 2 == 0) {
                         // Chỉ số chẵn
                         return buildCategoryItem(
-                            icons[index], categories[index].name, isDarkTheme);
+                            icons[index], categories[index].name, isDarkTheme, index, ref);
                       } else {
                         // Chỉ số lẻ
-                        return SizedBox(); // Chỗ này để trống nếu bạn không muốn hiển thị phần tử ở chỉ số lẻ
+                        return const SizedBox();
                       }
                     }),
                   ),
@@ -231,10 +211,10 @@ class HomeView extends ConsumerWidget {
                       if (index % 2 != 0) {
                         // Chỉ số lẻ
                         return buildCategoryItem(
-                            icons[index], categories[index].name, isDarkTheme);
+                            icons[index], categories[index].name, isDarkTheme, index, ref);
                       } else {
                         // Chỉ số chẵn
-                        return SizedBox(); // Chỗ này để trống nếu bạn không muốn hiển thị phần tử ở chỉ số chẵn
+                        return const SizedBox();
                       }
                     }),
                   ),
@@ -247,7 +227,7 @@ class HomeView extends ConsumerWidget {
     );
   }
 
-  Widget buildCategoryItem(Widget icon, String title, bool isDarkTheme) {
+  Widget buildCategoryItem(Widget icon, String title, bool isDarkTheme, int index, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       padding: const EdgeInsets.all(8.0),
@@ -256,17 +236,22 @@ class HomeView extends ConsumerWidget {
         border: Border.all(color: Colors.black54),
         color: isDarkTheme ? const Color(0xFF605F5F) : Colors.white,
       ),
-      child: Row(
-        children: [
-          icon,
-          SizedBox(
-            width: ScreenUtil().setWidth(3),
-          ),
-          Text(
-            title,
-            style: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
-          ),
-        ],
+      child: InkWell(
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(AppRoutes.category, arguments: index);
+        },
+        child: Row(
+          children: [
+            icon,
+            SizedBox(
+              width: ScreenUtil().setWidth(3),
+            ),
+            Text(
+              title,
+              style: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+            ),
+          ],
+        ),
       ),
     );
   }
