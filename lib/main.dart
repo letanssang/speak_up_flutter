@@ -1,15 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/app_modules.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/resources/app_theme.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 
 import 'injection/injector.dart';
 import 'presentation/navigation/app_router.dart';
@@ -38,6 +40,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkTheme = ref.watch(themeProvider);
+    final language = ref.watch(appLanguageProvider);
     return ScreenUtilInit(
         designSize: const Size(375, 812),
         builder: (context, child) {
@@ -46,16 +49,9 @@ class MyApp extends ConsumerWidget {
             themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
             theme: getAppLightTheme(),
             darkTheme: getAppDarkTheme(),
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'), // English
-              Locale('vi'), // Vietnamese
-            ],
-            locale: const Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: language.getLocale(),
             home: Navigator(
               key: ref.read(appNavigatorProvider).navigatorKey,
               initialRoute: AppRoutes.splash,

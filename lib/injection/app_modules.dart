@@ -6,7 +6,9 @@ import 'package:speak_up/data/repositories/account_settings/account_settings_rep
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
 import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
 import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
+import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
+import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/is_signed_in_use_case.dart';
@@ -49,8 +51,8 @@ class AppModules {
             injector.get<FirebaseAuth>(), injector.get<GoogleSignIn>()));
 
     // Firestore repository
-    injector.registerLazySingleton<FirestoreRepository>(() =>
-        FirestoreRepository(injector.get<FirebaseFirestore>()));
+    injector.registerLazySingleton<FirestoreRepository>(
+        () => FirestoreRepository(injector.get<FirebaseFirestore>()));
     // Get app theme use case
     injector
         .registerLazySingleton<GetAppThemeUseCase>(() => GetAppThemeUseCase());
@@ -81,5 +83,13 @@ class AppModules {
     //Get topic list from category use case
     injector.registerLazySingleton<GetTopicListFromCategoryUseCase>(
         () => GetTopicListFromCategoryUseCase());
+
+    // Get app language use case
+    injector.registerLazySingleton<GetAppLanguageUseCase>(
+        () => GetAppLanguageUseCase());
+
+    // Save app language use case
+    injector.registerLazySingleton<SaveAppLanguageUseCase>(
+        () => SaveAppLanguageUseCase());
   }
 }

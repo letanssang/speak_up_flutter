@@ -24,9 +24,7 @@ class HomeView extends ConsumerWidget {
             buildCurrentCourses(),
             buildCategories(ref.watch(themeProvider), context, () {
               ref.read(appNavigatorProvider).navigateTo(AppRoutes.categories);
-            },
-              ref
-            ),
+            }, ref),
             Expanded(
               flex: 3,
               child: Column(
@@ -42,7 +40,8 @@ class HomeView extends ConsumerWidget {
                         )),
                   ),
                   GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         mainAxisSpacing: 8,
                         crossAxisSpacing: 8,
@@ -58,14 +57,14 @@ class HomeView extends ConsumerWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             image: const DecorationImage(
-                              image: AssetImage('assets/images/temp_topic.png',),
+                              image: AssetImage(
+                                'assets/images/temp_topic.png',
+                              ),
                               fit: BoxFit.cover,
                             ),
-
                           ),
                         );
-                      }
-                  )
+                      })
                 ],
               ),
             ),
@@ -150,8 +149,8 @@ class HomeView extends ConsumerWidget {
     );
   }
 
-  Flexible buildCategories(
-      bool isDarkTheme, BuildContext context, Function()? onPressed, WidgetRef ref) {
+  Flexible buildCategories(bool isDarkTheme, BuildContext context,
+      Function()? onPressed, WidgetRef ref) {
     final icons = isDarkTheme ? categoryDarkIcons : categoryIcons;
     return Flexible(
       flex: 2,
@@ -197,8 +196,8 @@ class HomeView extends ConsumerWidget {
                         List<Widget>.generate(categories.length - 3, (index) {
                       if (index % 2 == 0) {
                         // Chỉ số chẵn
-                        return buildCategoryItem(
-                            icons[index], categories[index].name, isDarkTheme, index, ref);
+                        return buildCategoryItem(icons[index],
+                            categories[index].name, isDarkTheme, index, ref);
                       } else {
                         // Chỉ số lẻ
                         return const SizedBox();
@@ -210,8 +209,8 @@ class HomeView extends ConsumerWidget {
                     children: List<Widget>.generate(categories.length, (index) {
                       if (index % 2 != 0) {
                         // Chỉ số lẻ
-                        return buildCategoryItem(
-                            icons[index], categories[index].name, isDarkTheme, index, ref);
+                        return buildCategoryItem(icons[index],
+                            categories[index].name, isDarkTheme, index, ref);
                       } else {
                         // Chỉ số chẵn
                         return const SizedBox();
@@ -227,7 +226,8 @@ class HomeView extends ConsumerWidget {
     );
   }
 
-  Widget buildCategoryItem(Widget icon, String title, bool isDarkTheme, int index, WidgetRef ref) {
+  Widget buildCategoryItem(
+      Widget icon, String title, bool isDarkTheme, int index, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       padding: const EdgeInsets.all(8.0),
@@ -238,7 +238,9 @@ class HomeView extends ConsumerWidget {
       ),
       child: InkWell(
         onTap: () {
-          ref.read(appNavigatorProvider).navigateTo(AppRoutes.category, arguments: index);
+          ref
+              .read(appNavigatorProvider)
+              .navigateTo(AppRoutes.category, arguments: index);
         },
         child: Row(
           children: [
@@ -248,7 +250,8 @@ class HomeView extends ConsumerWidget {
             ),
             Text(
               title,
-              style: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+              style:
+                  TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
             ),
           ],
         ),

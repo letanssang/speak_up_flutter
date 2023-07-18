@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
@@ -92,30 +93,30 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
             children: [
               Padding(
                 padding: EdgeInsets.all(ScreenUtil().setWidth(20)),
-                child: const Text(
-                  'Create your account',
-                  style: TextStyle(
+                child: Text(
+                  AppLocalizations.of(context)!.createYourAccount,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               CustomTextField(
-                hintText: 'Enter your user name',
+                hintText: AppLocalizations.of(context)!.enterYourName,
                 suffixIcon: const Icon(Icons.person),
                 keyboardType: TextInputType.name,
                 controller: _userNameTextEditingController,
                 validator: validateUserName,
               ),
               CustomTextField(
-                hintText: 'Enter your email address',
+                hintText: AppLocalizations.of(context)!.enterYourEmail,
                 suffixIcon: const Icon(Icons.email),
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailTextEditingController,
                 validator: validateEmail,
               ),
               CustomTextField(
-                hintText: 'Enter your password',
+                hintText: AppLocalizations.of(context)!.enterYourPassword,
                 suffixIcon: Icon(state.isPasswordVisible
                     ? Icons.visibility
                     : Icons.visibility_off),
@@ -141,13 +142,13 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                       .onSignUpButtonPressed(_emailTextEditingController.text,
                           _passwordTextEditingController.text);
                 },
-                text: 'Continue',
+                text: AppLocalizations.of(context)!.continueButton,
                 buttonState: state.loadingStatus.buttonState,
               )),
-              const Center(
+              Center(
                 child: Text(
-                  'Already have an account?',
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.alreadyHaveAnAccount,
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
@@ -157,7 +158,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                     onPressed: () {
                       ref.read(appNavigatorProvider).pop();
                     },
-                    child: Text('Sign in',
+                    child: Text(AppLocalizations.of(context)!.signIn,
                         style: TextStyle(
                           fontSize: ScreenUtil().setSp(16),
                           fontWeight: FontWeight.w600,

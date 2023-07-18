@@ -23,14 +23,14 @@ class SharedPreferencesManager {
         PreferenceKey.isDarkTheme.name,
       );
 
-  Future<void> saveLanguage({required Language language}) async {
+  Future<void> saveAppLanguage({required Language language}) async {
     _sharedPreferences.setString(
       PreferenceKey.language.name,
       EnumToString.convertToString(language),
     );
   }
 
-  Future<Language> getLanguage() async {
+  Language getAppLanguage() {
     final language = _sharedPreferences.getString(
       PreferenceKey.language.name,
     );

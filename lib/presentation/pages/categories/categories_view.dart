@@ -44,6 +44,7 @@ class CategoriesView extends ConsumerWidget {
     return Card(
       elevation: 5,
       color: darkTheme ? Colors.grey[850] : Colors.white,
+      surfaceTintColor: Colors.white,
       child: InkWell(
         onTap: () {
           ref

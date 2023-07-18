@@ -4,7 +4,7 @@ import 'package:speak_up/injection/injector.dart';
 
 class SwitchAppThemeUseCase extends UseCase<bool, void> {
   @override
-  Future<void> run(bool param) async {
-    await injector.get<AccountSettingsRepository>().switchAppTheme(param);
+  Future<void> run(bool input) async {
+    await injector.get<AccountSettingsRepository>().switchAppTheme(input);
   }
-  }
+}

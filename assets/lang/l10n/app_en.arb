@@ -1,6 +1,35 @@
 {
 "helloWorld": "Hello World!",
-"@helloWorld": {
-"description": "The conventional newborn programmer greeting"
-}
+"welcomeToSpeakUp": "Welcome to SpeakUp",
+"letsStartSpeakingEnglish": "Let's start speaking English",
+"exploreYourVoiceWithUs": "Explore your voice with us",
+"speakUpAndBeHeard": "Speak up and be heard",
+"conversationIsTheKey": "Conversation is the key",
+"practiceMakesPerfect": "Practice makes perfect",
+"welcomeSignIn": "Welcome!\nSign in to continue",
+"continueWithGoogle": "Continue with Google",
+"signInWithYourEmail": "Sign in with your email",
+"dontHaveAnAccount": "Don't have an account?",
+"signUp": "Sign up",
+"createYourAccount": "Create your account",
+"enterYourName": "Enter your name",
+"enterYourEmail": "Enter your email address",
+"enterYourPassword": "Enter your password",
+"continueButton": "Continue",
+"alreadyHaveAnAccount": "Already have an account?",
+"signIn": "Sign in",
+"emailAddress": "Email address",
+"password": "Password",
+"accountSettings": "Account Settings",
+"editProfile": "Edit Profile",
+"notification": "Notification",
+"darkMode": "Dark Mode",
+"language": "Language",
+"selectLanguage": "Select Language",
+"about": "About",
+"logOut": "Log Out",
+"areYouSureYouWantToLogOut": "Are you sure you want to log out?",
+"yes": "Yes",
+"no": "No",
+"getStarted": "Get Started"
 }

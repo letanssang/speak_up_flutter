@@ -1,8 +1,12 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
+import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/constant/string.dart';
@@ -20,10 +24,10 @@ class OnboardingView extends ConsumerStatefulWidget {
 class _OnboardingViewState extends ConsumerState<OnboardingView> {
   final PageController _pageController = PageController();
   double _currentIndex = 0;
-  Language _language = Language.english;
 
   @override
   Widget build(BuildContext context) {
+    final language = ref.watch(appLanguageProvider);
     _pageController.addListener(() {
       if (_pageController.hasClients) {
         setState(() {
@@ -50,25 +54,30 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: InkWell(
-                  onTap: () => setState(() {
-                    if (_language == Language.english) {
-                      _language = Language.vietnamese;
+                  onTap: () {
+                    if (language == Language.english) {
+                      ref.read(appLanguageProvider.notifier).state =
+                          Language.vietnamese;
                     } else {
-                      _language = Language.english;
+                      ref.read(appLanguageProvider.notifier).state =
+                          Language.english;
                     }
-                  }),
+                    injector
+                        .get<SaveAppLanguageUseCase>()
+                        .run(ref.read(appLanguageProvider.notifier).state);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(_language.toLanguageString(),
+                      Text(language.toLanguageShortString(),
                           style: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
+                            fontSize: ScreenUtil().setSp(18),
                             color: Colors.black,
                           )),
                       SizedBox(
                         width: ScreenUtil().setWidth(8),
                       ),
-                      _language.getFlag(),
+                      language.getFlag(),
                     ],
                   ),
                 ),
@@ -82,7 +91,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 controller: _pageController,
                 itemBuilder: (context, index) {
                   return buildPageViewItem(
-                      index, splashTitles[index], splashSubtitles[index]);
+                      index,
+                      getSplashTitle(index, context),
+                      getSplashSubtitle(index, context));
                 }),
           ),
           Padding(
@@ -102,7 +113,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           ),
           CustomButton(
               height: 60,
-              text: 'Get Started',
+              text: AppLocalizations.of(context)!.getStarted,
               onTap: () {
                 ref.read(appNavigatorProvider).navigateTo(
                       AppRoutes.signIn,
@@ -123,12 +134,15 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           index,
           width: ScreenUtil().screenWidth * 0.8,
         ),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: ScreenUtil().setSp(24),
-            fontWeight: FontWeight.w600,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(24),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
@@ -83,27 +84,27 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(20.0),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
                       child: Text(
-                        'Sign in to your account',
+                        AppLocalizations.of(context)!.signInWithYourEmail,
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: ScreenUtil().setSp(24),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     CustomTextField(
-                      aboveText: 'Email address',
-                      hintText: 'Enter your email address',
+                      aboveText: AppLocalizations.of(context)!.emailAddress,
+                      hintText: AppLocalizations.of(context)!.enterYourEmail,
                       suffixIcon: const Icon(Icons.email),
                       keyboardType: TextInputType.emailAddress,
                       controller: _emailTextEditingController,
                       validator: validateEmail,
                     ),
                     CustomTextField(
-                      aboveText: 'Password',
-                      hintText: 'Enter your password',
+                      aboveText: AppLocalizations.of(context)!.password,
+                      hintText: AppLocalizations.of(context)!.enterYourPassword,
                       suffixIcon: const Icon(Icons.remove_red_eye),
                       keyboardType: TextInputType.visiblePassword,
                       controller: _passwordTextEditingController,
@@ -118,7 +119,7 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                     ),
                     CustomButton(
                         marginVertical: 30,
-                        text: 'Sign in',
+                        text: AppLocalizations.of(context)!.signIn,
                         buttonState: state.loadingStatus.buttonState,
                         onTap: () {
                           if (!_formKey.currentState!.validate()) return;
@@ -132,7 +133,7 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                       height: ScreenUtil().setHeight(32),
                     ),
                     Text(
-                      'Don\'t have an account?',
+                      AppLocalizations.of(context)!.dontHaveAnAccount,
                       style: TextStyle(
                         fontSize: ScreenUtil().setSp(16),
                       ),
@@ -143,7 +144,7 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                                 AppRoutes.signUpEmail,
                               );
                         },
-                        child: Text('Sign up',
+                        child: Text(AppLocalizations.of(context)!.signUp,
                             style: TextStyle(
                               fontSize: ScreenUtil().setSp(16),
                               fontWeight: FontWeight.w600,

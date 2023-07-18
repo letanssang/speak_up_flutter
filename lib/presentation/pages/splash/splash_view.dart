@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/authentication_status_provider.dart';
-import 'package:speak_up/domain/use_cases/authentication/is_signed_in_use_case.dart';
-import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 
 class SplashView extends ConsumerStatefulWidget {
   const SplashView({super.key});
 
   @override
-  _SplashViewState createState() => _SplashViewState();
+  ConsumerState<SplashView> createState() => _SplashViewState();
 }
 
 class _SplashViewState extends ConsumerState<SplashView> {

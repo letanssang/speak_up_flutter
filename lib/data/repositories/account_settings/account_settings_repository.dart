@@ -15,11 +15,11 @@ class AccountSettingsRepository {
     await _sharedPreferencesManager.saveIsDarkTheme(param: value);
   }
 
-  Future<void> saveLanguage(Language language) async {
-    await _sharedPreferencesManager.saveLanguage(language: language);
+  Future<void> saveAppLanguage(Language language) async {
+    await _sharedPreferencesManager.saveAppLanguage(language: language);
   }
 
-  Future<Language> getLanguage() async {
-    return await _sharedPreferencesManager.getLanguage();
+  Language getAppLanguage() {
+    return _sharedPreferencesManager.getAppLanguage();
   }
 }

@@ -22,7 +22,9 @@ ThemeData getAppLightTheme() {
       surfaceTintColor: Colors.white,
     ),
     primaryColor: const Color(0xFF50248F),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF50248F)),
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: const Color(0xFF50248F),
+    ),
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.black),
   );

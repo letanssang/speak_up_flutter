@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 
@@ -19,6 +17,7 @@ extension LanguageExtension on Language {
         return '';
     }
   }
+
   String toLanguageShortString() {
     switch (this) {
       case Language.english:
@@ -29,6 +28,7 @@ extension LanguageExtension on Language {
         return '';
     }
   }
+
   Locale getLocale() {
     switch (this) {
       case Language.english:
@@ -39,6 +39,7 @@ extension LanguageExtension on Language {
         return const Locale('en');
     }
   }
+
   Widget getFlag() {
     switch (this) {
       case Language.english:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
@@ -20,6 +21,7 @@ final signInViewModelProvider =
 
 class SignInView extends ConsumerWidget {
   const SignInView({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(signInViewModelProvider);
@@ -62,7 +64,7 @@ class SignInView extends ConsumerWidget {
                   child: Center(
                     child: Text(
                       textAlign: TextAlign.center,
-                      'Welcome!\nSign in to continue',
+                      AppLocalizations.of(context)!.welcomeSignIn,
                       style: TextStyle(
                         fontSize: ScreenUtil().setSp(28),
                         fontWeight: FontWeight.w600,
@@ -71,12 +73,12 @@ class SignInView extends ConsumerWidget {
                   ),
                 ),
                 CustomButton(
-                  text: 'Continue with Google',
+                  text: AppLocalizations.of(context)!.continueWithGoogle,
                   height: 60,
                   textColor: Colors.black,
                   fontWeight: FontWeight.w600,
                   image: AppImages.googleLogo(),
-                  buttonColor: Color(0xFFEBECEE),
+                  buttonColor: const Color(0xFFEBECEE),
                   onTap: () {
                     ref
                         .read(signInViewModelProvider.notifier)
@@ -84,7 +86,7 @@ class SignInView extends ConsumerWidget {
                   },
                 ),
                 CustomButton(
-                    text: 'Sign in with your email',
+                    text: AppLocalizations.of(context)!.signInWithYourEmail,
                     height: 60,
                     textColor: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -101,7 +103,7 @@ class SignInView extends ConsumerWidget {
                   height: ScreenUtil().setHeight(32),
                 ),
                 Text(
-                  'Don\'t have an account?',
+                  AppLocalizations.of(context)!.dontHaveAnAccount,
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(16),
                   ),
@@ -112,7 +114,7 @@ class SignInView extends ConsumerWidget {
                             AppRoutes.signUpEmail,
                           );
                     },
-                    child: Text('Sign up',
+                    child: Text(AppLocalizations.of(context)!.signUp,
                         style: TextStyle(
                           fontSize: ScreenUtil().setSp(16),
                           fontWeight: FontWeight.w600,
@@ -124,7 +126,7 @@ class SignInView extends ConsumerWidget {
             ),
           ),
           if (state.loadingStatus == LoadingStatus.success)
-            AppLoadingIndicator(),
+            const AppLoadingIndicator(),
         ],
       ),
     );

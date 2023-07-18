@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
@@ -46,19 +47,20 @@ class _CategoryViewState extends ConsumerState<CategoryView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(categoryViewModelProvider);
+    final isDarkTheme = ref.watch(themeProvider);
     return Scaffold(
       appBar: AppBar(
         title: category != null ? Text(category!.name) : null,
       ),
       body: state.loadingStatus == LoadingStatus.success
-          ? buildBodySuccess(state.topics)
+          ? buildBodySuccess(state.topics, isDarkTheme)
           : state.loadingStatus == LoadingStatus.error
               ? buildBodyError()
               : buildBodyInProgress(),
     );
   }
 
-  Widget buildBodySuccess(List<Topic> topics) {
+  Widget buildBodySuccess(List<Topic> topics, bool isDarkTheme) {
     return Center(
       child: ListView.builder(
         itemCount: topics.length,
@@ -66,39 +68,40 @@ class _CategoryViewState extends ConsumerState<CategoryView> {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Card(
-              elevation: 5,
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        'assets/images/temp_topic.png',
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
+                elevation: 5,
+                color: isDarkTheme ? Colors.grey[850] : Colors.white,
+                surfaceTintColor: Colors.white,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        topics[index].name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          'assets/images/temp_topic.png',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ],
-                  )
-                ],
-              )
-            ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          topics[index].name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )),
           );
         },
       ),
