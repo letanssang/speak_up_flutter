@@ -1,1 +1,1 @@
-enum PreferenceKey { isDarkTheme }
+enum PreferenceKey { isDarkTheme, language }

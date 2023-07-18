@@ -1,4 +1,5 @@
 import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 
 class AccountSettingsRepository {
   AccountSettingsRepository(this._sharedPreferencesManager);
@@ -12,5 +13,13 @@ class AccountSettingsRepository {
 
   Future<void> switchAppTheme(bool value) async {
     await _sharedPreferencesManager.saveIsDarkTheme(param: value);
+  }
+
+  Future<void> saveLanguage(Language language) async {
+    await _sharedPreferencesManager.saveLanguage(language: language);
+  }
+
+  Future<Language> getLanguage() async {
+    return await _sharedPreferencesManager.getLanguage();
   }
 }

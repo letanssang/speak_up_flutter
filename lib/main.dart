@@ -9,6 +9,7 @@ import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/app_modules.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/resources/app_theme.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'injection/injector.dart';
 import 'presentation/navigation/app_router.dart';
@@ -45,6 +46,16 @@ class MyApp extends ConsumerWidget {
             themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
             theme: getAppLightTheme(),
             darkTheme: getAppDarkTheme(),
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'), // English
+              Locale('vi'), // Vietnamese
+            ],
+            locale: const Locale('en'),
             home: Navigator(
               key: ref.read(appNavigatorProvider).navigatorKey,
               initialRoute: AppRoutes.splash,

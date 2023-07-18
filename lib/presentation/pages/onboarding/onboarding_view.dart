@@ -20,7 +20,7 @@ class OnboardingView extends ConsumerStatefulWidget {
 class _OnboardingViewState extends ConsumerState<OnboardingView> {
   final PageController _pageController = PageController();
   double _currentIndex = 0;
-  Language _language = Language.eng;
+  Language _language = Language.english;
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +44,23 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 margin: EdgeInsets.symmetric(
                     vertical: ScreenUtil().statusBarHeight + 16,
                     horizontal: 16),
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: InkWell(
                   onTap: () => setState(() {
-                    if (_language == Language.eng) {
-                      _language = Language.vie;
+                    if (_language == Language.english) {
+                      _language = Language.vietnamese;
                     } else {
-                      _language = Language.eng;
+                      _language = Language.english;
                     }
                   }),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(_language == Language.eng ? 'VIE' : 'ENG',
+                      Text(_language.toLanguageString(),
                           style: TextStyle(
                             fontSize: ScreenUtil().setSp(14),
                             color: Colors.black,
@@ -68,15 +68,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                       SizedBox(
                         width: ScreenUtil().setWidth(8),
                       ),
-                      _language == Language.eng
-                          ? AppImages.vietnamFlag(
-                              width: ScreenUtil().setWidth(24),
-                              height: ScreenUtil().setHeight(24),
-                            )
-                          : AppImages.USFlag(
-                              width: ScreenUtil().setWidth(24),
-                              height: ScreenUtil().setHeight(24),
-                            ),
+                      _language.getFlag(),
                     ],
                   ),
                 ),

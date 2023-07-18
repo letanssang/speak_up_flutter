@@ -16,7 +16,7 @@ class AppImages {
     );
   }
 
-  static Widget USFlag({double? width, double? height, BoxFit? boxFit}) {
+  static Widget usFlag({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_logoImagesPath/us.png',
       width: width,
@@ -25,7 +25,7 @@ class AppImages {
     );
   }
 
-  static Widget vietnamFlag({double? width, double? height, BoxFit? boxFit}) {
+  static Widget vnFlag({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_logoImagesPath/vietnam.png',
       width: width,
