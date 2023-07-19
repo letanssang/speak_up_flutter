@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_state.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_view_model.dart';
@@ -16,6 +19,9 @@ final signUpViewModelProvider =
     StateNotifierProvider.autoDispose<SignUpViewModel, SignUpState>(
         (ref) => SignUpViewModel(
               injector.get<CreateUserWithEmailAndPasswordUseCase>(),
+              injector.get<SaveUserDataUseCase>(),
+              injector.get<UpdateDisplayNameUseCase>(),
+              injector.get<FirebaseAuth>(),
             ));
 
 class SignUpView extends ConsumerStatefulWidget {
@@ -139,8 +145,10 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                   if (!_formKey.currentState!.validate()) return;
                   ref
                       .read(signUpViewModelProvider.notifier)
-                      .onSignUpButtonPressed(_emailTextEditingController.text,
-                          _passwordTextEditingController.text);
+                      .onSignUpButtonPressed(
+                          _emailTextEditingController.text,
+                          _passwordTextEditingController.text,
+                          _userNameTextEditingController.text);
                 },
                 text: AppLocalizations.of(context)!.continueButton,
                 buttonState: state.loadingStatus.buttonState,

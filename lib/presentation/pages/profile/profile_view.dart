@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -135,6 +136,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileViewModelProvider);
+    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
         appBar: AppBar(
           leading: BackButton(
@@ -171,14 +173,16 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                             child: CircleAvatar(
                               radius: 32,
                               child: ClipOval(
-                                child: AppImages.avatar(),
+                                child: user!.photoURL != null
+                                    ? Image.network(user.photoURL!)
+                                    : AppImages.avatar(),
                               ),
                             ),
                           ),
-                          const Text(
-                            'Sang',
+                          Text(
+                            user.displayName ?? '',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: ScreenUtil().setSp(24.0),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -196,6 +200,13 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                             ref
                                 .read(appNavigatorProvider)
                                 .navigateTo(AppRoutes.editProfile);
+                          }),
+                          buildListTile(AppIcons.changePassword(size: 48),
+                              AppLocalizations.of(context)!.changePassword,
+                              onTap: () {
+                            ref
+                                .read(appNavigatorProvider)
+                                .navigateTo(AppRoutes.changePassword);
                           }),
                           buildListTile(AppIcons.notification(size: 48),
                               AppLocalizations.of(context)!.notification,

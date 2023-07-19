@@ -22,6 +22,7 @@
 "password": "Mật khẩu",
 "accountSettings": "Cài đặt tài khoản",
 "editProfile": "Chỉnh sửa hồ sơ",
+"changePassword": "Đổi mật khẩu",
 "notification": "Thông báo",
 "darkMode": "Chế độ tối",
 "language": "Ngôn ngữ",
@@ -31,5 +32,11 @@
 "areYouSureYouWantToLogOut": "Bạn có chắc chắn muốn đăng xuất?",
 "yes": "Có",
 "no": "Không",
+"personalInformation": "Thông tin cá nhân",
+"confirmChange": "Xác nhận thay đổi",
+"currentPassword": "Mật khẩu hiện tại",
+"newPassword": "Mật khẩu mới",
+"confirmNewPassword": "Xác nhận mật khẩu mới",
 "getStarted": "Bắt đầu"
+
 }

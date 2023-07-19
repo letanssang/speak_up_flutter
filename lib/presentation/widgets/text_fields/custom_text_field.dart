@@ -11,7 +11,6 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final int? errorMaxLines;
   final String? aboveText;
-  final String? initialValue;
   final void Function()? onSuffixIconTap;
   final double? width;
 
@@ -26,7 +25,6 @@ class CustomTextField extends StatelessWidget {
       this.validator,
       this.errorMaxLines = 1,
       this.aboveText,
-      this.initialValue,
       this.onSuffixIconTap,
       this.width});
 
@@ -52,7 +50,6 @@ class CustomTextField extends StatelessWidget {
               ),
             ),
           TextFormField(
-            initialValue: initialValue,
             validator: validator,
             obscureText: obscureText,
             controller: controller,

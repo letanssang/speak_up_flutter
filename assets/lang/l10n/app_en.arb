@@ -22,6 +22,7 @@
 "password": "Password",
 "accountSettings": "Account Settings",
 "editProfile": "Edit Profile",
+"changePassword": "Change Password",
 "notification": "Notification",
 "darkMode": "Dark Mode",
 "language": "Language",
@@ -31,5 +32,10 @@
 "areYouSureYouWantToLogOut": "Are you sure you want to log out?",
 "yes": "Yes",
 "no": "No",
+"personalInformation": "Personal Information",
+"confirmChange": "Confirm Change",
+"currentPassword": "Current Password",
+"newPassword": "New Password",
+"confirmNewPassword": "Confirm New Password",
 "getStarted": "Get Started"
 }

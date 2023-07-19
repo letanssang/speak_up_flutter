@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
+import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/constant/categories.dart';
 
 class HomeView extends ConsumerWidget {
@@ -75,17 +77,22 @@ class HomeView extends ConsumerWidget {
   }
 
   Row buildAppBar(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Row(
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: CircleAvatar(
-            radius: ScreenUtil().setWidth(20),
-            backgroundImage: const AssetImage('assets/images/avatar.png'),
+            radius: 20,
+            child: ClipOval(
+              child: user!.photoURL != null
+                  ? Image.network(user.photoURL!)
+                  : AppImages.avatar(),
+            ),
           ),
         ),
         Text(
-          'Hi Sang',
+          'Hi ${user.displayName}',
           style: TextStyle(
             fontSize: ScreenUtil().setSp(20),
             fontWeight: FontWeight.bold,

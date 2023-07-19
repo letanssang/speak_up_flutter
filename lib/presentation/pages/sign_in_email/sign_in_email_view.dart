@@ -105,7 +105,6 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                     CustomTextField(
                       aboveText: AppLocalizations.of(context)!.password,
                       hintText: AppLocalizations.of(context)!.enterYourPassword,
-                      suffixIcon: const Icon(Icons.remove_red_eye),
                       keyboardType: TextInputType.visiblePassword,
                       controller: _passwordTextEditingController,
                       errorMaxLines: 2,
@@ -116,6 +115,9 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                             .read(signInEmailViewModelProvider.notifier)
                             .onPasswordVisibilityPressed();
                       },
+                      suffixIcon: Icon(state.isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
                     ),
                     CustomButton(
                         marginVertical: 30,

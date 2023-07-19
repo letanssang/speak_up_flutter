@@ -15,7 +15,9 @@ import 'package:speak_up/domain/use_cases/authentication/is_signed_in_use_case.d
 import 'package:speak_up/domain/use_cases/authentication/sign_in_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_in_with_goole_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
 import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/injector.dart';
 
@@ -83,6 +85,9 @@ class AppModules {
     //Get topic list from category use case
     injector.registerLazySingleton<GetTopicListFromCategoryUseCase>(
         () => GetTopicListFromCategoryUseCase());
+    // Save user data use case
+    injector.registerLazySingleton<SaveUserDataUseCase>(
+        () => SaveUserDataUseCase());
 
     // Get app language use case
     injector.registerLazySingleton<GetAppLanguageUseCase>(
@@ -91,5 +96,9 @@ class AppModules {
     // Save app language use case
     injector.registerLazySingleton<SaveAppLanguageUseCase>(
         () => SaveAppLanguageUseCase());
+
+    //Update Display Name Use Case
+    injector.registerLazySingleton<UpdateDisplayNameUseCase>(
+        () => UpdateDisplayNameUseCase());
   }
 }

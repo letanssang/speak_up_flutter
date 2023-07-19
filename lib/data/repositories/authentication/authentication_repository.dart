@@ -23,13 +23,16 @@ class AuthenticationRepository {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
-
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
     return await _firebaseAuth.signInWithCredential(credential);
+  }
+
+  Future<void> updateDisplayName(String name) async {
+    await _firebaseAuth.currentUser!.updateDisplayName(name);
   }
 
   Future<void> signOut() async {
