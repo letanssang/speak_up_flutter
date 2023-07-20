@@ -9,8 +9,9 @@ import 'package:speak_up/domain/use_cases/authentication/update_password_use_cas
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/change_password/change_password_state.dart';
 import 'package:speak_up/presentation/pages/change_password/change_password_view_model.dart';
-import 'package:speak_up/presentation/utilities/common/validator.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
+import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
 
@@ -70,12 +71,12 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
 
   void addErrorMessageListener(BuildContext context) {
     ref.listen(
-        changePasswordViewModelProvider.select((value) => value.errorMessage),
+        changePasswordViewModelProvider.select((value) => value.errorCode),
         (previous, next) {
       if (next.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next),
+            content: Text(getAppErrorMessage(next, context)),
             backgroundColor: Colors.red,
           ),
         );
@@ -104,14 +105,15 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
                 keyboardType: TextInputType.visiblePassword,
                 controller: _currentPasswordTextEditingController,
                 errorMaxLines: 2,
-                validator: validatePassword,
-                obscureText: !state.isCurrentPasswordVisible,
+                validatorType: ValidatorType.password,
+                context: context,
+                obscureText: !state.isPasswordVisible,
                 onSuffixIconTap: () {
                   ref
                       .read(changePasswordViewModelProvider.notifier)
-                      .onCurrentPasswordVisibilityPressed();
+                      .onPasswordVisibilityPressed();
                 },
-                suffixIcon: Icon(state.isCurrentPasswordVisible
+                suffixIcon: Icon(state.isPasswordVisible
                     ? Icons.visibility
                     : Icons.visibility_off),
               ),
@@ -120,20 +122,22 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
                 keyboardType: TextInputType.visiblePassword,
                 controller: _newPasswordTextEditingController,
                 errorMaxLines: 2,
-                validator: validatePassword,
-                obscureText: !state.isNewPasswordVisible,
+                validatorType: ValidatorType.password,
+                context: context,
+                obscureText: !state.isPasswordVisible,
                 onSuffixIconTap: () {
                   ref
                       .read(changePasswordViewModelProvider.notifier)
-                      .onNewPasswordVisibilityPressed();
+                      .onPasswordVisibilityPressed();
                 },
-                suffixIcon: Icon(state.isNewPasswordVisible
+                suffixIcon: Icon(state.isPasswordVisible
                     ? Icons.visibility
                     : Icons.visibility_off),
               ),
               CustomButton(
                   marginVertical: ScreenUtil().setHeight(50),
                   text: AppLocalizations.of(context)!.confirmChange,
+                  buttonState: state.loadingStatus.buttonState,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       ref

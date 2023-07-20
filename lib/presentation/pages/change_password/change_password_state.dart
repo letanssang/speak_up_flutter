@@ -6,9 +6,8 @@ part 'change_password_state.freezed.dart';
 @freezed
 class ChangePasswordState with _$ChangePasswordState {
   const factory ChangePasswordState({
-    @Default(false) bool isCurrentPasswordVisible,
-    @Default(false) bool isNewPasswordVisible,
-    @Default('') String errorMessage,
+    @Default(false) bool isPasswordVisible,
+    @Default('') String errorCode,
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
   }) = _ChangePasswordState;
 }

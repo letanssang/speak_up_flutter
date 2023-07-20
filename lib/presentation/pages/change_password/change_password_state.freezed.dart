@@ -16,9 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ChangePasswordState {
-  bool get isCurrentPasswordVisible => throw _privateConstructorUsedError;
-  bool get isNewPasswordVisible => throw _privateConstructorUsedError;
-  String get errorMessage => throw _privateConstructorUsedError;
+  bool get isPasswordVisible => throw _privateConstructorUsedError;
+  String get errorCode => throw _privateConstructorUsedError;
   LoadingStatus get loadingStatus => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -33,10 +32,7 @@ abstract class $ChangePasswordStateCopyWith<$Res> {
       _$ChangePasswordStateCopyWithImpl<$Res, ChangePasswordState>;
   @useResult
   $Res call(
-      {bool isCurrentPasswordVisible,
-      bool isNewPasswordVisible,
-      String errorMessage,
-      LoadingStatus loadingStatus});
+      {bool isPasswordVisible, String errorCode, LoadingStatus loadingStatus});
 }
 
 /// @nodoc
@@ -52,23 +48,18 @@ class _$ChangePasswordStateCopyWithImpl<$Res, $Val extends ChangePasswordState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isCurrentPasswordVisible = null,
-    Object? isNewPasswordVisible = null,
-    Object? errorMessage = null,
+    Object? isPasswordVisible = null,
+    Object? errorCode = null,
     Object? loadingStatus = null,
   }) {
     return _then(_value.copyWith(
-      isCurrentPasswordVisible: null == isCurrentPasswordVisible
-          ? _value.isCurrentPasswordVisible
-          : isCurrentPasswordVisible // ignore: cast_nullable_to_non_nullable
+      isPasswordVisible: null == isPasswordVisible
+          ? _value.isPasswordVisible
+          : isPasswordVisible // ignore: cast_nullable_to_non_nullable
               as bool,
-      isNewPasswordVisible: null == isNewPasswordVisible
-          ? _value.isNewPasswordVisible
-          : isNewPasswordVisible // ignore: cast_nullable_to_non_nullable
-              as bool,
-      errorMessage: null == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
+      errorCode: null == errorCode
+          ? _value.errorCode
+          : errorCode // ignore: cast_nullable_to_non_nullable
               as String,
       loadingStatus: null == loadingStatus
           ? _value.loadingStatus
@@ -87,10 +78,7 @@ abstract class _$$_ChangePasswordStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool isCurrentPasswordVisible,
-      bool isNewPasswordVisible,
-      String errorMessage,
-      LoadingStatus loadingStatus});
+      {bool isPasswordVisible, String errorCode, LoadingStatus loadingStatus});
 }
 
 /// @nodoc
@@ -104,23 +92,18 @@ class __$$_ChangePasswordStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isCurrentPasswordVisible = null,
-    Object? isNewPasswordVisible = null,
-    Object? errorMessage = null,
+    Object? isPasswordVisible = null,
+    Object? errorCode = null,
     Object? loadingStatus = null,
   }) {
     return _then(_$_ChangePasswordState(
-      isCurrentPasswordVisible: null == isCurrentPasswordVisible
-          ? _value.isCurrentPasswordVisible
-          : isCurrentPasswordVisible // ignore: cast_nullable_to_non_nullable
+      isPasswordVisible: null == isPasswordVisible
+          ? _value.isPasswordVisible
+          : isPasswordVisible // ignore: cast_nullable_to_non_nullable
               as bool,
-      isNewPasswordVisible: null == isNewPasswordVisible
-          ? _value.isNewPasswordVisible
-          : isNewPasswordVisible // ignore: cast_nullable_to_non_nullable
-              as bool,
-      errorMessage: null == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
+      errorCode: null == errorCode
+          ? _value.errorCode
+          : errorCode // ignore: cast_nullable_to_non_nullable
               as String,
       loadingStatus: null == loadingStatus
           ? _value.loadingStatus
@@ -134,27 +117,23 @@ class __$$_ChangePasswordStateCopyWithImpl<$Res>
 
 class _$_ChangePasswordState implements _ChangePasswordState {
   const _$_ChangePasswordState(
-      {this.isCurrentPasswordVisible = false,
-      this.isNewPasswordVisible = false,
-      this.errorMessage = '',
+      {this.isPasswordVisible = false,
+      this.errorCode = '',
       this.loadingStatus = LoadingStatus.initial});
 
   @override
   @JsonKey()
-  final bool isCurrentPasswordVisible;
+  final bool isPasswordVisible;
   @override
   @JsonKey()
-  final bool isNewPasswordVisible;
-  @override
-  @JsonKey()
-  final String errorMessage;
+  final String errorCode;
   @override
   @JsonKey()
   final LoadingStatus loadingStatus;
 
   @override
   String toString() {
-    return 'ChangePasswordState(isCurrentPasswordVisible: $isCurrentPasswordVisible, isNewPasswordVisible: $isNewPasswordVisible, errorMessage: $errorMessage, loadingStatus: $loadingStatus)';
+    return 'ChangePasswordState(isPasswordVisible: $isPasswordVisible, errorCode: $errorCode, loadingStatus: $loadingStatus)';
   }
 
   @override
@@ -162,20 +141,17 @@ class _$_ChangePasswordState implements _ChangePasswordState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ChangePasswordState &&
-            (identical(
-                    other.isCurrentPasswordVisible, isCurrentPasswordVisible) ||
-                other.isCurrentPasswordVisible == isCurrentPasswordVisible) &&
-            (identical(other.isNewPasswordVisible, isNewPasswordVisible) ||
-                other.isNewPasswordVisible == isNewPasswordVisible) &&
-            (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage) &&
+            (identical(other.isPasswordVisible, isPasswordVisible) ||
+                other.isPasswordVisible == isPasswordVisible) &&
+            (identical(other.errorCode, errorCode) ||
+                other.errorCode == errorCode) &&
             (identical(other.loadingStatus, loadingStatus) ||
                 other.loadingStatus == loadingStatus));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isCurrentPasswordVisible,
-      isNewPasswordVisible, errorMessage, loadingStatus);
+  int get hashCode =>
+      Object.hash(runtimeType, isPasswordVisible, errorCode, loadingStatus);
 
   @JsonKey(ignore: true)
   @override
@@ -187,17 +163,14 @@ class _$_ChangePasswordState implements _ChangePasswordState {
 
 abstract class _ChangePasswordState implements ChangePasswordState {
   const factory _ChangePasswordState(
-      {final bool isCurrentPasswordVisible,
-      final bool isNewPasswordVisible,
-      final String errorMessage,
+      {final bool isPasswordVisible,
+      final String errorCode,
       final LoadingStatus loadingStatus}) = _$_ChangePasswordState;
 
   @override
-  bool get isCurrentPasswordVisible;
+  bool get isPasswordVisible;
   @override
-  bool get isNewPasswordVisible;
-  @override
-  String get errorMessage;
+  String get errorCode;
   @override
   LoadingStatus get loadingStatus;
   @override

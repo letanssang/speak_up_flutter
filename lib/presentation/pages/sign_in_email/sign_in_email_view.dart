@@ -8,8 +8,9 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_state.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_view_model.dart';
-import 'package:speak_up/presentation/utilities/common/validator.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
+import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
@@ -56,13 +57,12 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
   }
 
   void addErrorMessageListener(BuildContext context) {
-    ref.listen(
-        signInEmailViewModelProvider.select((value) => value.errorMessage),
+    ref.listen(signInEmailViewModelProvider.select((value) => value.errorCode),
         (previous, next) {
       if (next.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next),
+            content: Text(getAppErrorMessage(next, context)),
             backgroundColor: Colors.red,
           ),
         );
@@ -104,7 +104,8 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                       suffixIcon: const Icon(Icons.email),
                       keyboardType: TextInputType.emailAddress,
                       controller: _emailTextEditingController,
-                      validator: validateEmail,
+                      validatorType: ValidatorType.email,
+                      context: context,
                     ),
                     CustomTextField(
                       aboveText: AppLocalizations.of(context)!.password,
@@ -112,7 +113,8 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                       keyboardType: TextInputType.visiblePassword,
                       controller: _passwordTextEditingController,
                       errorMaxLines: 2,
-                      validator: validatePassword,
+                      validatorType: ValidatorType.password,
+                      context: context,
                       obscureText: !state.isPasswordVisible,
                       onSuffixIconTap: () {
                         ref

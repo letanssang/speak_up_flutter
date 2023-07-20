@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/presentation/utilities/common/validator.dart';
+import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
 
 class CustomTextField extends StatelessWidget {
   final String? hintText;
@@ -8,11 +10,12 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction textInputAction;
   final TextEditingController? controller;
   final bool obscureText;
-  final String? Function(String?)? validator;
+  final ValidatorType? validatorType;
   final int? errorMaxLines;
   final String? aboveText;
   final void Function()? onSuffixIconTap;
   final double? width;
+  final BuildContext context;
 
   const CustomTextField(
       {super.key,
@@ -22,11 +25,12 @@ class CustomTextField extends StatelessWidget {
       this.textInputAction = TextInputAction.next,
       this.controller,
       this.obscureText = false,
-      this.validator,
+      this.validatorType,
       this.errorMaxLines = 1,
       this.aboveText,
       this.onSuffixIconTap,
-      this.width});
+      this.width,
+      required this.context});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,18 @@ class CustomTextField extends StatelessWidget {
               ),
             ),
           TextFormField(
-            validator: validator,
+            validator: (value) {
+              switch (validatorType) {
+                case ValidatorType.email:
+                  return validateEmail(value!, context);
+                case ValidatorType.password:
+                  return validatePassword(value!, context);
+                case ValidatorType.userName:
+                  return validateUserName(value!, context);
+                default:
+                  return null;
+              }
+            },
             obscureText: obscureText,
             controller: controller,
             textInputAction: textInputAction,

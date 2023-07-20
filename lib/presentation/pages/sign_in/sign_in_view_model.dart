@@ -14,7 +14,7 @@ class SignInViewModel extends StateNotifier<SignInState> {
   void resetError() {
     state = state.copyWith(
       loadingStatus: LoadingStatus.initial,
-      errorMessage: '',
+      errorCode: '',
     );
   }
 
@@ -30,22 +30,22 @@ class SignInViewModel extends StateNotifier<SignInState> {
     } on PlatformException catch (e) {
       state = state.copyWith(
         loadingStatus: LoadingStatus.error,
-        errorMessage: e.toString(),
+        errorCode: e.code,
       );
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(
         loadingStatus: LoadingStatus.error,
-        errorMessage: e.toString(),
+        errorCode: e.code,
       );
     } on FirebaseException catch (e) {
       state = state.copyWith(
         loadingStatus: LoadingStatus.error,
-        errorMessage: e.toString(),
+        errorCode: e.code,
       );
     } catch (e) {
       state = state.copyWith(
         loadingStatus: LoadingStatus.error,
-        errorMessage: e.toString(),
+        errorCode: e.toString(),
       );
     }
   }

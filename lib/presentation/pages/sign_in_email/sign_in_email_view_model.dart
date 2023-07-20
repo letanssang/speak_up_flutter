@@ -18,7 +18,7 @@ class SignInEmailViewModel extends StateNotifier<SignInEmailState> {
   void resetError() {
     state = state.copyWith(
       loadingStatus: LoadingStatus.initial,
-      errorMessage: '',
+      errorCode: '',
     );
   }
 
@@ -36,37 +36,15 @@ class SignInEmailViewModel extends StateNotifier<SignInEmailState> {
         loadingStatus: LoadingStatus.success,
       );
     } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case 'invalid-email':
-          state = state.copyWith(
-            loadingStatus: LoadingStatus.error,
-            errorMessage: 'Invalid email',
-          );
-          break;
-        case 'user-not-found':
-          state = state.copyWith(
-            loadingStatus: LoadingStatus.error,
-            errorMessage: 'User not found',
-          );
-          break;
-        case 'user-disabled':
-          state = state.copyWith(
-            loadingStatus: LoadingStatus.error,
-            errorMessage: 'User disabled',
-          );
-          break;
-        case 'wrong-password':
-          state = state.copyWith(
-            loadingStatus: LoadingStatus.error,
-            errorMessage: 'Wrong password',
-          );
-          break;
-        default:
-          state = state.copyWith(
-            loadingStatus: LoadingStatus.error,
-            errorMessage: 'Something went wrong',
-          );
-      }
+      state = state.copyWith(
+        loadingStatus: LoadingStatus.error,
+        errorCode: e.code,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        loadingStatus: LoadingStatus.error,
+        errorCode: e.toString(),
+      );
     }
   }
 }

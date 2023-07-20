@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'sign_up_state.dart';
+part of 'edit_profile_state.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,30 +15,28 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$SignUpState {
+mixin _$EditProfileState {
   LoadingStatus get loadingStatus => throw _privateConstructorUsedError;
-  bool get isPasswordVisible => throw _privateConstructorUsedError;
   String get errorCode => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $SignUpStateCopyWith<SignUpState> get copyWith =>
+  $EditProfileStateCopyWith<EditProfileState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SignUpStateCopyWith<$Res> {
-  factory $SignUpStateCopyWith(
-          SignUpState value, $Res Function(SignUpState) then) =
-      _$SignUpStateCopyWithImpl<$Res, SignUpState>;
+abstract class $EditProfileStateCopyWith<$Res> {
+  factory $EditProfileStateCopyWith(
+          EditProfileState value, $Res Function(EditProfileState) then) =
+      _$EditProfileStateCopyWithImpl<$Res, EditProfileState>;
   @useResult
-  $Res call(
-      {LoadingStatus loadingStatus, bool isPasswordVisible, String errorCode});
+  $Res call({LoadingStatus loadingStatus, String errorCode});
 }
 
 /// @nodoc
-class _$SignUpStateCopyWithImpl<$Res, $Val extends SignUpState>
-    implements $SignUpStateCopyWith<$Res> {
-  _$SignUpStateCopyWithImpl(this._value, this._then);
+class _$EditProfileStateCopyWithImpl<$Res, $Val extends EditProfileState>
+    implements $EditProfileStateCopyWith<$Res> {
+  _$EditProfileStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -49,7 +47,6 @@ class _$SignUpStateCopyWithImpl<$Res, $Val extends SignUpState>
   @override
   $Res call({
     Object? loadingStatus = null,
-    Object? isPasswordVisible = null,
     Object? errorCode = null,
   }) {
     return _then(_value.copyWith(
@@ -57,10 +54,6 @@ class _$SignUpStateCopyWithImpl<$Res, $Val extends SignUpState>
           ? _value.loadingStatus
           : loadingStatus // ignore: cast_nullable_to_non_nullable
               as LoadingStatus,
-      isPasswordVisible: null == isPasswordVisible
-          ? _value.isPasswordVisible
-          : isPasswordVisible // ignore: cast_nullable_to_non_nullable
-              as bool,
       errorCode: null == errorCode
           ? _value.errorCode
           : errorCode // ignore: cast_nullable_to_non_nullable
@@ -70,41 +63,35 @@ class _$SignUpStateCopyWithImpl<$Res, $Val extends SignUpState>
 }
 
 /// @nodoc
-abstract class _$$_SignUpStateCopyWith<$Res>
-    implements $SignUpStateCopyWith<$Res> {
-  factory _$$_SignUpStateCopyWith(
-          _$_SignUpState value, $Res Function(_$_SignUpState) then) =
-      __$$_SignUpStateCopyWithImpl<$Res>;
+abstract class _$$_EditProfileStateCopyWith<$Res>
+    implements $EditProfileStateCopyWith<$Res> {
+  factory _$$_EditProfileStateCopyWith(
+          _$_EditProfileState value, $Res Function(_$_EditProfileState) then) =
+      __$$_EditProfileStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {LoadingStatus loadingStatus, bool isPasswordVisible, String errorCode});
+  $Res call({LoadingStatus loadingStatus, String errorCode});
 }
 
 /// @nodoc
-class __$$_SignUpStateCopyWithImpl<$Res>
-    extends _$SignUpStateCopyWithImpl<$Res, _$_SignUpState>
-    implements _$$_SignUpStateCopyWith<$Res> {
-  __$$_SignUpStateCopyWithImpl(
-      _$_SignUpState _value, $Res Function(_$_SignUpState) _then)
+class __$$_EditProfileStateCopyWithImpl<$Res>
+    extends _$EditProfileStateCopyWithImpl<$Res, _$_EditProfileState>
+    implements _$$_EditProfileStateCopyWith<$Res> {
+  __$$_EditProfileStateCopyWithImpl(
+      _$_EditProfileState _value, $Res Function(_$_EditProfileState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? loadingStatus = null,
-    Object? isPasswordVisible = null,
     Object? errorCode = null,
   }) {
-    return _then(_$_SignUpState(
+    return _then(_$_EditProfileState(
       loadingStatus: null == loadingStatus
           ? _value.loadingStatus
           : loadingStatus // ignore: cast_nullable_to_non_nullable
               as LoadingStatus,
-      isPasswordVisible: null == isPasswordVisible
-          ? _value.isPasswordVisible
-          : isPasswordVisible // ignore: cast_nullable_to_non_nullable
-              as bool,
       errorCode: null == errorCode
           ? _value.errorCode
           : errorCode // ignore: cast_nullable_to_non_nullable
@@ -115,65 +102,54 @@ class __$$_SignUpStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SignUpState implements _SignUpState {
-  const _$_SignUpState(
-      {this.loadingStatus = LoadingStatus.initial,
-      this.isPasswordVisible = true,
-      this.errorCode = ''});
+class _$_EditProfileState implements _EditProfileState {
+  const _$_EditProfileState(
+      {this.loadingStatus = LoadingStatus.initial, this.errorCode = ''});
 
   @override
   @JsonKey()
   final LoadingStatus loadingStatus;
   @override
   @JsonKey()
-  final bool isPasswordVisible;
-  @override
-  @JsonKey()
   final String errorCode;
 
   @override
   String toString() {
-    return 'SignUpState(loadingStatus: $loadingStatus, isPasswordVisible: $isPasswordVisible, errorCode: $errorCode)';
+    return 'EditProfileState(loadingStatus: $loadingStatus, errorCode: $errorCode)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SignUpState &&
+            other is _$_EditProfileState &&
             (identical(other.loadingStatus, loadingStatus) ||
                 other.loadingStatus == loadingStatus) &&
-            (identical(other.isPasswordVisible, isPasswordVisible) ||
-                other.isPasswordVisible == isPasswordVisible) &&
             (identical(other.errorCode, errorCode) ||
                 other.errorCode == errorCode));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, loadingStatus, isPasswordVisible, errorCode);
+  int get hashCode => Object.hash(runtimeType, loadingStatus, errorCode);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SignUpStateCopyWith<_$_SignUpState> get copyWith =>
-      __$$_SignUpStateCopyWithImpl<_$_SignUpState>(this, _$identity);
+  _$$_EditProfileStateCopyWith<_$_EditProfileState> get copyWith =>
+      __$$_EditProfileStateCopyWithImpl<_$_EditProfileState>(this, _$identity);
 }
 
-abstract class _SignUpState implements SignUpState {
-  const factory _SignUpState(
+abstract class _EditProfileState implements EditProfileState {
+  const factory _EditProfileState(
       {final LoadingStatus loadingStatus,
-      final bool isPasswordVisible,
-      final String errorCode}) = _$_SignUpState;
+      final String errorCode}) = _$_EditProfileState;
 
   @override
   LoadingStatus get loadingStatus;
   @override
-  bool get isPasswordVisible;
-  @override
   String get errorCode;
   @override
   @JsonKey(ignore: true)
-  _$$_SignUpStateCopyWith<_$_SignUpState> get copyWith =>
+  _$$_EditProfileStateCopyWith<_$_EditProfileState> get copyWith =>
       throw _privateConstructorUsedError;
 }

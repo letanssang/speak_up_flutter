@@ -1,34 +1,37 @@
-String? validateEmail(String? email) {
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+String? validateEmail(String? email, BuildContext context) {
   if (email == null || email.isEmpty) {
-    return 'Email is required';
+    return AppLocalizations.of(context)!.emailIsRequired;
   }
   const String regex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
   final RegExp regExp = RegExp(regex);
   if (!regExp.hasMatch(email)) {
-    return 'Enter a valid email address';
+    return AppLocalizations.of(context)!.enterAValidEmail;
   }
   return null;
 }
 
-String? validateUserName(String? userName) {
+String? validateUserName(String? userName, BuildContext context) {
   if (userName == null || userName.isEmpty) {
-    return 'User name is required';
+    return AppLocalizations.of(context)!.userNameIsRequired;
   }
   if (userName.length < 6) {
-    return 'User name must be at least 6 characters';
+    return AppLocalizations.of(context)!.userNameMustBeAtLeast6Characters;
   }
-  if(userName.length > 20){
-    return 'User name must not exceed 20 characters';
+  if (userName.length > 20) {
+    return AppLocalizations.of(context)!.userNameMustNotExceed20Characters;
   }
   return null;
 }
 
-String? validatePassword(String? password) {
+String? validatePassword(String? password, BuildContext context) {
   if (password == null || password.isEmpty) {
-    return 'Password is required';
+    return AppLocalizations.of(context)!.passwordIsRequired;
   }
   if (password.length < 6) {
-    return 'Password must be at least 6 characters';
+    return AppLocalizations.of(context)!.passwordMustBeAtLeast6Characters;
   }
   return null;
 }

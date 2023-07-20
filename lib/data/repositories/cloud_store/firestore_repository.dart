@@ -30,4 +30,12 @@ class FirestoreRepository {
 
     return topics;
   }
+
+  Future<void> updateDisplayName(String name, String uid) async {
+    await _firestore.collection('users').doc(uid).update({'name': name});
+  }
+
+  Future<void> updateEmail(String email, String uid) async {
+    await _firestore.collection('users').doc(uid).update({'email': email});
+  }
 }

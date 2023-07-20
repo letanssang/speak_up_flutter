@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SignInEmailState {
   LoadingStatus get loadingStatus => throw _privateConstructorUsedError;
   bool get isPasswordVisible => throw _privateConstructorUsedError;
-  String get errorMessage => throw _privateConstructorUsedError;
+  String get errorCode => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SignInEmailStateCopyWith<SignInEmailState> get copyWith =>
@@ -32,9 +32,7 @@ abstract class $SignInEmailStateCopyWith<$Res> {
       _$SignInEmailStateCopyWithImpl<$Res, SignInEmailState>;
   @useResult
   $Res call(
-      {LoadingStatus loadingStatus,
-      bool isPasswordVisible,
-      String errorMessage});
+      {LoadingStatus loadingStatus, bool isPasswordVisible, String errorCode});
 }
 
 /// @nodoc
@@ -52,7 +50,7 @@ class _$SignInEmailStateCopyWithImpl<$Res, $Val extends SignInEmailState>
   $Res call({
     Object? loadingStatus = null,
     Object? isPasswordVisible = null,
-    Object? errorMessage = null,
+    Object? errorCode = null,
   }) {
     return _then(_value.copyWith(
       loadingStatus: null == loadingStatus
@@ -63,9 +61,9 @@ class _$SignInEmailStateCopyWithImpl<$Res, $Val extends SignInEmailState>
           ? _value.isPasswordVisible
           : isPasswordVisible // ignore: cast_nullable_to_non_nullable
               as bool,
-      errorMessage: null == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
+      errorCode: null == errorCode
+          ? _value.errorCode
+          : errorCode // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -80,9 +78,7 @@ abstract class _$$_SignInEmailStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {LoadingStatus loadingStatus,
-      bool isPasswordVisible,
-      String errorMessage});
+      {LoadingStatus loadingStatus, bool isPasswordVisible, String errorCode});
 }
 
 /// @nodoc
@@ -98,7 +94,7 @@ class __$$_SignInEmailStateCopyWithImpl<$Res>
   $Res call({
     Object? loadingStatus = null,
     Object? isPasswordVisible = null,
-    Object? errorMessage = null,
+    Object? errorCode = null,
   }) {
     return _then(_$_SignInEmailState(
       loadingStatus: null == loadingStatus
@@ -109,9 +105,9 @@ class __$$_SignInEmailStateCopyWithImpl<$Res>
           ? _value.isPasswordVisible
           : isPasswordVisible // ignore: cast_nullable_to_non_nullable
               as bool,
-      errorMessage: null == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
+      errorCode: null == errorCode
+          ? _value.errorCode
+          : errorCode // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -123,7 +119,7 @@ class _$_SignInEmailState implements _SignInEmailState {
   const _$_SignInEmailState(
       {this.loadingStatus = LoadingStatus.initial,
       this.isPasswordVisible = true,
-      this.errorMessage = ''});
+      this.errorCode = ''});
 
   @override
   @JsonKey()
@@ -133,11 +129,11 @@ class _$_SignInEmailState implements _SignInEmailState {
   final bool isPasswordVisible;
   @override
   @JsonKey()
-  final String errorMessage;
+  final String errorCode;
 
   @override
   String toString() {
-    return 'SignInEmailState(loadingStatus: $loadingStatus, isPasswordVisible: $isPasswordVisible, errorMessage: $errorMessage)';
+    return 'SignInEmailState(loadingStatus: $loadingStatus, isPasswordVisible: $isPasswordVisible, errorCode: $errorCode)';
   }
 
   @override
@@ -149,13 +145,13 @@ class _$_SignInEmailState implements _SignInEmailState {
                 other.loadingStatus == loadingStatus) &&
             (identical(other.isPasswordVisible, isPasswordVisible) ||
                 other.isPasswordVisible == isPasswordVisible) &&
-            (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+            (identical(other.errorCode, errorCode) ||
+                other.errorCode == errorCode));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, loadingStatus, isPasswordVisible, errorMessage);
+      Object.hash(runtimeType, loadingStatus, isPasswordVisible, errorCode);
 
   @JsonKey(ignore: true)
   @override
@@ -168,14 +164,14 @@ abstract class _SignInEmailState implements SignInEmailState {
   const factory _SignInEmailState(
       {final LoadingStatus loadingStatus,
       final bool isPasswordVisible,
-      final String errorMessage}) = _$_SignInEmailState;
+      final String errorCode}) = _$_SignInEmailState;
 
   @override
   LoadingStatus get loadingStatus;
   @override
   bool get isPasswordVisible;
   @override
-  String get errorMessage;
+  String get errorCode;
   @override
   @JsonKey(ignore: true)
   _$$_SignInEmailStateCopyWith<_$_SignInEmailState> get copyWith =>

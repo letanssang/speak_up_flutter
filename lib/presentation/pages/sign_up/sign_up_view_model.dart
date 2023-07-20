@@ -30,7 +30,7 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
   void resetError() {
     state = state.copyWith(
       loadingStatus: LoadingStatus.initial,
-      errorMessage: '',
+      errorCode: '',
     );
   }
 
@@ -55,19 +55,17 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(
         loadingStatus: LoadingStatus.error,
-        errorMessage: e.message ?? 'Something went wrong',
+        errorCode: e.code,
       );
-      debugPrint(e.message);
     } on FirebaseException catch (e) {
       state = state.copyWith(
         loadingStatus: LoadingStatus.error,
-        errorMessage: e.message ?? 'Something went wrong',
+        errorCode: e.code,
       );
-      debugPrint(e.message);
     } catch (e) {
       state = state.copyWith(
         loadingStatus: LoadingStatus.error,
-        errorMessage: 'Something went wrong',
+        errorCode: e.toString(),
       );
       debugPrint(e.toString());
     }

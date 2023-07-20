@@ -8,10 +8,12 @@ import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_
 import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_state.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_view_model.dart';
-import 'package:speak_up/presentation/utilities/common/validator.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
+import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
 
@@ -60,7 +62,10 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop('dialog');
-                  ref.read(appNavigatorProvider).pop();
+                  ref.read(appNavigatorProvider).navigateTo(
+                        AppRoutes.mainMenu,
+                        shouldClearStack: true,
+                      );
                 },
                 child: const Text('OK'),
               ),
@@ -72,12 +77,12 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
   }
 
   void addErrorMessageListener(BuildContext context) {
-    ref.listen(signUpViewModelProvider.select((value) => value.errorMessage),
+    ref.listen(signUpViewModelProvider.select((value) => value.errorCode),
         (previous, next) {
       if (next.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next),
+            content: Text(getAppErrorMessage(next, context)),
             backgroundColor: Colors.red,
           ),
         );
@@ -116,14 +121,16 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 suffixIcon: const Icon(Icons.person),
                 keyboardType: TextInputType.name,
                 controller: _userNameTextEditingController,
-                validator: validateUserName,
+                validatorType: ValidatorType.userName,
+                context: context,
               ),
               CustomTextField(
                 hintText: AppLocalizations.of(context)!.enterYourEmail,
                 suffixIcon: const Icon(Icons.email),
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailTextEditingController,
-                validator: validateEmail,
+                validatorType: ValidatorType.email,
+                context: context,
               ),
               CustomTextField(
                 hintText: AppLocalizations.of(context)!.enterYourPassword,
@@ -139,8 +146,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 controller: _passwordTextEditingController,
                 obscureText:
                     !ref.watch(signUpViewModelProvider).isPasswordVisible,
-                validator: validatePassword,
+                validatorType: ValidatorType.password,
                 errorMaxLines: 2,
+                context: context,
               ),
               Center(
                   child: CustomButton(

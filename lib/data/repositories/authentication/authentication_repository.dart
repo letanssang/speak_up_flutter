@@ -35,6 +35,10 @@ class AuthenticationRepository {
     await _firebaseAuth.currentUser!.updateDisplayName(name);
   }
 
+  Future<void> updateEmail(String email) async {
+    await _firebaseAuth.currentUser!.updateEmail(email);
+  }
+
   Future<void> updatePassword(String password) async {
     await _firebaseAuth.currentUser!.updatePassword(password);
   }
@@ -53,5 +57,9 @@ class AuthenticationRepository {
 
   bool isSignedIn() {
     return _firebaseAuth.currentUser != null;
+  }
+
+  User getCurrentUser() {
+    return _firebaseAuth.currentUser!;
   }
 }

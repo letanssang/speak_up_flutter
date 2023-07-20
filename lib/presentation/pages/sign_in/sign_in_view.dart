@@ -11,6 +11,7 @@ import 'package:speak_up/presentation/pages/sign_in/sign_in_state.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
@@ -37,12 +38,12 @@ class SignInView extends ConsumerWidget {
         });
       }
     });
-    ref.listen(signInViewModelProvider.select((value) => value.errorMessage),
+    ref.listen(signInViewModelProvider.select((value) => value.errorCode),
         (previous, next) {
       if (next.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next),
+            content: Text(getAppErrorMessage(next, context)),
             backgroundColor: Colors.red,
           ),
         );

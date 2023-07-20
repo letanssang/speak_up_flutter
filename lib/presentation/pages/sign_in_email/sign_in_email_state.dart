@@ -8,6 +8,6 @@ class SignInEmailState with _$SignInEmailState {
   const factory SignInEmailState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default(true) bool isPasswordVisible,
-    @Default('') String errorMessage,
+    @Default('') String errorCode,
   }) = _SignInEmailState;
 }

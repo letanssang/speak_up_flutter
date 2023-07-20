@@ -18,15 +18,9 @@ class ChangePasswordViewModel extends StateNotifier<ChangePasswordState> {
     this._reAuthenticateWithCredentialUseCase,
   ) : super(const ChangePasswordState());
 
-  void onCurrentPasswordVisibilityPressed() {
+  void onPasswordVisibilityPressed() {
     state = state.copyWith(
-      isCurrentPasswordVisible: !state.isCurrentPasswordVisible,
-    );
-  }
-
-  void onNewPasswordVisibilityPressed() {
-    state = state.copyWith(
-      isNewPasswordVisible: !state.isNewPasswordVisible,
+      isPasswordVisible: !state.isPasswordVisible,
     );
   }
 
@@ -43,12 +37,12 @@ class ChangePasswordViewModel extends StateNotifier<ChangePasswordState> {
         );
       } on FirebaseAuthException catch (e) {
         state = state.copyWith(
-          errorMessage: e.message ?? 'Something went wrong',
+          errorCode: e.code,
           loadingStatus: LoadingStatus.error,
         );
       } catch (e) {
         state = state.copyWith(
-          errorMessage: e.toString(),
+          errorCode: e.toString(),
           loadingStatus: LoadingStatus.error,
         );
       }
@@ -57,7 +51,7 @@ class ChangePasswordViewModel extends StateNotifier<ChangePasswordState> {
 
   void resetError() {
     state = state.copyWith(
-      errorMessage: '',
+      errorCode: '',
       loadingStatus: LoadingStatus.initial,
     );
   }

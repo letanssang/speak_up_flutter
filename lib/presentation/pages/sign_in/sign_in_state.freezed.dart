@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SignInState {
   LoadingStatus get loadingStatus => throw _privateConstructorUsedError;
-  String get errorMessage => throw _privateConstructorUsedError;
+  String get errorCode => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SignInStateCopyWith<SignInState> get copyWith =>
@@ -30,7 +30,7 @@ abstract class $SignInStateCopyWith<$Res> {
           SignInState value, $Res Function(SignInState) then) =
       _$SignInStateCopyWithImpl<$Res, SignInState>;
   @useResult
-  $Res call({LoadingStatus loadingStatus, String errorMessage});
+  $Res call({LoadingStatus loadingStatus, String errorCode});
 }
 
 /// @nodoc
@@ -47,16 +47,16 @@ class _$SignInStateCopyWithImpl<$Res, $Val extends SignInState>
   @override
   $Res call({
     Object? loadingStatus = null,
-    Object? errorMessage = null,
+    Object? errorCode = null,
   }) {
     return _then(_value.copyWith(
       loadingStatus: null == loadingStatus
           ? _value.loadingStatus
           : loadingStatus // ignore: cast_nullable_to_non_nullable
               as LoadingStatus,
-      errorMessage: null == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
+      errorCode: null == errorCode
+          ? _value.errorCode
+          : errorCode // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -70,7 +70,7 @@ abstract class _$$_SignInStateCopyWith<$Res>
       __$$_SignInStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({LoadingStatus loadingStatus, String errorMessage});
+  $Res call({LoadingStatus loadingStatus, String errorCode});
 }
 
 /// @nodoc
@@ -85,16 +85,16 @@ class __$$_SignInStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? loadingStatus = null,
-    Object? errorMessage = null,
+    Object? errorCode = null,
   }) {
     return _then(_$_SignInState(
       loadingStatus: null == loadingStatus
           ? _value.loadingStatus
           : loadingStatus // ignore: cast_nullable_to_non_nullable
               as LoadingStatus,
-      errorMessage: null == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
+      errorCode: null == errorCode
+          ? _value.errorCode
+          : errorCode // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -104,18 +104,18 @@ class __$$_SignInStateCopyWithImpl<$Res>
 
 class _$_SignInState implements _SignInState {
   const _$_SignInState(
-      {this.loadingStatus = LoadingStatus.initial, this.errorMessage = ''});
+      {this.loadingStatus = LoadingStatus.initial, this.errorCode = ''});
 
   @override
   @JsonKey()
   final LoadingStatus loadingStatus;
   @override
   @JsonKey()
-  final String errorMessage;
+  final String errorCode;
 
   @override
   String toString() {
-    return 'SignInState(loadingStatus: $loadingStatus, errorMessage: $errorMessage)';
+    return 'SignInState(loadingStatus: $loadingStatus, errorCode: $errorCode)';
   }
 
   @override
@@ -125,12 +125,12 @@ class _$_SignInState implements _SignInState {
             other is _$_SignInState &&
             (identical(other.loadingStatus, loadingStatus) ||
                 other.loadingStatus == loadingStatus) &&
-            (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+            (identical(other.errorCode, errorCode) ||
+                other.errorCode == errorCode));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, loadingStatus, errorMessage);
+  int get hashCode => Object.hash(runtimeType, loadingStatus, errorCode);
 
   @JsonKey(ignore: true)
   @override
@@ -142,12 +142,12 @@ class _$_SignInState implements _SignInState {
 abstract class _SignInState implements SignInState {
   const factory _SignInState(
       {final LoadingStatus loadingStatus,
-      final String errorMessage}) = _$_SignInState;
+      final String errorCode}) = _$_SignInState;
 
   @override
   LoadingStatus get loadingStatus;
   @override
-  String get errorMessage;
+  String get errorCode;
   @override
   @JsonKey(ignore: true)
   _$$_SignInStateCopyWith<_$_SignInState> get copyWith =>

@@ -11,12 +11,14 @@ import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_cas
 import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/is_signed_in_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/reauthenticate_with_credential_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_in_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_in_with_goole_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/update_email_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
@@ -92,6 +94,18 @@ class AppModules {
     injector.registerLazySingleton<UpdatePasswordUseCase>(
         () => UpdatePasswordUseCase());
 
+    // Update email use case
+    injector
+        .registerLazySingleton<UpdateEmailUseCase>(() => UpdateEmailUseCase());
+
+    //Update Display Name Use Case
+    injector.registerLazySingleton<UpdateDisplayNameUseCase>(
+        () => UpdateDisplayNameUseCase());
+
+    // Get current user use case
+    injector.registerLazySingleton<GetCurrentUserUseCase>(
+        () => GetCurrentUserUseCase());
+
     //Get topic list from category use case
     injector.registerLazySingleton<GetTopicListFromCategoryUseCase>(
         () => GetTopicListFromCategoryUseCase());
@@ -106,9 +120,5 @@ class AppModules {
     // Save app language use case
     injector.registerLazySingleton<SaveAppLanguageUseCase>(
         () => SaveAppLanguageUseCase());
-
-    //Update Display Name Use Case
-    injector.registerLazySingleton<UpdateDisplayNameUseCase>(
-        () => UpdateDisplayNameUseCase());
   }
 }
