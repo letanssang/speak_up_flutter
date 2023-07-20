@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ChangePasswordState {
   bool get isCurrentPasswordVisible => throw _privateConstructorUsedError;
   bool get isNewPasswordVisible => throw _privateConstructorUsedError;
-  bool get isConfirmPasswordVisible => throw _privateConstructorUsedError;
+  String get errorMessage => throw _privateConstructorUsedError;
+  LoadingStatus get loadingStatus => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ChangePasswordStateCopyWith<ChangePasswordState> get copyWith =>
@@ -34,7 +35,8 @@ abstract class $ChangePasswordStateCopyWith<$Res> {
   $Res call(
       {bool isCurrentPasswordVisible,
       bool isNewPasswordVisible,
-      bool isConfirmPasswordVisible});
+      String errorMessage,
+      LoadingStatus loadingStatus});
 }
 
 /// @nodoc
@@ -52,7 +54,8 @@ class _$ChangePasswordStateCopyWithImpl<$Res, $Val extends ChangePasswordState>
   $Res call({
     Object? isCurrentPasswordVisible = null,
     Object? isNewPasswordVisible = null,
-    Object? isConfirmPasswordVisible = null,
+    Object? errorMessage = null,
+    Object? loadingStatus = null,
   }) {
     return _then(_value.copyWith(
       isCurrentPasswordVisible: null == isCurrentPasswordVisible
@@ -63,10 +66,14 @@ class _$ChangePasswordStateCopyWithImpl<$Res, $Val extends ChangePasswordState>
           ? _value.isNewPasswordVisible
           : isNewPasswordVisible // ignore: cast_nullable_to_non_nullable
               as bool,
-      isConfirmPasswordVisible: null == isConfirmPasswordVisible
-          ? _value.isConfirmPasswordVisible
-          : isConfirmPasswordVisible // ignore: cast_nullable_to_non_nullable
-              as bool,
+      errorMessage: null == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
+      loadingStatus: null == loadingStatus
+          ? _value.loadingStatus
+          : loadingStatus // ignore: cast_nullable_to_non_nullable
+              as LoadingStatus,
     ) as $Val);
   }
 }
@@ -82,7 +89,8 @@ abstract class _$$_ChangePasswordStateCopyWith<$Res>
   $Res call(
       {bool isCurrentPasswordVisible,
       bool isNewPasswordVisible,
-      bool isConfirmPasswordVisible});
+      String errorMessage,
+      LoadingStatus loadingStatus});
 }
 
 /// @nodoc
@@ -98,7 +106,8 @@ class __$$_ChangePasswordStateCopyWithImpl<$Res>
   $Res call({
     Object? isCurrentPasswordVisible = null,
     Object? isNewPasswordVisible = null,
-    Object? isConfirmPasswordVisible = null,
+    Object? errorMessage = null,
+    Object? loadingStatus = null,
   }) {
     return _then(_$_ChangePasswordState(
       isCurrentPasswordVisible: null == isCurrentPasswordVisible
@@ -109,10 +118,14 @@ class __$$_ChangePasswordStateCopyWithImpl<$Res>
           ? _value.isNewPasswordVisible
           : isNewPasswordVisible // ignore: cast_nullable_to_non_nullable
               as bool,
-      isConfirmPasswordVisible: null == isConfirmPasswordVisible
-          ? _value.isConfirmPasswordVisible
-          : isConfirmPasswordVisible // ignore: cast_nullable_to_non_nullable
-              as bool,
+      errorMessage: null == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
+      loadingStatus: null == loadingStatus
+          ? _value.loadingStatus
+          : loadingStatus // ignore: cast_nullable_to_non_nullable
+              as LoadingStatus,
     ));
   }
 }
@@ -123,7 +136,8 @@ class _$_ChangePasswordState implements _ChangePasswordState {
   const _$_ChangePasswordState(
       {this.isCurrentPasswordVisible = false,
       this.isNewPasswordVisible = false,
-      this.isConfirmPasswordVisible = false});
+      this.errorMessage = '',
+      this.loadingStatus = LoadingStatus.initial});
 
   @override
   @JsonKey()
@@ -133,11 +147,14 @@ class _$_ChangePasswordState implements _ChangePasswordState {
   final bool isNewPasswordVisible;
   @override
   @JsonKey()
-  final bool isConfirmPasswordVisible;
+  final String errorMessage;
+  @override
+  @JsonKey()
+  final LoadingStatus loadingStatus;
 
   @override
   String toString() {
-    return 'ChangePasswordState(isCurrentPasswordVisible: $isCurrentPasswordVisible, isNewPasswordVisible: $isNewPasswordVisible, isConfirmPasswordVisible: $isConfirmPasswordVisible)';
+    return 'ChangePasswordState(isCurrentPasswordVisible: $isCurrentPasswordVisible, isNewPasswordVisible: $isNewPasswordVisible, errorMessage: $errorMessage, loadingStatus: $loadingStatus)';
   }
 
   @override
@@ -150,14 +167,15 @@ class _$_ChangePasswordState implements _ChangePasswordState {
                 other.isCurrentPasswordVisible == isCurrentPasswordVisible) &&
             (identical(other.isNewPasswordVisible, isNewPasswordVisible) ||
                 other.isNewPasswordVisible == isNewPasswordVisible) &&
-            (identical(
-                    other.isConfirmPasswordVisible, isConfirmPasswordVisible) ||
-                other.isConfirmPasswordVisible == isConfirmPasswordVisible));
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage) &&
+            (identical(other.loadingStatus, loadingStatus) ||
+                other.loadingStatus == loadingStatus));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, isCurrentPasswordVisible,
-      isNewPasswordVisible, isConfirmPasswordVisible);
+      isNewPasswordVisible, errorMessage, loadingStatus);
 
   @JsonKey(ignore: true)
   @override
@@ -171,14 +189,17 @@ abstract class _ChangePasswordState implements ChangePasswordState {
   const factory _ChangePasswordState(
       {final bool isCurrentPasswordVisible,
       final bool isNewPasswordVisible,
-      final bool isConfirmPasswordVisible}) = _$_ChangePasswordState;
+      final String errorMessage,
+      final LoadingStatus loadingStatus}) = _$_ChangePasswordState;
 
   @override
   bool get isCurrentPasswordVisible;
   @override
   bool get isNewPasswordVisible;
   @override
-  bool get isConfirmPasswordVisible;
+  String get errorMessage;
+  @override
+  LoadingStatus get loadingStatus;
   @override
   @JsonKey(ignore: true)
   _$$_ChangePasswordStateCopyWith<_$_ChangePasswordState> get copyWith =>

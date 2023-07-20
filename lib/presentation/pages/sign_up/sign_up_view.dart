@@ -69,6 +69,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         );
       }
     });
+  }
+
+  void addErrorMessageListener(BuildContext context) {
     ref.listen(signUpViewModelProvider.select((value) => value.errorMessage),
         (previous, next) {
       if (next.isNotEmpty) {
@@ -87,6 +90,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
   Widget build(BuildContext context) {
     final state = ref.watch(signUpViewModelProvider);
     addFetchingListener(context);
+    addErrorMessageListener(context);
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),

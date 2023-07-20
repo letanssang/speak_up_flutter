@@ -23,7 +23,6 @@ final signInViewModelProvider =
 
 class SignInView extends ConsumerWidget {
   const SignInView({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(signInViewModelProvider);

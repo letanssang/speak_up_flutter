@@ -53,6 +53,9 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
         });
       }
     });
+  }
+
+  void addErrorMessageListener(BuildContext context) {
     ref.listen(
         signInEmailViewModelProvider.select((value) => value.errorMessage),
         (previous, next) {
@@ -72,6 +75,7 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
   Widget build(BuildContext context) {
     final state = ref.watch(signInEmailViewModelProvider);
     addFetchDataListener();
+    addErrorMessageListener(context);
     return Scaffold(
         appBar: AppBar(
           leading: const BackButton(),

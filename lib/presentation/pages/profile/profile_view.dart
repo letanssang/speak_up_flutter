@@ -201,13 +201,14 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                                 .read(appNavigatorProvider)
                                 .navigateTo(AppRoutes.editProfile);
                           }),
-                          buildListTile(AppIcons.changePassword(size: 48),
-                              AppLocalizations.of(context)!.changePassword,
-                              onTap: () {
-                            ref
-                                .read(appNavigatorProvider)
-                                .navigateTo(AppRoutes.changePassword);
-                          }),
+                          if (user.providerData[0].providerId == 'password')
+                            buildListTile(AppIcons.changePassword(size: 48),
+                                AppLocalizations.of(context)!.changePassword,
+                                onTap: () {
+                              ref
+                                  .read(appNavigatorProvider)
+                                  .navigateTo(AppRoutes.changePassword);
+                            }),
                           buildListTile(AppIcons.notification(size: 48),
                               AppLocalizations.of(context)!.notification,
                               trailing: Switch(

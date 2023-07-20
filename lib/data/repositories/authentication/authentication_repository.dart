@@ -35,6 +35,18 @@ class AuthenticationRepository {
     await _firebaseAuth.currentUser!.updateDisplayName(name);
   }
 
+  Future<void> updatePassword(String password) async {
+    await _firebaseAuth.currentUser!.updatePassword(password);
+  }
+
+  Future<void> reAuthenticateWithCredential(String password) async {
+    final AuthCredential credential = EmailAuthProvider.credential(
+      email: _firebaseAuth.currentUser!.email!,
+      password: password,
+    );
+    await _firebaseAuth.currentUser!.reauthenticateWithCredential(credential);
+  }
+
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
