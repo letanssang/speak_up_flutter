@@ -53,6 +53,15 @@ class AppImages {
     );
   }
 
+  static Widget nothingHere({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/nothing_here.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
   static Widget activeLifestyle(
       {double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(

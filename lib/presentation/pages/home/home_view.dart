@@ -85,7 +85,7 @@ class HomeView extends ConsumerWidget {
           child: CircleAvatar(
             radius: 20,
             child: ClipOval(
-              child: user!.photoURL != null
+              child: user.photoURL != null
                   ? Image.network(user.photoURL!)
                   : AppImages.avatar(),
             ),

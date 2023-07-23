@@ -11,6 +11,7 @@ import 'package:speak_up/presentation/pages/sign_in/sign_in_view.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_view.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_view.dart';
 import 'package:speak_up/presentation/pages/splash/splash_view.dart';
+import 'package:speak_up/presentation/pages/topic/topic_view.dart';
 
 class AppRouter {
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -84,6 +85,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const CategoryView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.topic:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const TopicView(),
             settings: settings,
           );
         }

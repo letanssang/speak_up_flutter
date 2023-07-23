@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/presentation/pages/home/home_view.dart';
 import 'package:speak_up/presentation/pages/profile/profile_view.dart';
+import 'package:speak_up/presentation/pages/saved/saved_view.dart';
 import 'package:speak_up/presentation/pages/search/search_view.dart';
 
 import 'main_menu_state.dart';
@@ -14,6 +15,7 @@ final mainMenuViewModelProvider =
 List<Widget> _pageOptions = <Widget>[
   const HomeView(),
   const SearchView(),
+  const SavedView(),
   const ProfileView()
 ];
 
@@ -30,6 +32,8 @@ class MainMenuView extends ConsumerWidget {
           onTap: (index) {
             ref.read(mainMenuViewModelProvider.notifier).changeTab(index);
           },
+          unselectedItemColor: Colors.grey,
+          selectedItemColor: Theme.of(context).primaryColor,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -38,6 +42,10 @@ class MainMenuView extends ConsumerWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bookmark),
+              label: 'Saved',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

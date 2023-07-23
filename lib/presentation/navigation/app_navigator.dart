@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum AppNavigatorStackAction {
   //keep all screens in stack
@@ -12,9 +11,10 @@ enum AppNavigatorStackAction {
 
 // [AppNavigator] is a navigator that can be used to navigate between screens.
 class AppNavigator {
-  AppNavigator(this._ref);
-  final Ref _ref;
+  AppNavigator();
+
   final navigatorKey = GlobalKey<NavigatorState>();
+
   Future<dynamic> navigateTo(
     String routeName, {
     dynamic arguments,
@@ -43,7 +43,8 @@ class AppNavigator {
       arguments: arguments,
     );
   }
-  void pop(){
+
+  void pop() {
     final currentState = navigatorKey.currentState;
     if (currentState == null) {
       return;

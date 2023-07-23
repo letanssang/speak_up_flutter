@@ -7,15 +7,17 @@ part of 'topic.dart';
 // **************************************************************************
 
 Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
-      json['ID'] as int,
-      json['Topic Name'] as String,
-      json['Category ID'] as int,
-      json['Category Name'] as String,
+      topicID: json['TopicID'] as int,
+      topicName: json['TopicName'] as String,
+      translation: json['Translation'] as String,
+      categoryID: json['CategoryID'] as int,
+      pairCount: json['QAPairCount'] as int,
     );
 
 Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
-      'ID': instance.id,
-      'Topic Name': instance.name,
-      'Category ID': instance.categoryID,
-      'Category Name': instance.category,
+      'TopicID': instance.topicID,
+      'TopicName': instance.topicName,
+      'Translation': instance.translation,
+      'CategoryID': instance.categoryID,
+      'QAPairCount': instance.pairCount,
     };
