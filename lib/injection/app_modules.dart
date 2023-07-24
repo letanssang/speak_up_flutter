@@ -1,8 +1,10 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
+import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
 import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
 import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
@@ -10,12 +12,13 @@ import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/is_signed_in_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/reauthenticate_with_credential_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_in_with_email_and_password_use_case.dart';
-import 'package:speak_up/domain/use_cases/authentication/sign_in_with_goole_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/sign_in_with_google_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_email_use_case.dart';
@@ -48,6 +51,9 @@ class AppModules {
     injector.registerLazySingleton<FirebaseFirestore>(
         () => FirebaseFirestore.instance);
 
+    // Audio Player
+    injector.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
+
     // Account settings repository
     injector.registerLazySingleton<AccountSettingsRepository>(() =>
         AccountSettingsRepository(injector.get<SharedPreferencesManager>()));
@@ -60,6 +66,10 @@ class AppModules {
     // Firestore repository
     injector.registerLazySingleton<FirestoreRepository>(
         () => FirestoreRepository(injector.get<FirebaseFirestore>()));
+    // Audio Player Repository
+    injector.registerLazySingleton<AudioPlayerRepository>(
+        () => AudioPlayerRepository(injector.get<AudioPlayer>()));
+
     // Get app theme use case
     injector
         .registerLazySingleton<GetAppThemeUseCase>(() => GetAppThemeUseCase());
@@ -126,5 +136,9 @@ class AppModules {
     // Save app language use case
     injector.registerLazySingleton<SaveAppLanguageUseCase>(
         () => SaveAppLanguageUseCase());
+
+    // Play audio from url use case
+    injector.registerLazySingleton<PlayAudioFromUrlUseCase>(
+        () => PlayAudioFromUrlUseCase());
   }
 }

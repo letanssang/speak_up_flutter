@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_topic_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';
@@ -16,6 +17,7 @@ final topicViewModelProvider =
     StateNotifierProvider.autoDispose<TopicViewModel, TopicState>(
   (ref) => TopicViewModel(
     injector.get<GetSentenceListFromTopicUseCase>(),
+    injector.get<PlayAudioFromUrlUseCase>(),
   ),
 );
 
@@ -77,6 +79,10 @@ class _TopicViewState extends ConsumerState<TopicView> {
             : buildRespondentMessage(
                 context, isDarkTheme, sentence, isExpandedTranslations[index],
                 () {
+                ref
+                    .read(topicViewModelProvider.notifier)
+                    .onTapSpeaker(sentence.audioEndpoint);
+              }, () {
                 ref
                     .read(topicViewModelProvider.notifier)
                     .onTapExpandedTranslation(index);
@@ -180,8 +186,13 @@ class _TopicViewState extends ConsumerState<TopicView> {
     );
   }
 
-  Widget buildRespondentMessage(BuildContext context, bool isDarkTheme,
-      Sentence sentence, bool isExpandedTranslation, Function()? onTap) {
+  Widget buildRespondentMessage(
+      BuildContext context,
+      bool isDarkTheme,
+      Sentence sentence,
+      bool isExpandedTranslation,
+      Function()? onTapSpeaker,
+      Function()? onTapTranslation) {
     return Align(
       alignment: Alignment.centerRight,
       child: Stack(
@@ -229,6 +240,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: InkWell(
+                        onTap: onTapSpeaker,
                         child: Icon(
                           Icons.volume_up,
                           size: 20,
@@ -239,7 +251,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: InkWell(
-                        onTap: onTap,
+                        onTap: onTapTranslation,
                         child: Icon(
                           Icons.translate,
                           size: 20,
