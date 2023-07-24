@@ -38,7 +38,6 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _currentPasswordTextEditingController.dispose();
     _newPasswordTextEditingController.dispose();
     super.dispose();

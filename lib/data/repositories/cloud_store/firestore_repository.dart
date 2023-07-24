@@ -43,13 +43,12 @@ class FirestoreRepository {
         .get();
 
     List<Sentence> sentences = [];
-
     for (var docSnapshot in sentencesSnapshot.docs) {
       Map<String, dynamic> data = docSnapshot.data();
       Sentence sentence = Sentence.fromJson(data);
       sentences.add(sentence);
     }
-
+    sentences.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
     return sentences;
   }
 

@@ -10,13 +10,22 @@ class TopicViewModel extends StateNotifier<TopicState> {
     this.getSentenceListFromTopicUseCase,
   ) : super(const TopicState());
 
+  void onTapExpandedTranslation(int index) {
+    List<bool> isExpandedTranslations = List.from(state.isExpandedTranslations);
+    isExpandedTranslations[index] = !isExpandedTranslations[index];
+    state = state.copyWith(isExpandedTranslations: isExpandedTranslations);
+  }
+
   Future<void> fetchSentenceList(int topicID) async {
     state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
     try {
       final sentences = await getSentenceListFromTopicUseCase.run(topicID);
+      final List<bool> isExpandedTranslations =
+          List.generate(sentences.length, (index) => false, growable: false);
       state = state.copyWith(
         loadingStatus: LoadingStatus.success,
         sentences: sentences,
+        isExpandedTranslations: isExpandedTranslations,
       );
     } catch (e) {
       state = state.copyWith(loadingStatus: LoadingStatus.error);

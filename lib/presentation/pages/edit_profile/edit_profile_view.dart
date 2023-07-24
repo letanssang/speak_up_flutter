@@ -43,7 +43,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _userNameTextEditingController.text = user!.displayName ?? '';
     _emailTextEditingController.text = user!.email ?? '';

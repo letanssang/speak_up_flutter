@@ -9,5 +9,6 @@ class TopicState with _$TopicState {
   const factory TopicState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default([]) List<Sentence> sentences,
+    @Default([]) List<bool> isExpandedTranslations,
   }) = _TopicState;
 }

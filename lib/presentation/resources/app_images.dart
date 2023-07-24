@@ -43,6 +43,24 @@ class AppImages {
     );
   }
 
+  static Widget questioner({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/questioner.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
+  static Widget respondent({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/respondent.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
   static Widget onboarding(int index,
       {double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(

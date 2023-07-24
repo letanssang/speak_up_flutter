@@ -48,7 +48,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 margin: EdgeInsets.symmetric(
                     vertical: ScreenUtil().statusBarHeight + 16,
                     horizontal: 16),
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(20),
@@ -70,8 +70,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(language.toLanguageShortString(),
-                          style: TextStyle(
-                            fontSize: ScreenUtil().setSp(18),
+                          style: const TextStyle(
                             color: Colors.black,
                           )),
                       SizedBox(

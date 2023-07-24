@@ -37,7 +37,6 @@ class ProfileView extends ConsumerStatefulWidget {
 class ProfileViewState extends ConsumerState<ProfileView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.delayed(Duration.zero, () {
       ref.read(profileViewModelProvider.notifier).getThemeData();

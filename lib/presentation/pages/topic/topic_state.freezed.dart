@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TopicState {
   LoadingStatus get loadingStatus => throw _privateConstructorUsedError;
   List<Sentence> get sentences => throw _privateConstructorUsedError;
+  List<bool> get isExpandedTranslations => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TopicStateCopyWith<TopicState> get copyWith =>
@@ -30,7 +31,10 @@ abstract class $TopicStateCopyWith<$Res> {
           TopicState value, $Res Function(TopicState) then) =
       _$TopicStateCopyWithImpl<$Res, TopicState>;
   @useResult
-  $Res call({LoadingStatus loadingStatus, List<Sentence> sentences});
+  $Res call(
+      {LoadingStatus loadingStatus,
+      List<Sentence> sentences,
+      List<bool> isExpandedTranslations});
 }
 
 /// @nodoc
@@ -48,6 +52,7 @@ class _$TopicStateCopyWithImpl<$Res, $Val extends TopicState>
   $Res call({
     Object? loadingStatus = null,
     Object? sentences = null,
+    Object? isExpandedTranslations = null,
   }) {
     return _then(_value.copyWith(
       loadingStatus: null == loadingStatus
@@ -58,6 +63,10 @@ class _$TopicStateCopyWithImpl<$Res, $Val extends TopicState>
           ? _value.sentences
           : sentences // ignore: cast_nullable_to_non_nullable
               as List<Sentence>,
+      isExpandedTranslations: null == isExpandedTranslations
+          ? _value.isExpandedTranslations
+          : isExpandedTranslations // ignore: cast_nullable_to_non_nullable
+              as List<bool>,
     ) as $Val);
   }
 }
@@ -70,7 +79,10 @@ abstract class _$$_TopicStateCopyWith<$Res>
       __$$_TopicStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({LoadingStatus loadingStatus, List<Sentence> sentences});
+  $Res call(
+      {LoadingStatus loadingStatus,
+      List<Sentence> sentences,
+      List<bool> isExpandedTranslations});
 }
 
 /// @nodoc
@@ -86,6 +98,7 @@ class __$$_TopicStateCopyWithImpl<$Res>
   $Res call({
     Object? loadingStatus = null,
     Object? sentences = null,
+    Object? isExpandedTranslations = null,
   }) {
     return _then(_$_TopicState(
       loadingStatus: null == loadingStatus
@@ -96,6 +109,10 @@ class __$$_TopicStateCopyWithImpl<$Res>
           ? _value._sentences
           : sentences // ignore: cast_nullable_to_non_nullable
               as List<Sentence>,
+      isExpandedTranslations: null == isExpandedTranslations
+          ? _value._isExpandedTranslations
+          : isExpandedTranslations // ignore: cast_nullable_to_non_nullable
+              as List<bool>,
     ));
   }
 }
@@ -105,8 +122,10 @@ class __$$_TopicStateCopyWithImpl<$Res>
 class _$_TopicState implements _TopicState {
   const _$_TopicState(
       {this.loadingStatus = LoadingStatus.initial,
-      final List<Sentence> sentences = const []})
-      : _sentences = sentences;
+      final List<Sentence> sentences = const [],
+      final List<bool> isExpandedTranslations = const []})
+      : _sentences = sentences,
+        _isExpandedTranslations = isExpandedTranslations;
 
   @override
   @JsonKey()
@@ -120,9 +139,19 @@ class _$_TopicState implements _TopicState {
     return EqualUnmodifiableListView(_sentences);
   }
 
+  final List<bool> _isExpandedTranslations;
+  @override
+  @JsonKey()
+  List<bool> get isExpandedTranslations {
+    if (_isExpandedTranslations is EqualUnmodifiableListView)
+      return _isExpandedTranslations;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_isExpandedTranslations);
+  }
+
   @override
   String toString() {
-    return 'TopicState(loadingStatus: $loadingStatus, sentences: $sentences)';
+    return 'TopicState(loadingStatus: $loadingStatus, sentences: $sentences, isExpandedTranslations: $isExpandedTranslations)';
   }
 
   @override
@@ -133,12 +162,17 @@ class _$_TopicState implements _TopicState {
             (identical(other.loadingStatus, loadingStatus) ||
                 other.loadingStatus == loadingStatus) &&
             const DeepCollectionEquality()
-                .equals(other._sentences, _sentences));
+                .equals(other._sentences, _sentences) &&
+            const DeepCollectionEquality().equals(
+                other._isExpandedTranslations, _isExpandedTranslations));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, loadingStatus,
-      const DeepCollectionEquality().hash(_sentences));
+  int get hashCode => Object.hash(
+      runtimeType,
+      loadingStatus,
+      const DeepCollectionEquality().hash(_sentences),
+      const DeepCollectionEquality().hash(_isExpandedTranslations));
 
   @JsonKey(ignore: true)
   @override
@@ -150,12 +184,15 @@ class _$_TopicState implements _TopicState {
 abstract class _TopicState implements TopicState {
   const factory _TopicState(
       {final LoadingStatus loadingStatus,
-      final List<Sentence> sentences}) = _$_TopicState;
+      final List<Sentence> sentences,
+      final List<bool> isExpandedTranslations}) = _$_TopicState;
 
   @override
   LoadingStatus get loadingStatus;
   @override
   List<Sentence> get sentences;
+  @override
+  List<bool> get isExpandedTranslations;
   @override
   @JsonKey(ignore: true)
   _$$_TopicStateCopyWith<_$_TopicState> get copyWith =>
