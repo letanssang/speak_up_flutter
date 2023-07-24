@@ -74,6 +74,10 @@ class _TopicViewState extends ConsumerState<TopicView> {
                 isDarkTheme, sentence, isExpandedTranslations[index], () {
                 ref
                     .read(topicViewModelProvider.notifier)
+                    .onTapSpeaker(sentence.audioEndpoint);
+              }, () {
+                ref
+                    .read(topicViewModelProvider.notifier)
                     .onTapExpandedTranslation(index);
               })
             : buildRespondentMessage(
@@ -91,8 +95,12 @@ class _TopicViewState extends ConsumerState<TopicView> {
     );
   }
 
-  Widget buildQuestionerMessage(bool isDarkTheme, Sentence sentence,
-      bool isExpandedTranslation, Function()? onTap) {
+  Widget buildQuestionerMessage(
+      bool isDarkTheme,
+      Sentence sentence,
+      bool isExpandedTranslation,
+      Function()? onTapSpeaker,
+      Function()? onTapTranslation) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Stack(
@@ -106,7 +114,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
             ),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDarkTheme ? Colors.grey[200] : Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: isDarkTheme
@@ -140,6 +148,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: InkWell(
+                        onTap: onTapSpeaker,
                         child: Icon(
                           Icons.volume_up,
                           size: 20,
@@ -152,7 +161,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: InkWell(
-                        onTap: onTap,
+                        onTap: onTapTranslation,
                         child: Icon(
                           Icons.translate,
                           size: 20,

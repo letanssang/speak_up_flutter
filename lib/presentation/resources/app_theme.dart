@@ -23,8 +23,7 @@ ThemeData getAppLightTheme() {
     ),
     primaryColor: const Color(0xFF50248F),
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFF50248F),
-    ),
+        seedColor: const Color(0xFF50248F), surfaceVariant: Colors.transparent),
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.black),
   );
@@ -52,7 +51,8 @@ ThemeData getAppDarkTheme() {
       surfaceTintColor: Colors.white,
     ),
     primaryColor: const Color(0xFF50248F),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF50248F)),
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF50248F), surfaceVariant: Colors.transparent),
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.white),
   );
