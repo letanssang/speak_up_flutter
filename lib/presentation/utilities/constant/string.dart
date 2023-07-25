@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+const String dailyConversationURL =
+    'https://basicenglishspeaking.com/wp-content/uploads/audio/QA/';
+const String audioExtension = '.mp3';
 String getSplashTitle(int index, BuildContext context) {
   switch (index) {
     case 0:

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:speak_up/domain/use_cases/authentication/sign_in_with_goole_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/sign_in_with_google_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';

@@ -43,6 +43,8 @@ dependencies:
     sdk: flutter
   intl: any
   enum_to_string: ^2.0.1
+  audioplayers: ^4.1.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

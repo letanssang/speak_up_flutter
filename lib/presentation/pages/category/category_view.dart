@@ -29,11 +29,15 @@ class CategoryView extends ConsumerStatefulWidget {
   ConsumerState<CategoryView> createState() => _CategoryViewState();
 }
 
-class _CategoryViewState extends ConsumerState<CategoryView> {
+class _CategoryViewState extends ConsumerState<CategoryView>
+    with TickerProviderStateMixin {
   Category? category;
+
+  late TabController _tabController;
 
   @override
   void initState() {
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _init();
@@ -54,9 +58,7 @@ class _CategoryViewState extends ConsumerState<CategoryView> {
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: category != null ? Text(category!.name) : null,
-      ),
+      appBar: AppBar(),
       body: state.loadingStatus == LoadingStatus.success
           ? buildBodySuccess(state.topics, isDarkTheme, language)
           : state.loadingStatus == LoadingStatus.error
@@ -67,58 +69,111 @@ class _CategoryViewState extends ConsumerState<CategoryView> {
 
   Widget buildBodySuccess(
       List<Topic> topics, bool isDarkTheme, Language language) {
-    return Center(
-      child: ListView.builder(
-        itemCount: topics.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: InkWell(
-              onTap: () {
-                ref
-                    .read(appNavigatorProvider)
-                    .navigateTo(AppRoutes.topic, arguments: topics[index]);
-              },
-              child: Card(
-                  elevation: 5,
-                  color: isDarkTheme ? Colors.grey[850] : Colors.white,
-                  surfaceTintColor: Colors.white,
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            'assets/images/temp_topic.png',
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+            ),
+            child: Image.asset(
+              'assets/images/temp_topic.png',
+              width: double.infinity,
+              height: 200,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(category!.name,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          Container(
+            height: 50,
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey[350]),
+            child: TabBar(
+              controller: _tabController,
+              indicator: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorPadding: EdgeInsets.zero,
+              indicatorColor: Colors.transparent,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.black,
+              tabs: const [
+                Tab(
+                  icon: Text(
+                    'About',
+                  ),
+                ),
+                Tab(
+                  icon: Text('Topics'),
+                ),
+              ],
+            ),
+          ),
+          Flexible(
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                Container(),
+                ListView.builder(
+                  itemCount: topics.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: InkWell(
+                        onTap: () {
+                          ref.read(appNavigatorProvider).navigateTo(
+                              AppRoutes.topic,
+                              arguments: topics[index]);
+                        },
+                        child: Card(
+                          elevation: 5,
+                          color: isDarkTheme ? Colors.grey[850] : Colors.white,
+                          surfaceTintColor: Colors.white,
+                          child: ListTile(
+                            title: Text(
+                              topics[index].topicName,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              topics[index].translation,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                            trailing: Icon(
+                              Icons.play_circle_outline_outlined,
+                              size: 32,
+                              color: isDarkTheme
+                                  ? Colors.white
+                                  : Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            language == Language.english
-                                ? topics[index].topicName
-                                : topics[index].translation,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  )),
+                    );
+                  },
+                ),
+              ],
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

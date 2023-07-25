@@ -13,6 +13,7 @@ class AppRoutes {
   static const String categories = '/categories';
   static const String category = '/category';
   static const String topic = '/topic';
+  static const String lessons = '/lessons';
 
   //profile
   static const String editProfile = '/edit_profile';

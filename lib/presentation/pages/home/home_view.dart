@@ -13,6 +13,7 @@ class HomeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkTheme = ref.watch(themeProvider);
     return SingleChildScrollView(
       child: SizedBox(
         height: ScreenUtil().screenHeight * 2,
@@ -30,44 +31,99 @@ class HomeView extends ConsumerWidget {
             Expanded(
               flex: 3,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text('Explore',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(18),
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
-                  GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 8,
-                      ),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.all(8),
-                      itemCount: 4,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: ScreenUtil().screenWidth * 0.4,
-                          height: ScreenUtil().screenHeight * 0.2,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            image: const DecorationImage(
-                              image: AssetImage(
-                                'assets/images/temp_topic.png',
-                              ),
-                              fit: BoxFit.cover,
-                            ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 8),
+                        child: Text(
+                          'Explore',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(18),
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      })
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          ref
+                              .read(appNavigatorProvider)
+                              .navigateTo(AppRoutes.lessons);
+                        },
+                        child: Text(
+                          'View all',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      buildExploreItem(
+                          '100 Common English Phrases and Sentence Patterns',
+                          isDarkTheme),
+                      buildExploreItem(
+                          '102 Common English Idioms with Meaning and Examples',
+                          isDarkTheme),
+                    ],
+                  )
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildExploreItem(String title, bool isDarkTheme) {
+    return SizedBox(
+      width: ScreenUtil().screenWidth * 0.45,
+      height: ScreenUtil().screenHeight * 0.3,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        color: isDarkTheme ? Colors.grey[800] : Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 5,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: AspectRatio(
+                  aspectRatio: 1.2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/images/temp_topic.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isDarkTheme ? Colors.white : Colors.black),
               ),
             ),
           ],

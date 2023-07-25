@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
-import 'package:speak_up/domain/use_cases/authentication/sign_in_with_goole_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/sign_in_with_google_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
