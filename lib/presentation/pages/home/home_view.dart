@@ -16,7 +16,7 @@ class HomeView extends ConsumerWidget {
     final isDarkTheme = ref.watch(themeProvider);
     return SingleChildScrollView(
       child: SizedBox(
-        height: ScreenUtil().screenHeight * 2,
+        height: ScreenUtil().screenHeight * 1.5,
         width: ScreenUtil().screenWidth,
         child: Column(
           children: [
@@ -85,7 +85,7 @@ class HomeView extends ConsumerWidget {
   Widget buildExploreItem(String title, bool isDarkTheme) {
     return SizedBox(
       width: ScreenUtil().screenWidth * 0.45,
-      height: ScreenUtil().screenHeight * 0.3,
+      height: ScreenUtil().screenHeight * 0.35,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
