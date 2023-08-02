@@ -4,15 +4,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/data/providers/lesson_list_provider.dart';
+import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/constant/categories.dart';
 
-class HomeView extends ConsumerWidget {
+class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends ConsumerState<HomeView> {
+  List<Lesson> lessons = [];
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  Future<void> _init() async {
+    lessons = await ref.read(lessonListProvider.future);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isDarkTheme = ref.watch(themeProvider);
     return SingleChildScrollView(
       child: SizedBox(
@@ -28,56 +47,58 @@ class HomeView extends ConsumerWidget {
             buildCategories(ref.watch(themeProvider), context, () {
               ref.read(appNavigatorProvider).navigateTo(AppRoutes.categories);
             }, ref),
-            Expanded(
-              flex: 3,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        child: Text(
-                          'Explore',
-                          style: TextStyle(
-                            fontSize: ScreenUtil().setSp(18),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          ref
-                              .read(appNavigatorProvider)
-                              .navigateTo(AppRoutes.lessons);
-                        },
-                        child: Text(
-                          'View all',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      buildExploreItem(
-                          '100 Common English Phrases and Sentence Patterns',
-                          isDarkTheme),
-                      buildExploreItem(
-                          '102 Common English Idioms with Meaning and Examples',
-                          isDarkTheme),
-                    ],
-                  )
-                ],
-              ),
-            ),
+            buildExplore(context, isDarkTheme),
           ],
         ),
+      ),
+    );
+  }
+
+  Expanded buildExplore(BuildContext context, bool isDarkTheme) {
+    return Expanded(
+      flex: 3,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                child: Text(
+                  'Explore',
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(18),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  ref
+                      .read(appNavigatorProvider)
+                      .navigateTo(AppRoutes.lessons, arguments: lessons);
+                },
+                child: Text(
+                  'View all',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              buildExploreItem(
+                  lessons.isNotEmpty ? lessons[0].name : '', isDarkTheme),
+              buildExploreItem(
+                  lessons.isNotEmpty ? lessons[1].name : '', isDarkTheme),
+            ],
+          )
+        ],
       ),
     );
   }

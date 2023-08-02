@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 
@@ -15,6 +16,23 @@ class FirestoreRepository {
       'name': user.displayName,
       'photoUrl': user.photoURL,
     });
+  }
+
+  Future<List<Lesson>> getLessonList() async {
+    final lessonSnapshot = await _firestore
+        .collection('lessons')
+        .where('Status', isEqualTo: 1)
+        .get();
+
+    List<Lesson> lessons = [];
+
+    for (var docSnapshot in lessonSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      Lesson lesson = Lesson.fromJson(data);
+      lessons.add(lesson);
+    }
+
+    return lessons;
   }
 
   Future<List<Topic>> getTopicsFromCategory(int categoryId) async {
