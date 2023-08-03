@@ -60,6 +60,11 @@
 "passwordMustBeAtLeast6Characters": "Mật khẩu phải có ít nhất 6 ký tự",
 "success": "Thành công",
 "yourProfileInformationHasBeenUpdated": "Thông tin hồ sơ của bạn đã được cập nhật",
+"explore": "Khám phá",
+"viewAll": "Xem tất cả",
+"categories": "Danh mục",
+"continueLearning": "Tiếp tục học",
+"featuredCourses": "Khóa học nổi bật",
 "getStarted": "Bắt đầu"
 
 }

@@ -1,14 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/data/providers/lesson_list_provider.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_lesson_list_use_case.dart';
+import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
+import 'package:speak_up/presentation/pages/home/home_state.dart';
+import 'package:speak_up/presentation/pages/home/home_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/constant/categories.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+
+final homeViewModelProvider =
+    StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
+        (ref) => HomeViewModel(
+              injector.get<GetLessonListUseCase>(),
+            ));
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -18,21 +31,24 @@ class HomeView extends ConsumerStatefulWidget {
 }
 
 class _HomeViewState extends ConsumerState<HomeView> {
-  List<Lesson> lessons = [];
-
   @override
   void initState() {
-    _init();
+    // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _init();
+    });
   }
 
   Future<void> _init() async {
-    lessons = await ref.read(lessonListProvider.future);
+    await ref.read(homeViewModelProvider.notifier).getLessonList();
   }
 
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = ref.watch(themeProvider);
+    final language = ref.watch(appLanguageProvider);
+    final state = ref.watch(homeViewModelProvider);
     return SingleChildScrollView(
       child: SizedBox(
         height: ScreenUtil().screenHeight * 1.5,
@@ -47,14 +63,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
             buildCategories(ref.watch(themeProvider), context, () {
               ref.read(appNavigatorProvider).navigateTo(AppRoutes.categories);
             }, ref),
-            buildExplore(context, isDarkTheme),
+            if (state.loadingStatus == LoadingStatus.success)
+              buildExplore(context, state.lessons, isDarkTheme, language),
           ],
         ),
       ),
     );
   }
 
-  Expanded buildExplore(BuildContext context, bool isDarkTheme) {
+  Expanded buildExplore(BuildContext context, List<Lesson> lessons,
+      bool isDarkTheme, Language language) {
     return Expanded(
       flex: 3,
       child: Column(
@@ -66,7 +84,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                 child: Text(
-                  'Explore',
+                  AppLocalizations.of(context)!.explore,
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(18),
                     fontWeight: FontWeight.bold,
@@ -80,7 +98,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       .navigateTo(AppRoutes.lessons, arguments: lessons);
                 },
                 child: Text(
-                  'View all',
+                  AppLocalizations.of(context)!.viewAll,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -92,10 +110,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              buildExploreItem(lessons.isNotEmpty ? lessons[0].name : '',
-                  isDarkTheme, lessons.isNotEmpty ? lessons[0].imageURL : null),
-              buildExploreItem(lessons.isNotEmpty ? lessons[1].name : '',
-                  isDarkTheme, lessons.isNotEmpty ? lessons[1].imageURL : null),
+              buildExploreItem(lessons[0], isDarkTheme, language),
+              buildExploreItem(lessons[1], isDarkTheme, language),
             ],
           )
         ],
@@ -103,10 +119,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget buildExploreItem(String title, bool isDarkTheme, String? imageURL) {
+  Widget buildExploreItem(Lesson lesson, bool isDarkTheme, Language language) {
     return SizedBox(
       width: ScreenUtil().screenWidth * 0.45,
-      height: ScreenUtil().screenHeight * 0.36,
+      height: ScreenUtil().screenHeight * 0.3,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -130,11 +146,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: imageURL != null
-                              ? NetworkImage(imageURL)
-                              : const AssetImage(
-                                  'assets/images/temp_topic.png',
-                                ) as ImageProvider),
+                          image: NetworkImage(lesson.imageURL)),
                     ),
                   ),
                 ),
@@ -144,7 +156,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  title,
+                  language == Language.english
+                      ? lesson.name
+                      : lesson.translation,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -205,7 +219,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-              child: Text('Continue learning',
+              child: Text(AppLocalizations.of(context)!.continueLearning,
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(18),
                     fontWeight: FontWeight.bold,
@@ -256,7 +270,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Text(
-                    'Categories',
+                    AppLocalizations.of(context)!.categories,
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(18),
                       fontWeight: FontWeight.bold,
@@ -266,7 +280,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 TextButton(
                   onPressed: onPressed,
                   child: Text(
-                    'View all',
+                    AppLocalizations.of(context)!.viewAll,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                     ),

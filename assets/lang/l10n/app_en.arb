@@ -60,5 +60,10 @@
 "passwordMustBeAtLeast6Characters": "Password must be at least 6 characters",
 "success": "Success",
 "yourProfileInformationHasBeenUpdated": "Your profile information has been updated",
+"explore": "Explore",
+"viewAll": "View All",
+"categories": "Categories",
+"continueLearning": "Continue Learning",
+"featuredCourses": "Featured Courses",
 "getStarted": "Get Started"
 }
