@@ -5,6 +5,7 @@ import 'package:speak_up/presentation/pages/categories/categories_view.dart';
 import 'package:speak_up/presentation/pages/category/category_view.dart';
 import 'package:speak_up/presentation/pages/change_password/change_password_view.dart';
 import 'package:speak_up/presentation/pages/edit_profile/edit_profile_view.dart';
+import 'package:speak_up/presentation/pages/lesson/lesson_view.dart';
 import 'package:speak_up/presentation/pages/lessons/lessons_view.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/onboarding/onboarding_view.dart';
@@ -100,6 +101,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const LessonsView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.lesson:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const LessonView(),
             settings: settings,
           );
         }

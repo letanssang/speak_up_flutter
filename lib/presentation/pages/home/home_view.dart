@@ -92,10 +92,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              buildExploreItem(
-                  lessons.isNotEmpty ? lessons[0].name : '', isDarkTheme),
-              buildExploreItem(
-                  lessons.isNotEmpty ? lessons[1].name : '', isDarkTheme),
+              buildExploreItem(lessons.isNotEmpty ? lessons[0].name : '',
+                  isDarkTheme, lessons.isNotEmpty ? lessons[0].imageURL : null),
+              buildExploreItem(lessons.isNotEmpty ? lessons[1].name : '',
+                  isDarkTheme, lessons.isNotEmpty ? lessons[1].imageURL : null),
             ],
           )
         ],
@@ -103,10 +103,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget buildExploreItem(String title, bool isDarkTheme) {
+  Widget buildExploreItem(String title, bool isDarkTheme, String? imageURL) {
     return SizedBox(
       width: ScreenUtil().screenWidth * 0.45,
-      height: ScreenUtil().screenHeight * 0.35,
+      height: ScreenUtil().screenHeight * 0.36,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -128,23 +128,28 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/temp_topic.png'),
-                        fit: BoxFit.cover,
-                      ),
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: imageURL != null
+                              ? NetworkImage(imageURL)
+                              : const AssetImage(
+                                  'assets/images/temp_topic.png',
+                                ) as ImageProvider),
                     ),
                   ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isDarkTheme ? Colors.white : Colors.black),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: isDarkTheme ? Colors.white : Colors.black),
+                ),
               ),
             ),
           ],
