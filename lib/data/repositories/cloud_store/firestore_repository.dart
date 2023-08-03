@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
+import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 
@@ -31,7 +32,7 @@ class FirestoreRepository {
       Lesson lesson = Lesson.fromJson(data);
       lessons.add(lesson);
     }
-
+    lessons.sort((a, b) => a.lessonID.compareTo(b.lessonID));
     return lessons;
   }
 
@@ -51,6 +52,21 @@ class FirestoreRepository {
     }
 
     return topics;
+  }
+
+  Future<List<SentencePattern>> getSentencePatternList() async {
+    final sentencePatternSnapshot = await _firestore
+        .collection('patterns')
+        .where('Status', isEqualTo: 1)
+        .get();
+    List<SentencePattern> sentencePatterns = [];
+    for (var docSnapshot in sentencePatternSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      SentencePattern sentencePattern = SentencePattern.fromJson(data);
+      sentencePatterns.add(sentencePattern);
+    }
+    sentencePatterns.sort((a, b) => a.patternID.compareTo(b.patternID));
+    return sentencePatterns;
   }
 
   Future<List<Sentence>> getSentencesFromTopic(int topicId) async {
