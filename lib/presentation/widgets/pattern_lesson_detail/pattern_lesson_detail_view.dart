@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/pattern_lesson_detail/pattern_lesson_detail_state.dart';
@@ -54,7 +56,12 @@ class _PatternLessonDetailViewState
                 color: isDarkTheme ? Colors.grey[850] : Colors.white,
                 surfaceTintColor: Colors.white,
                 child: ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    ref.read(appNavigatorProvider).navigateTo(
+                          AppRoutes.pattern,
+                          arguments: state.sentencePatterns[index],
+                        );
+                  },
                   title: Text(
                     state.sentencePatterns[index].name,
                     style: const TextStyle(

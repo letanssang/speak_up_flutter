@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:speak_up/domain/entities/expression/expression.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
 import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
@@ -121,10 +122,28 @@ class FirestoreRepository {
     return idiomTypes;
   }
 
+  Future<List<Expression>> getExpressionListByType(int expressionTypeID) async {
+    final expressionSnapshot = await _firestore
+        .collection('expressions')
+        .where('ExpressionTypeID', isEqualTo: expressionTypeID)
+        .where('Status', isEqualTo: 1)
+        .get();
+
+    List<Expression> expressions = [];
+    for (var docSnapshot in expressionSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      Expression expression = Expression.fromJson(data);
+      expressions.add(expression);
+    }
+    expressions.sort((a, b) => a.expressionID.compareTo(b.expressionID));
+    return expressions;
+  }
+
   Future<List<Sentence>> getSentencesFromTopic(int topicId) async {
     final sentencesSnapshot = await _firestore
-        .collection('sentences')
-        .where('TopicId', isEqualTo: topicId)
+        .collection('sentencesA')
+        .where('ParentType', isEqualTo: 1)
+        .where('ParentID', isEqualTo: topicId)
         .where('Status', isEqualTo: 1)
         .get();
 
@@ -134,7 +153,25 @@ class FirestoreRepository {
       Sentence sentence = Sentence.fromJson(data);
       sentences.add(sentence);
     }
-    sentences.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+    sentences.sort((a, b) => a.sentenceID.compareTo(b.sentenceID));
+    return sentences;
+  }
+
+  Future<List<Sentence>> getSentenceListFromPattern(int patternID) async {
+    final sentencesSnapshot = await _firestore
+        .collection('sentencesA')
+        .where('ParentType', isEqualTo: 2)
+        .where('ParentID', isEqualTo: patternID)
+        .where('Status', isEqualTo: 1)
+        .get();
+
+    List<Sentence> sentences = [];
+    for (var docSnapshot in sentencesSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      Sentence sentence = Sentence.fromJson(data);
+      sentences.add(sentence);
+    }
+    sentences.sort((a, b) => a.sentenceID.compareTo(b.sentenceID));
     return sentences;
   }
 

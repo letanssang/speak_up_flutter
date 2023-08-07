@@ -15,6 +15,8 @@ class AppRoutes {
   static const String topic = '/topic';
   static const String lessons = '/lessons';
   static const String lesson = '/lesson';
+  static const String pattern = '/pattern';
+  static const String expression = '/expression';
 
   //profile
   static const String editProfile = '/edit_profile';

@@ -4,7 +4,7 @@ part 'sentence.g.dart';
 
 @JsonSerializable()
 class Sentence {
-  @JsonKey(name: 'SentenceId')
+  @JsonKey(name: 'SentenceID')
   final int sentenceID;
   @JsonKey(name: 'Text')
   final String text;
@@ -12,21 +12,18 @@ class Sentence {
   final String translation;
   @JsonKey(name: 'AudioEndpoint')
   final String audioEndpoint;
-  @JsonKey(name: 'TopicId')
-  final int topicID;
-  @JsonKey(name: 'SortOrder')
-  final int sortOrder;
-  @JsonKey(name: 'Type')
-  final int type;
+  @JsonKey(name: 'ParentID')
+  final int parentID;
+  @JsonKey(name: 'ParentType')
+  final int parentType;
 
   Sentence({
     required this.sentenceID,
     required this.text,
     required this.translation,
     required this.audioEndpoint,
-    required this.topicID,
-    required this.sortOrder,
-    required this.type,
+    required this.parentID,
+    required this.parentType,
   });
 
   factory Sentence.fromJson(Map<String, dynamic> json) =>

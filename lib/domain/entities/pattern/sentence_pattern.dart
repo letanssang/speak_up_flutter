@@ -17,5 +17,10 @@ class SentencePattern {
   });
   factory SentencePattern.fromJson(Map<String, dynamic> json) =>
       _$SentencePatternFromJson(json);
+  factory SentencePattern.initial() => SentencePattern(
+        patternID: 0,
+        name: '',
+        dialogue: '',
+      );
   Map<String, dynamic> toJson() => _$SentencePatternToJson(this);
 }

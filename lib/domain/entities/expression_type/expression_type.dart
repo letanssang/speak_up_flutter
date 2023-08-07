@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'expression_type.g.dart';
 
 @JsonSerializable()
@@ -22,5 +23,12 @@ class ExpressionType {
   });
   factory ExpressionType.fromJson(Map<String, dynamic> json) =>
       _$ExpressionTypeFromJson(json);
+  factory ExpressionType.initial() => ExpressionType(
+        expressionTypeID: 0,
+        name: '',
+        translation: '',
+        description: '',
+        descriptionTranslation: '',
+      );
   Map<String, dynamic> toJson() => _$ExpressionTypeToJson(this);
 }

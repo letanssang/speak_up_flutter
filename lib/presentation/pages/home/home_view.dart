@@ -123,6 +123,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget buildExploreItem(Lesson lesson, bool isDarkTheme, Language language) {
     return SizedBox(
       width: ScreenUtil().screenWidth * 0.45,
+      height: ScreenUtil().screenHeight * 0.32,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
