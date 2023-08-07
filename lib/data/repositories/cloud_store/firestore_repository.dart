@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
+import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
+import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 
@@ -88,20 +90,36 @@ class FirestoreRepository {
     return sentencePatterns;
   }
 
-  // Future<List<PhrasalVerb>> getPhrasalVerbList() async {
-  //   final phrasalVerbSnapshot = await _firestore
-  //       .collection('phrasal_verbs')
-  //       .where('Status', isEqualTo: 1)
-  //       .get();
-  //   List<PhrasalVerb> phrasalVerbs = [];
-  //   for (var docSnapshot in phrasalVerbSnapshot.docs) {
-  //     Map<String, dynamic> data = docSnapshot.data();
-  //     PhrasalVerb phrasalVerb = PhrasalVerb.fromJson(data);
-  //     phrasalVerbs.add(phrasalVerb);
-  //   }
-  //   phrasalVerbs.sort((a, b) => a.phrasalVerbID.compareTo(b.phrasalVerbID));
-  //   return phrasalVerbs;
-  // }
+  Future<List<PhrasalVerbType>> getPhrasalVerbTypeList() async {
+    final phrasalVerbTypeSnapshot = await _firestore
+        .collection('phrasal_verb_types')
+        .where('Status', isEqualTo: 1)
+        .get();
+    List<PhrasalVerbType> phrasalVerbTypes = [];
+    for (var docSnapshot in phrasalVerbTypeSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      PhrasalVerbType phrasalVerbType = PhrasalVerbType.fromJson(data);
+      phrasalVerbTypes.add(phrasalVerbType);
+    }
+    phrasalVerbTypes
+        .sort((a, b) => a.phrasalVerbTypeID.compareTo(b.phrasalVerbTypeID));
+    return phrasalVerbTypes;
+  }
+
+  Future<List<IdiomType>> getIdiomTypeList() async {
+    final idiomTypeSnapshot = await _firestore
+        .collection('idiom_types')
+        .where('Status', isEqualTo: 1)
+        .get();
+    List<IdiomType> idiomTypes = [];
+    for (var docSnapshot in idiomTypeSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      IdiomType idiomType = IdiomType.fromJson(data);
+      idiomTypes.add(idiomType);
+    }
+    idiomTypes.sort((a, b) => a.idiomTypeID.compareTo(b.idiomTypeID));
+    return idiomTypes;
+  }
 
   Future<List<Sentence>> getSentencesFromTopic(int topicId) async {
     final sentencesSnapshot = await _firestore

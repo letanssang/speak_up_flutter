@@ -4,9 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
-import 'package:speak_up/presentation/pages/lesson/widgets/expression_types/expression_types_view.dart';
-import 'package:speak_up/presentation/pages/lesson/widgets/pattern_lesson_detail/pattern_lesson_detail_view.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/widgets/expression_types/expression_types_view.dart';
+import 'package:speak_up/presentation/widgets/idiom_types/idiom_types_view.dart';
+import 'package:speak_up/presentation/widgets/pattern_lesson_detail/pattern_lesson_detail_view.dart';
+import 'package:speak_up/presentation/widgets/phrasal_verb_types/phrasal_verb_types_view.dart';
 
 class LessonView extends ConsumerStatefulWidget {
   const LessonView({super.key});
@@ -134,6 +136,10 @@ class _LessonViewState extends ConsumerState<LessonView>
         return const PatternLessonDetailView();
       case 2:
         return const ExpressionTypesView();
+      case 3:
+        return const PhrasalVerbTypesView();
+      case 4:
+        return const IdiomTypesView();
       default:
         return Container();
     }

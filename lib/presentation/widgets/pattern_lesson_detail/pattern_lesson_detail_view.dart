@@ -1,51 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_expression_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
-import 'package:speak_up/presentation/pages/lesson/widgets/expression_types/expression_types_state.dart';
-import 'package:speak_up/presentation/pages/lesson/widgets/expression_types/expression_types_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
+import 'package:speak_up/presentation/widgets/pattern_lesson_detail/pattern_lesson_detail_state.dart';
+import 'package:speak_up/presentation/widgets/pattern_lesson_detail/pattern_lesson_detail_view_model.dart';
 
-final expressionTypesViewModelProvider = StateNotifierProvider.autoDispose<
-    ExpressionTypesViewModel, ExpressionTypesState>(
-  (ref) => ExpressionTypesViewModel(
-    injector.get<GetExpressionTypeListUseCase>(),
-  ),
-);
+final patternLessonDetailViewModelProvider = StateNotifierProvider.autoDispose<
+    PatternLessonDetailViewModel, PatternLessonDetailState>((ref) {
+  return PatternLessonDetailViewModel(
+    injector.get<GetSentencePatternListUseCase>(),
+  );
+});
 
-class ExpressionTypesView extends ConsumerStatefulWidget {
-  const ExpressionTypesView({super.key});
-
+class PatternLessonDetailView extends ConsumerStatefulWidget {
+  const PatternLessonDetailView({super.key});
   @override
-  ConsumerState<ExpressionTypesView> createState() =>
-      _ExpressionTypesViewState();
+  ConsumerState<PatternLessonDetailView> createState() =>
+      _PatternLessonDetailViewState();
 }
 
-class _ExpressionTypesViewState extends ConsumerState<ExpressionTypesView> {
+class _PatternLessonDetailViewState
+    extends ConsumerState<PatternLessonDetailView> {
   @override
-  void initState() {
+  initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _init();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _init();
     });
   }
 
   Future<void> _init() async {
     await ref
-        .read(expressionTypesViewModelProvider.notifier)
-        .fetchExpressionList();
+        .read(patternLessonDetailViewModelProvider.notifier)
+        .fetchSentencePatternList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(expressionTypesViewModelProvider);
+    final state = ref.watch(patternLessonDetailViewModelProvider);
     final isDarkTheme = ref.watch(themeProvider);
     switch (state.loadingStatus) {
       case LoadingStatus.success:
         return ListView.builder(
-          itemCount: state.expressionTypes.length,
+          itemCount: state.sentencePatterns.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -56,16 +56,10 @@ class _ExpressionTypesViewState extends ConsumerState<ExpressionTypesView> {
                 child: ListTile(
                   onTap: () {},
                   title: Text(
-                    state.expressionTypes[index].name,
+                    state.sentencePatterns[index].name,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    state.expressionTypes[index].translation,
-                    style: const TextStyle(
-                      fontSize: 14,
                     ),
                   ),
                   trailing: Icon(
