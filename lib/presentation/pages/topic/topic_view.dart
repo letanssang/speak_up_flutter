@@ -45,7 +45,6 @@ class _TopicViewState extends ConsumerState<TopicView> {
         .read(topicViewModelProvider.notifier)
         .fetchSentenceList(topic!.topicID);
   }
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(topicViewModelProvider);
@@ -53,6 +52,11 @@ class _TopicViewState extends ConsumerState<TopicView> {
     return Scaffold(
       appBar: AppBar(
         title: topic != null ? Text(topic!.topicName) : null,
+        // TODO: Add divider
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1),
+        ),
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? buildBodySuccess(

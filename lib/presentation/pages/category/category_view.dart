@@ -133,37 +133,35 @@ class _CategoryViewState extends ConsumerState<CategoryView>
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: InkWell(
-                      onTap: () {
-                        ref.read(appNavigatorProvider).navigateTo(
-                            AppRoutes.topic,
-                            arguments: topics[index]);
-                      },
-                      child: Card(
-                        elevation: 5,
-                        color: isDarkTheme ? Colors.grey[850] : Colors.white,
-                        surfaceTintColor: Colors.white,
-                        child: ListTile(
-                          title: Text(
-                            topics[index].topicName,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    child: Card(
+                      elevation: 5,
+                      color: isDarkTheme ? Colors.grey[850] : Colors.white,
+                      surfaceTintColor: Colors.white,
+                      child: ListTile(
+                        onTap: () {
+                          ref.read(appNavigatorProvider).navigateTo(
+                              AppRoutes.topic,
+                              arguments: topics[index]);
+                        },
+                        title: Text(
+                          topics[index].topicName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                          subtitle: Text(
-                            topics[index].translation,
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
+                        ),
+                        subtitle: Text(
+                          topics[index].translation,
+                          style: const TextStyle(
+                            fontSize: 14,
                           ),
-                          trailing: Icon(
-                            Icons.play_circle_outline_outlined,
-                            size: 32,
-                            color: isDarkTheme
-                                ? Colors.white
-                                : Theme.of(context).primaryColor,
-                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.play_circle_outline_outlined,
+                          size: 32,
+                          color: isDarkTheme
+                              ? Colors.white
+                              : Theme.of(context).primaryColor,
                         ),
                       ),
                     ),

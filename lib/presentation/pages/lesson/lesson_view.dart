@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
+import 'package:speak_up/presentation/pages/lesson/widgets/pattern_lesson_detail/pattern_lesson_detail_view.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 
 class LessonView extends ConsumerStatefulWidget {
@@ -101,7 +102,7 @@ class _LessonViewState extends ConsumerState<LessonView>
                     controller: _tabController,
                     children: <Widget>[
                       buildAboutLesson(language),
-                      buildDetailLesson(isDarkTheme),
+                      buildDetailLesson(isDarkTheme, lesson!.lessonID),
                     ],
                   ),
                 ),
@@ -126,45 +127,12 @@ class _LessonViewState extends ConsumerState<LessonView>
     );
   }
 
-  ListView buildDetailLesson(bool isDarkTheme) {
-    return ListView.builder(
-      itemCount: 5,
-      physics: const BouncingScrollPhysics(),
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: InkWell(
-            onTap: () {},
-            child: Card(
-              elevation: 5,
-              color: isDarkTheme ? Colors.grey[850] : Colors.white,
-              surfaceTintColor: Colors.white,
-              child: ListTile(
-                title: const Text(
-                  'title',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  'subtitle',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.play_circle_outline_outlined,
-                  size: 32,
-                  color: isDarkTheme
-                      ? Colors.white
-                      : Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
+  Widget buildDetailLesson(bool isDarkTheme, int lessonID) {
+    switch (lessonID) {
+      case 1:
+        return const PatternLessonDetailView();
+      default:
+        return Container();
+    }
   }
 }

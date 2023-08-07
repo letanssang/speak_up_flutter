@@ -18,7 +18,6 @@ class HomeViewModel extends StateNotifier<HomeState> {
           lessons: lessons, loadingStatus: LoadingStatus.success);
     } catch (e) {
       state = state.copyWith(loadingStatus: LoadingStatus.error);
-      print(e);
     }
   }
 }

@@ -33,7 +33,6 @@ class HomeView extends ConsumerStatefulWidget {
 class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _init();
@@ -71,9 +70,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Expanded buildExplore(BuildContext context, List<Lesson> lessons,
+  Widget buildExplore(BuildContext context, List<Lesson> lessons,
       bool isDarkTheme, Language language) {
-    return Expanded(
+    return Flexible(
       flex: 3,
       child: Column(
         children: [
@@ -106,13 +105,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              buildExploreItem(lessons[0], isDarkTheme, language),
-              buildExploreItem(lessons[1], isDarkTheme, language),
-            ],
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                buildExploreItem(lessons[0], isDarkTheme, language),
+                buildExploreItem(lessons[1], isDarkTheme, language),
+              ],
+            ),
           )
         ],
       ),
@@ -122,16 +123,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget buildExploreItem(Lesson lesson, bool isDarkTheme, Language language) {
     return SizedBox(
       width: ScreenUtil().screenWidth * 0.45,
-      height: ScreenUtil().screenHeight * 0.3,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         color: isDarkTheme ? Colors.grey[800] : Colors.white,
         surfaceTintColor: Colors.white,
-        elevation: 5,
+        elevation: 3,
         child: Column(
-          mainAxisSize: MainAxisSize.max,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.all(5.0),
@@ -298,11 +298,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     children:
                         List<Widget>.generate(categories.length - 3, (index) {
                       if (index % 2 == 0) {
-                        // Chỉ số chẵn
                         return buildCategoryItem(icons[index],
                             categories[index].name, isDarkTheme, index, ref);
                       } else {
-                        // Chỉ số lẻ
                         return const SizedBox();
                       }
                     }),
@@ -311,11 +309,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: List<Widget>.generate(categories.length, (index) {
                       if (index % 2 != 0) {
-                        // Chỉ số lẻ
                         return buildCategoryItem(icons[index],
                             categories[index].name, isDarkTheme, index, ref);
                       } else {
-                        // Chỉ số chẵn
                         return const SizedBox();
                       }
                     }),
