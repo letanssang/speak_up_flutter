@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
@@ -54,6 +55,24 @@ class FirestoreRepository {
     return topics;
   }
 
+  Future<List<ExpressionType>> getExpressionTypeList() async {
+    final expressionTypeSnapshot = await _firestore
+        .collection('expression_types')
+        .where('Status', isEqualTo: 1)
+        .get();
+
+    List<ExpressionType> expressionTypes = [];
+
+    for (var docSnapshot in expressionTypeSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      ExpressionType expressionType = ExpressionType.fromJson(data);
+      expressionTypes.add(expressionType);
+    }
+    expressionTypes
+        .sort((a, b) => a.expressionTypeID.compareTo(b.expressionTypeID));
+    return expressionTypes;
+  }
+
   Future<List<SentencePattern>> getSentencePatternList() async {
     final sentencePatternSnapshot = await _firestore
         .collection('patterns')
@@ -68,6 +87,21 @@ class FirestoreRepository {
     sentencePatterns.sort((a, b) => a.patternID.compareTo(b.patternID));
     return sentencePatterns;
   }
+
+  // Future<List<PhrasalVerb>> getPhrasalVerbList() async {
+  //   final phrasalVerbSnapshot = await _firestore
+  //       .collection('phrasal_verbs')
+  //       .where('Status', isEqualTo: 1)
+  //       .get();
+  //   List<PhrasalVerb> phrasalVerbs = [];
+  //   for (var docSnapshot in phrasalVerbSnapshot.docs) {
+  //     Map<String, dynamic> data = docSnapshot.data();
+  //     PhrasalVerb phrasalVerb = PhrasalVerb.fromJson(data);
+  //     phrasalVerbs.add(phrasalVerb);
+  //   }
+  //   phrasalVerbs.sort((a, b) => a.phrasalVerbID.compareTo(b.phrasalVerbID));
+  //   return phrasalVerbs;
+  // }
 
   Future<List<Sentence>> getSentencesFromTopic(int topicId) async {
     final sentencesSnapshot = await _firestore

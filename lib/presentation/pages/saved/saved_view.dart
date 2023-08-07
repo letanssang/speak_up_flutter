@@ -38,7 +38,7 @@ class SavedView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {},
-            child: Text('Explore'),
+            child: const Text('Explore'),
           )
         ],
       ),
