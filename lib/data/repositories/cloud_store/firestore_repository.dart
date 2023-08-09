@@ -176,7 +176,7 @@ class FirestoreRepository {
     return idioms;
   }
 
-  Future<List<Sentence>> getSentencesFromTopic(int topicId) async {
+  Future<List<Sentence>> getSentenceListFromTopic(int topicId) async {
     final sentencesSnapshot = await _firestore
         .collection('sentencesA')
         .where('ParentType', isEqualTo: 1)

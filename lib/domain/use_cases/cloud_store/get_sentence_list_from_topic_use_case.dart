@@ -7,6 +7,6 @@ class GetSentenceListFromTopicUseCase
     extends FutureUseCase<int, List<Sentence>> {
   @override
   Future<List<Sentence>> run(int input) async {
-    return injector.get<FirestoreRepository>().getSentencesFromTopic(input);
+    return injector.get<FirestoreRepository>().getSentenceListFromTopic(input);
   }
 }

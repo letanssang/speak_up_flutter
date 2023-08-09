@@ -12,15 +12,12 @@ class Topic {
   final String translation;
   @JsonKey(name: 'CategoryID')
   final int categoryID;
-  @JsonKey(name: 'QAPairCount')
-  final int pairCount;
 
   Topic({
     required this.topicID,
     required this.topicName,
     required this.translation,
     required this.categoryID,
-    required this.pairCount,
   });
 
   factory Topic.fromJson(Map<String, dynamic> json) => _$TopicFromJson(json);

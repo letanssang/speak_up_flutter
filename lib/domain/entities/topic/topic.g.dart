@@ -11,7 +11,6 @@ Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
       topicName: json['TopicName'] as String,
       translation: json['Translation'] as String,
       categoryID: json['CategoryID'] as int,
-      pairCount: json['QAPairCount'] as int,
     );
 
 Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
@@ -19,5 +18,4 @@ Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
       'TopicName': instance.topicName,
       'Translation': instance.translation,
       'CategoryID': instance.categoryID,
-      'QAPairCount': instance.pairCount,
     };
