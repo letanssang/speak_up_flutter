@@ -16,5 +16,10 @@ class PhrasalVerbType {
   });
   factory PhrasalVerbType.fromJson(Map<String, dynamic> json) =>
       _$PhrasalVerbTypeFromJson(json);
+  factory PhrasalVerbType.initial() => PhrasalVerbType(
+        phrasalVerbTypeID: 0,
+        name: '',
+        translation: '',
+      );
   Map<String, dynamic> toJson() => _$PhrasalVerbTypeToJson(this);
 }

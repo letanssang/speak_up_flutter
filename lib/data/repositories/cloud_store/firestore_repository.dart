@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:speak_up/domain/entities/expression/expression.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
+import 'package:speak_up/domain/entities/idiom/idiom.dart';
 import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
+import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
 import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
@@ -137,6 +139,41 @@ class FirestoreRepository {
     }
     expressions.sort((a, b) => a.expressionID.compareTo(b.expressionID));
     return expressions;
+  }
+
+  Future<List<PhrasalVerb>> getPhrasalVerbListByType(
+      int phrasalVerbTypeID) async {
+    final phrasalVerbSnapshot = await _firestore
+        .collection('phrasal_verbs')
+        .where('PhrasalVerbTypeID', isEqualTo: phrasalVerbTypeID)
+        .where('Status', isEqualTo: 1)
+        .get();
+
+    List<PhrasalVerb> phrasalVerbs = [];
+    for (var docSnapshot in phrasalVerbSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      PhrasalVerb phrasalVerb = PhrasalVerb.fromJson(data);
+      phrasalVerbs.add(phrasalVerb);
+    }
+    phrasalVerbs.sort((a, b) => a.phrasalVerbID.compareTo(b.phrasalVerbID));
+    return phrasalVerbs;
+  }
+
+  Future<List<Idiom>> getIdiomListByType(int idiomTypeId) async {
+    final idiomSnapshot = await _firestore
+        .collection('idioms')
+        .where('IdiomTypeID', isEqualTo: idiomTypeId)
+        .where('Status', isEqualTo: 1)
+        .get();
+
+    List<Idiom> idioms = [];
+    for (var docSnapshot in idiomSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      Idiom idiom = Idiom.fromJson(data);
+      idioms.add(idiom);
+    }
+    idioms.sort((a, b) => a.idiomID.compareTo(b.idiomID));
+    return idioms;
   }
 
   Future<List<Sentence>> getSentencesFromTopic(int topicId) async {

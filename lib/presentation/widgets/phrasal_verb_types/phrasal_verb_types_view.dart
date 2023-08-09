@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_phrasal_verb_type_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/phrasal_verb_types/phrasal_verb_types_state.dart';
@@ -27,7 +29,7 @@ class _PhrasalVerbTypesViewState extends ConsumerState<PhrasalVerbTypesView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _init();
     });
   }
@@ -54,7 +56,11 @@ class _PhrasalVerbTypesViewState extends ConsumerState<PhrasalVerbTypesView> {
                 color: isDarkTheme ? Colors.grey[850] : Colors.white,
                 surfaceTintColor: Colors.white,
                 child: ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    ref.read(appNavigatorProvider).navigateTo(
+                        AppRoutes.phrasalVerb,
+                        arguments: state.phrasalVerbTypes[index]);
+                  },
                   title: Text(
                     state.phrasalVerbTypes[index].name,
                     style: const TextStyle(

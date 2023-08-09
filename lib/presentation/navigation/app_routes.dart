@@ -17,6 +17,8 @@ class AppRoutes {
   static const String lesson = '/lesson';
   static const String pattern = '/pattern';
   static const String expression = '/expression';
+  static const String phrasalVerb = '/phrasal_verb';
+  static const String idiom = '/idiom';
 
   //profile
   static const String editProfile = '/edit_profile';

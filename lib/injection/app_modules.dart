@@ -25,8 +25,10 @@ import 'package:speak_up/domain/use_cases/authentication/update_email_use_case.d
 import 'package:speak_up/domain/use_cases/authentication/update_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_expression_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_expression_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_type_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_lesson_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_phrasal_verb_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_phrasal_verb_type_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_pattern_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_topic_use_case.dart';
@@ -139,9 +141,18 @@ class AppModules {
     //Get topic list from category use case
     injector.registerLazySingleton<GetTopicListFromCategoryUseCase>(
         () => GetTopicListFromCategoryUseCase());
+
     // Get expression list by type use case
     injector.registerLazySingleton<GetExpressionListByTypeUseCase>(
         () => GetExpressionListByTypeUseCase());
+
+    // Get phrasal verb list by type use case
+    injector.registerLazySingleton<GetPhrasalVerbListByTypeUseCase>(
+        () => GetPhrasalVerbListByTypeUseCase());
+
+    // Get idiom list by type use case
+    injector.registerLazySingleton<GetIdiomListByTypeUseCase>(
+        () => GetIdiomListByTypeUseCase());
 
     // Get sentence list from topic use case
     injector.registerLazySingleton<GetSentenceListFromTopicUseCase>(

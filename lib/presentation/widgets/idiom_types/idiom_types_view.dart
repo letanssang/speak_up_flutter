@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_type_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/idiom_types/idiom_types_state.dart';
 import 'package:speak_up/presentation/widgets/idiom_types/idiom_types_view_model.dart';
@@ -51,7 +53,10 @@ class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
                 color: isDarkTheme ? Colors.grey[850] : Colors.white,
                 surfaceTintColor: Colors.white,
                 child: ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    ref.read(appNavigatorProvider).navigateTo(AppRoutes.idiom,
+                        arguments: state.idiomTypes[index]);
+                  },
                   title: Text(
                     state.idiomTypes[index].name,
                     style: const TextStyle(

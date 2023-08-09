@@ -16,5 +16,10 @@ class IdiomType {
   });
   factory IdiomType.fromJson(Map<String, dynamic> json) =>
       _$IdiomTypeFromJson(json);
+  factory IdiomType.initial() => IdiomType(
+        idiomTypeID: 0,
+        name: '',
+        translation: '',
+      );
   Map<String, dynamic> toJson() => _$IdiomTypeToJson(this);
 }
