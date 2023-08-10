@@ -11,7 +11,6 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/category/category_state.dart';
 import 'package:speak_up/presentation/pages/category/category_view_model.dart';
-import 'package:speak_up/presentation/utilities/constant/categories.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
@@ -32,7 +31,7 @@ class CategoryView extends ConsumerStatefulWidget {
 
 class _CategoryViewState extends ConsumerState<CategoryView>
     with TickerProviderStateMixin {
-  Category? category;
+  Category category = Category.initial();
 
   late TabController _tabController;
 
@@ -46,11 +45,10 @@ class _CategoryViewState extends ConsumerState<CategoryView>
   }
 
   Future<void> _init() async {
-    final categoryIndex = ModalRoute.of(context)!.settings.arguments as int;
-    category = categories[categoryIndex];
+    category = ModalRoute.of(context)!.settings.arguments as Category;
     await ref
         .read(categoryViewModelProvider.notifier)
-        .fetchTopicList(category!.id);
+        .fetchTopicList(category.categoryID);
   }
 
   @override
@@ -59,7 +57,11 @@ class _CategoryViewState extends ConsumerState<CategoryView>
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: language == Language.english
+            ? Text(category.name)
+            : Text(category.translation),
+      ),
       body: state.loadingStatus == LoadingStatus.success
           ? buildBodySuccess(state.topics, isDarkTheme, language)
           : state.loadingStatus == LoadingStatus.error
@@ -87,7 +89,7 @@ class _CategoryViewState extends ConsumerState<CategoryView>
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(category!.name,
+          child: Text(category.name,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
-import 'package:speak_up/presentation/utilities/constant/categories.dart';
+import 'package:speak_up/presentation/utilities/constant/category_icon_list.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 
 class CategoriesView extends ConsumerWidget {
   const CategoriesView({Key? key}) : super(key: key);
@@ -11,7 +14,8 @@ class CategoriesView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool isDarkTheme = ref.watch(themeProvider);
-
+    final categories =
+        ModalRoute.of(context)!.settings.arguments as List<Category>;
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
@@ -33,14 +37,17 @@ class CategoriesView extends ConsumerWidget {
           ),
           itemCount: images.length,
           itemBuilder: (BuildContext context, int index) {
-            return buildCategoryCard(index, isDarkTheme, ref);
+            return buildCategoryCard(
+                index, isDarkTheme, ref, categories[index]);
           },
         ),
       ),
     );
   }
 
-  Widget buildCategoryCard(int index, bool darkTheme, WidgetRef ref) {
+  Widget buildCategoryCard(
+      int index, bool darkTheme, WidgetRef ref, Category category) {
+    final language = ref.watch(appLanguageProvider);
     return Card(
       elevation: 5,
       color: darkTheme ? Colors.grey[850] : Colors.white,
@@ -49,7 +56,7 @@ class CategoriesView extends ConsumerWidget {
         onTap: () {
           ref
               .read(appNavigatorProvider)
-              .navigateTo(AppRoutes.category, arguments: index);
+              .navigateTo(AppRoutes.category, arguments: category);
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -57,9 +64,11 @@ class CategoriesView extends ConsumerWidget {
             images[index],
             Text(
               textAlign: TextAlign.center,
-              categories[index].name,
+              language == Language.english
+                  ? category.name
+                  : category.translation,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),

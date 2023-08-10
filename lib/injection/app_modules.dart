@@ -23,6 +23,7 @@ import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart'
 import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_email_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_password_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_category_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_expression_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_expression_type_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
@@ -125,6 +126,10 @@ class AppModules {
     // Get current user use case
     injector.registerLazySingleton<GetCurrentUserUseCase>(
         () => GetCurrentUserUseCase());
+
+    // Get category list use case
+    injector.registerLazySingleton<GetCategoryListUseCase>(
+        () => GetCategoryListUseCase());
 
     // Get lesson list use case
     injector.registerLazySingleton<GetLessonListUseCase>(

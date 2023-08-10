@@ -1,13 +1,29 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-part 'category.freezed.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'category.g.dart';
 
-@freezed
-class Category with _$Category {
-  const factory Category({
-    required int id,
-    required String name,
-    List<int>? topicIDs,
-    String? imagePath,
-    String? iconPath,
-  }) = _Category;
+@JsonSerializable()
+class Category {
+  @JsonKey(name: 'CategoryID')
+  final int categoryID;
+  @JsonKey(name: 'Name')
+  final String name;
+  @JsonKey(name: 'Translation')
+  final String translation;
+  @JsonKey(name: 'ImageURL')
+  final String imageUrl;
+  Category({
+    required this.categoryID,
+    required this.name,
+    required this.translation,
+    required this.imageUrl,
+  });
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
+  factory Category.initial() => Category(
+        categoryID: 0,
+        name: '',
+        translation: '',
+        imageUrl: '',
+      );
+  Map<String, dynamic> toJson() => _$CategoryToJson(this);
 }

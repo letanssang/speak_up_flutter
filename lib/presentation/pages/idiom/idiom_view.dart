@@ -46,10 +46,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
       body: Column(
         children: [
           const Text('Examples'),
-          ...ref
-              .watch(idiomViewModelProvider)
-              .idioms
-              .map((e) => Text('${e.name}')),
+          ...ref.watch(idiomViewModelProvider).idioms.map((e) => Text(e.name)),
         ],
       ),
     );

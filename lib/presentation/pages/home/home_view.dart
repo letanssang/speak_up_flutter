@@ -6,22 +6,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_category_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_lesson_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/home/home_state.dart';
 import 'package:speak_up/presentation/pages/home/home_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
-import 'package:speak_up/presentation/utilities/constant/categories.dart';
+import 'package:speak_up/presentation/utilities/constant/category_icon_list.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 final homeViewModelProvider =
-    StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
-        (ref) => HomeViewModel(
-              injector.get<GetLessonListUseCase>(),
-            ));
+    StateNotifierProvider.autoDispose<HomeViewModel, HomeState>((ref) =>
+        HomeViewModel(injector.get<GetLessonListUseCase>(),
+            injector.get<GetCategoryListUseCase>()));
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -40,7 +41,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   Future<void> _init() async {
-    await ref.read(homeViewModelProvider.notifier).getLessonList();
+    await ref.read(homeViewModelProvider.notifier).init();
   }
 
   @override
@@ -59,9 +60,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
             buildAppBar(context),
             buildCurrentCourses(),
-            buildCategories(ref.watch(themeProvider), context, () {
-              ref.read(appNavigatorProvider).navigateTo(AppRoutes.categories);
-            }, ref),
+            buildCategories(state.categories),
             if (state.loadingStatus == LoadingStatus.success)
               buildExplore(context, state.lessons, isDarkTheme, language),
           ],
@@ -123,7 +122,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget buildExploreItem(Lesson lesson, bool isDarkTheme, Language language) {
     return SizedBox(
       width: ScreenUtil().screenWidth * 0.45,
-      height: ScreenUtil().screenHeight * 0.32,
+      height: ScreenUtil().screenHeight * 0.33,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -253,9 +252,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Flexible buildCategories(bool isDarkTheme, BuildContext context,
-      Function()? onPressed, WidgetRef ref) {
-    final icons = isDarkTheme ? categoryDarkIcons : categoryIcons;
+  Flexible buildCategories(List<Category> categories) {
     return Flexible(
       flex: 2,
       child: Padding(
@@ -279,7 +276,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   ),
                 ),
                 TextButton(
-                  onPressed: onPressed,
+                  onPressed: () {
+                    ref.read(appNavigatorProvider).navigateTo(
+                        AppRoutes.categories,
+                        arguments: categories);
+                  },
                   child: Text(
                     AppLocalizations.of(context)!.viewAll,
                     style: TextStyle(
@@ -297,10 +298,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children:
-                        List<Widget>.generate(categories.length - 3, (index) {
+                        List<Widget>.generate(categories.length - 1, (index) {
                       if (index % 2 == 0) {
-                        return buildCategoryItem(icons[index],
-                            categories[index].name, isDarkTheme, index, ref);
+                        return buildCategoryItem(categories[index]);
                       } else {
                         return const SizedBox();
                       }
@@ -309,9 +309,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: List<Widget>.generate(categories.length, (index) {
-                      if (index % 2 != 0) {
-                        return buildCategoryItem(icons[index],
-                            categories[index].name, isDarkTheme, index, ref);
+                      if (index % 2 != 0 || index == categories.length - 1) {
+                        return buildCategoryItem(categories[index]);
                       } else {
                         return const SizedBox();
                       }
@@ -326,8 +325,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget buildCategoryItem(
-      Widget icon, String title, bool isDarkTheme, int index, WidgetRef ref) {
+  Widget buildCategoryItem(Category category) {
+    final isDarkTheme = ref.watch(themeProvider);
+    final language = ref.watch(appLanguageProvider);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       padding: const EdgeInsets.all(8.0),
@@ -340,16 +340,20 @@ class _HomeViewState extends ConsumerState<HomeView> {
         onTap: () {
           ref
               .read(appNavigatorProvider)
-              .navigateTo(AppRoutes.category, arguments: index);
+              .navigateTo(AppRoutes.category, arguments: category);
         },
         child: Row(
           children: [
-            icon,
+            isDarkTheme
+                ? categoryDarkIcons[category.categoryID - 1]
+                : categoryIcons[category.categoryID - 1],
             SizedBox(
               width: ScreenUtil().setWidth(3),
             ),
             Text(
-              title,
+              language == Language.english
+                  ? category.name
+                  : category.translation,
               style:
                   TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
             ),

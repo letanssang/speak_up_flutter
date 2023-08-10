@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/domain/entities/expression/expression.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
@@ -40,6 +41,23 @@ class FirestoreRepository {
     }
     lessons.sort((a, b) => a.lessonID.compareTo(b.lessonID));
     return lessons;
+  }
+
+  Future<List<Category>> getCategoryList() async {
+    final categorySnapshot = await _firestore
+        .collection('categories')
+        .where('Status', isEqualTo: 1)
+        .get();
+
+    List<Category> categories = [];
+
+    for (var docSnapshot in categorySnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      Category category = Category.fromJson(data);
+      categories.add(category);
+    }
+    categories.sort((a, b) => a.categoryID.compareTo(b.categoryID));
+    return categories;
   }
 
   Future<List<Topic>> getTopicsFromCategory(int categoryId) async {
