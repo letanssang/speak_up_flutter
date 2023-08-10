@@ -41,13 +41,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   Future<void> _init() async {
-    await ref.read(homeViewModelProvider.notifier).init();
+    await ref.read(homeViewModelProvider.notifier).getCategoryList();
+    await ref.read(homeViewModelProvider.notifier).getLessonList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = ref.watch(themeProvider);
-    final language = ref.watch(appLanguageProvider);
     final state = ref.watch(homeViewModelProvider);
     return SingleChildScrollView(
       child: SizedBox(
@@ -58,19 +57,17 @@ class _HomeViewState extends ConsumerState<HomeView> {
             SizedBox(
               height: ScreenUtil().statusBarHeight,
             ),
-            buildAppBar(context),
+            buildAppBar(),
             buildCurrentCourses(),
-            buildCategories(state.categories),
-            if (state.loadingStatus == LoadingStatus.success)
-              buildExplore(context, state.lessons, isDarkTheme, language),
+            buildCategories(state),
+            buildExplore(state),
           ],
         ),
       ),
     );
   }
 
-  Widget buildExplore(BuildContext context, List<Lesson> lessons,
-      bool isDarkTheme, Language language) {
+  Widget buildExplore(HomeState state) {
     return Flexible(
       flex: 3,
       child: Column(
@@ -93,7 +90,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 onPressed: () {
                   ref
                       .read(appNavigatorProvider)
-                      .navigateTo(AppRoutes.lessons, arguments: lessons);
+                      .navigateTo(AppRoutes.lessons, arguments: state.lessons);
                 },
                 child: Text(
                   AppLocalizations.of(context)!.viewAll,
@@ -105,21 +102,25 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ],
           ),
           Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                buildExploreItem(lessons[0], isDarkTheme, language),
-                buildExploreItem(lessons[1], isDarkTheme, language),
-              ],
-            ),
+            child: state.lessonsLoadingStatus == LoadingStatus.success
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      buildExploreItem(state.lessons[0]),
+                      buildExploreItem(state.lessons[1]),
+                    ],
+                  )
+                : Container(),
           )
         ],
       ),
     );
   }
 
-  Widget buildExploreItem(Lesson lesson, bool isDarkTheme, Language language) {
+  Widget buildExploreItem(Lesson lesson) {
+    final isDarkTheme = ref.watch(themeProvider);
+    final language = ref.watch(appLanguageProvider);
     return SizedBox(
       width: ScreenUtil().screenWidth * 0.45,
       height: ScreenUtil().screenHeight * 0.33,
@@ -172,7 +173,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Row buildAppBar(BuildContext context) {
+  Row buildAppBar() {
     final user = FirebaseAuth.instance.currentUser!;
     return Row(
       children: [
@@ -252,7 +253,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Flexible buildCategories(List<Category> categories) {
+  Flexible buildCategories(HomeState state) {
+    final categories = state.categories;
     return Flexible(
       flex: 2,
       child: Padding(
@@ -290,42 +292,48 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 ),
               ],
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children:
-                        List<Widget>.generate(categories.length - 1, (index) {
-                      if (index % 2 == 0) {
-                        return buildCategoryItem(categories[index]);
-                      } else {
-                        return const SizedBox();
-                      }
-                    }),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: List<Widget>.generate(categories.length, (index) {
-                      if (index % 2 != 0 || index == categories.length - 1) {
-                        return buildCategoryItem(categories[index]);
-                      } else {
-                        return const SizedBox();
-                      }
-                    }),
-                  ),
-                ],
-              ),
-            ),
+            state.categoriesLoadingStatus == LoadingStatus.success
+                ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: List<Widget>.generate(categories.length - 1,
+                              (index) {
+                            if (index % 2 == 0) {
+                              return buildCategoryItem(
+                                  categories[index], index);
+                            } else {
+                              return const SizedBox();
+                            }
+                          }),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children:
+                              List<Widget>.generate(categories.length, (index) {
+                            if (index % 2 != 0 ||
+                                index == categories.length - 1) {
+                              return buildCategoryItem(
+                                  categories[index], index);
+                            } else {
+                              return const SizedBox();
+                            }
+                          }),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
     );
   }
 
-  Widget buildCategoryItem(Category category) {
+  Widget buildCategoryItem(Category category, int index) {
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
     return Container(
@@ -344,9 +352,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         },
         child: Row(
           children: [
-            isDarkTheme
-                ? categoryDarkIcons[category.categoryID - 1]
-                : categoryIcons[category.categoryID - 1],
+            isDarkTheme ? categoryDarkIcons[index] : categoryIcons[index],
             SizedBox(
               width: ScreenUtil().setWidth(3),
             ),

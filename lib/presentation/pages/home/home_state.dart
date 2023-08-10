@@ -10,6 +10,7 @@ class HomeState with _$HomeState {
   const factory HomeState({
     @Default([]) List<Lesson> lessons,
     @Default([]) List<Category> categories,
-    @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
+    @Default(LoadingStatus.initial) LoadingStatus lessonsLoadingStatus,
+    @Default(LoadingStatus.initial) LoadingStatus categoriesLoadingStatus,
   }) = _HomeState;
 }

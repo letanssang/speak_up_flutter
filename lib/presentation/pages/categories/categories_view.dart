@@ -13,7 +13,6 @@ class CategoriesView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool isDarkTheme = ref.watch(themeProvider);
     final categories =
         ModalRoute.of(context)!.settings.arguments as List<Category>;
     return Scaffold(
@@ -37,19 +36,18 @@ class CategoriesView extends ConsumerWidget {
           ),
           itemCount: images.length,
           itemBuilder: (BuildContext context, int index) {
-            return buildCategoryCard(
-                index, isDarkTheme, ref, categories[index]);
+            return buildCategoryCard(index, ref, categories[index]);
           },
         ),
       ),
     );
   }
 
-  Widget buildCategoryCard(
-      int index, bool darkTheme, WidgetRef ref, Category category) {
+  Widget buildCategoryCard(int index, WidgetRef ref, Category category) {
     final language = ref.watch(appLanguageProvider);
+    final darkTheme = ref.watch(themeProvider);
     return Card(
-      elevation: 5,
+      elevation: 3,
       color: darkTheme ? Colors.grey[850] : Colors.white,
       surfaceTintColor: Colors.white,
       child: InkWell(
@@ -62,6 +60,7 @@ class CategoriesView extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             images[index],
+            const SizedBox(height: 8),
             Text(
               textAlign: TextAlign.center,
               language == Language.english

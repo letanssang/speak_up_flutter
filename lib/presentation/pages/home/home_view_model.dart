@@ -15,34 +15,29 @@ class HomeViewModel extends StateNotifier<HomeState> {
     this._getCategoryListUseCase,
   ) : super(const HomeState());
 
-  Future<void> init() async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
-    try {
-      final lessons = await getLessonList();
-      final categories = await getCategoryList();
-      state = state.copyWith(
-          lessons: lessons,
-          categories: categories,
-          loadingStatus: LoadingStatus.success);
-    } catch (e) {
-      state = state.copyWith(loadingStatus: LoadingStatus.error);
-    }
-  }
-
-  Future<List<Lesson>> getLessonList() async {
+  Future<void> getLessonList() async {
+    state = state.copyWith(lessonsLoadingStatus: LoadingStatus.inProgress);
     try {
       final lessons = await _getLessonListUseCase.run();
-      return lessons;
+      state = state.copyWith(
+        lessonsLoadingStatus: LoadingStatus.success,
+        lessons: lessons,
+      );
     } catch (e) {
+      state = state.copyWith(lessonsLoadingStatus: LoadingStatus.error);
       rethrow;
     }
   }
 
-  Future<List<Category>> getCategoryList() async {
+  Future<void> getCategoryList() async {
     try {
       final categories = await _getCategoryListUseCase.run();
-      return categories;
+      state = state.copyWith(
+        categoriesLoadingStatus: LoadingStatus.success,
+        categories: categories,
+      );
     } catch (e) {
+      state = state.copyWith(categoriesLoadingStatus: LoadingStatus.error);
       rethrow;
     }
   }
