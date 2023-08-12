@@ -16,35 +16,48 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  # Flutter SDK
   flutter:
     sdk: flutter
+
+  # State Management and Dependency Injection
   flutter_riverpod: ^2.3.6
-  freezed: ^2.3.5
-  flutter_screenutil: ^5.8.4
-  flutter_svg: ^2.0.7
-  dots_indicator: ^2.1.1
-  shared_preferences: ^2.2.0
   get_it: ^7.6.0
+
+  # JSON Serialization and Immutability
+  freezed: ^2.3.5
   json_annotation: ^4.8.1
   freezed_annotation: ^2.4.1
 
-  #firebase
+  # User Interface
+  flutter_screenutil: ^5.8.4
+  flutter_svg: ^2.0.7
+  dots_indicator: ^2.1.1
+  percent_indicator: ^4.2.3
+  loading_indicator: ^3.1.1
+  cupertino_icons: ^1.0.2
+
+  # Local Data Storage
+  shared_preferences: ^2.2.0
+  enum_to_string: ^2.0.1
+
+  # Firebase
   firebase_core: ^2.14.0
   firebase_auth: ^4.6.3
   cloud_firestore: ^4.8.2
 
-  loading_indicator: ^3.1.1
-  cupertino_icons: ^1.0.2
-  #authentication
+  # Authentication
   google_sign_in: ^6.1.4
 
-  #localizations
+  # Localization and Internationalization
   flutter_localizations:
     sdk: flutter
   intl: any
-  enum_to_string: ^2.0.1
+
+  # Audio Playback
   audioplayers: ^5.0.0
-  
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
