@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'idiom.g.dart';
 
 @JsonSerializable()
@@ -15,6 +16,7 @@ class Idiom {
   final String descriptionTranslation;
   @JsonKey(name: 'AudioEndpoint')
   final String audioEndpoint;
+
   Idiom({
     required this.idiomID,
     required this.name,
@@ -23,7 +25,9 @@ class Idiom {
     required this.descriptionTranslation,
     required this.audioEndpoint,
   });
+
   factory Idiom.fromJson(Map<String, dynamic> json) => _$IdiomFromJson(json);
+
   factory Idiom.initial() => Idiom(
         idiomID: 0,
         name: '',
@@ -32,5 +36,6 @@ class Idiom {
         descriptionTranslation: '',
         audioEndpoint: '',
       );
+
   Map<String, dynamic> toJson() => _$IdiomToJson(this);
 }

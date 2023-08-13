@@ -3,7 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const String dailyConversationURL =
     'https://basicenglishspeaking.com/wp-content/uploads/audio/QA/';
+const String idiomAudioURL =
+    'http://basicenglishspeaking.com/wp-content/uploads/2019/05/';
 const String audioExtension = '.mp3';
+
 String getSplashTitle(int index, BuildContext context) {
   switch (index) {
     case 0:

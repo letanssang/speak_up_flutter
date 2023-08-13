@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_state.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/percent_calculate.dart';
@@ -83,7 +85,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
                       (BuildContext context, int index) {
                         if (index.isEven) {
                           // Add the separator logic for even indexes
-                          return buildSeparator(context);
+                          return buildSeparator(context, state, index);
                         } else {
                           // Content for odd indexes (idiom items)
                           final idiomIndex = index ~/ 2;
@@ -108,43 +110,75 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
               ));
   }
 
-  Container buildCardItem(IdiomState state, int idiomIndex) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 32,
-      ),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: state.currentIdiomIndex >= idiomIndex
-            ? Theme.of(context).primaryColor
-            : Colors.grey,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Day ${idiomIndex + 1}',
-            style: TextStyle(
-              fontSize: ScreenUtil().setSp(14),
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+  Widget buildCardItem(IdiomState state, int idiomIndex) {
+    return InkWell(
+      onTap: () {
+        if (idiomIndex <= state.currentIdiomIndex) {
+          ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.idiomLearning,
+                arguments: state.idioms[idiomIndex],
+              );
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 32,
+        ),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: state.currentIdiomIndex >= idiomIndex
+              ? Theme.of(context).primaryColor
+              : Colors.grey,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: ScreenUtil().setWidth(16),
+                ),
+                Expanded(
+                  child: Text(
+                    'Day ${idiomIndex + 1}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(14),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                if (idiomIndex != state.currentIdiomIndex)
+                  Icon(
+                    idiomIndex > state.currentIdiomIndex
+                        ? Icons.lock_outline
+                        : Icons.check_circle_outline,
+                    color: Colors.white,
+                    size: ScreenUtil().setWidth(16),
+                  ),
+              ],
             ),
-          ),
-          Text(
-            ref.watch(idiomViewModelProvider).idioms[idiomIndex].name,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: ScreenUtil().setSp(18),
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                state.idioms[idiomIndex].name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(18),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Row buildSeparator(BuildContext context) {
+  Row buildSeparator(BuildContext context, IdiomState state, int index) {
     return Row(
       children: [
         const Spacer(),
@@ -154,7 +188,9 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
           ),
           width: 2,
           height: 32,
-          color: Theme.of(context).primaryColor, // Black color
+          color: index ~/ 2 < state.currentIdiomIndex + 1
+              ? Theme.of(context).primaryColor
+              : Colors.grey, // Black color
         ),
         const Spacer(),
       ],
