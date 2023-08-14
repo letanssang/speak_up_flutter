@@ -13,6 +13,7 @@ import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_cas
 import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/is_signed_in_use_case.dart';
@@ -194,5 +195,8 @@ class AppModules {
     // Play audio from url use case
     injector.registerLazySingleton<PlayAudioFromUrlUseCase>(
         () => PlayAudioFromUrlUseCase());
+
+    // Stop audio use case
+    injector.registerLazySingleton<StopAudioUseCase>(() => StopAudioUseCase());
   }
 }
