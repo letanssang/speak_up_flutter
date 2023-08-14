@@ -124,50 +124,57 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return SizedBox(
       width: ScreenUtil().screenWidth * 0.45,
       height: ScreenUtil().screenHeight * 0.33,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        color: isDarkTheme ? Colors.grey[800] : Colors.white,
-        surfaceTintColor: Colors.white,
-        elevation: 3,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: AspectRatio(
-                  aspectRatio: 1.2,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(lesson.imageURL)),
+      child: InkWell(
+        onTap: () {
+          ref
+              .read(appNavigatorProvider)
+              .navigateTo(AppRoutes.lesson, arguments: lesson);
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          color: isDarkTheme ? Colors.grey[800] : Colors.white,
+          surfaceTintColor: Colors.white,
+          elevation: 3,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 1.2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(lesson.imageURL)),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  language == Language.english
-                      ? lesson.name
-                      : lesson.translation,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: isDarkTheme ? Colors.white : Colors.black),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    language == Language.english
+                        ? lesson.name
+                        : lesson.translation,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isDarkTheme ? Colors.white : Colors.black),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

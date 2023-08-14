@@ -11,6 +11,7 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/category/category_state.dart';
 import 'package:speak_up/presentation/pages/category/category_view_model.dart';
+import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
@@ -88,89 +89,61 @@ class _CategoryViewState extends ConsumerState<CategoryView>
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Text(category.name,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               )),
         ),
-        Container(
-          height: 50,
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), color: Colors.grey[350]),
-          child: TabBar(
-            controller: _tabController,
-            indicator: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicatorPadding: EdgeInsets.zero,
-            indicatorColor: Colors.transparent,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.black,
-            tabs: const [
-              Tab(
-                icon: Text(
-                  'About',
-                ),
-              ),
-              Tab(
-                icon: Text('Topics'),
-              ),
-            ],
-          ),
-        ),
         Flexible(
-          fit: FlexFit.loose,
-          child: TabBarView(
-            controller: _tabController,
-            children: <Widget>[
-              Container(),
-              ListView.builder(
-                itemCount: topics.length,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Card(
-                      elevation: 5,
-                      color: isDarkTheme ? Colors.grey[850] : Colors.white,
-                      surfaceTintColor: Colors.white,
-                      child: ListTile(
-                        onTap: () {
-                          ref.read(appNavigatorProvider).navigateTo(
-                              AppRoutes.topic,
-                              arguments: topics[index]);
-                        },
-                        title: Text(
-                          topics[index].topicName,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          topics[index].translation,
-                          style: const TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.play_circle_outline_outlined,
-                          size: 32,
-                          color: isDarkTheme
-                              ? Colors.white
-                              : Theme.of(context).primaryColor,
-                        ),
+          child: ListView.builder(
+            itemCount: topics.length,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Card(
+                  elevation: 3,
+                  color: isDarkTheme ? Colors.grey[850] : Colors.white,
+                  surfaceTintColor: Colors.white,
+                  child: ListTile(
+                    onTap: () {
+                      ref.read(appNavigatorProvider).navigateTo(AppRoutes.topic,
+                          arguments: topics[index]);
+                    },
+                    leading: CircleAvatar(
+                        child: Text(
+                      formatIndexToString(index),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                    title: Text(
+                      topics[index].topicName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                },
-              ),
-            ],
+                    subtitle: Text(
+                      topics[index].translation,
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.play_circle_outline_outlined,
+                      size: 32,
+                      color: isDarkTheme
+                          ? Colors.white
+                          : Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ],

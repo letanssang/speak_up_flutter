@@ -21,6 +21,11 @@ class Topic {
   });
 
   factory Topic.fromJson(Map<String, dynamic> json) => _$TopicFromJson(json);
-
+  factory Topic.initial() => Topic(
+        topicID: 0,
+        topicName: '',
+        translation: '',
+        categoryID: 0,
+      );
   Map<String, dynamic> toJson() => _$TopicToJson(this);
 }

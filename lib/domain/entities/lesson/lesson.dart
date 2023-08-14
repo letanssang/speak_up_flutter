@@ -27,6 +27,13 @@ class Lesson {
   });
 
   factory Lesson.fromJson(Map<String, dynamic> json) => _$LessonFromJson(json);
-
+  factory Lesson.initial() => Lesson(
+        lessonID: 0,
+        name: '',
+        translation: '',
+        description: '',
+        descriptionTranslation: '',
+        imageURL: '',
+      );
   Map<String, dynamic> toJson() => _$LessonToJson(this);
 }

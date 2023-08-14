@@ -9,6 +9,7 @@ import 'package:speak_up/presentation/widgets/expression_types/expression_types_
 import 'package:speak_up/presentation/widgets/idiom_types/idiom_types_view.dart';
 import 'package:speak_up/presentation/widgets/pattern_lesson_detail/pattern_lesson_detail_view.dart';
 import 'package:speak_up/presentation/widgets/phrasal_verb_types/phrasal_verb_types_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LessonView extends ConsumerStatefulWidget {
   const LessonView({super.key});
@@ -19,7 +20,7 @@ class LessonView extends ConsumerStatefulWidget {
 
 class _LessonViewState extends ConsumerState<LessonView>
     with TickerProviderStateMixin {
-  Lesson? lesson;
+  Lesson lesson = Lesson.initial();
 
   late TabController _tabController;
   @override
@@ -36,81 +37,75 @@ class _LessonViewState extends ConsumerState<LessonView>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          lesson?.name ?? 'default',
+          lesson.name,
         ),
       ),
-      body: lesson == null
-          ? Container()
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                  child: Image.asset(
-                    'assets/images/temp_topic.png',
-                    width: double.infinity,
-                    height: ScreenUtil().screenHeight * 0.3,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text(
-                      language == Language.english
-                          ? lesson!.name
-                          : lesson!.translation,
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
-                Container(
-                  height: 50,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.grey[350]),
-                  child: TabBar(
-                    controller: _tabController,
-                    indicator: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicatorPadding: EdgeInsets.zero,
-                    indicatorColor: Colors.transparent,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.black,
-                    tabs: const [
-                      Tab(
-                        icon: Text(
-                          'About',
-                        ),
-                      ),
-                      Tab(
-                        icon: Text('Topics'),
-                      ),
-                    ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+            ),
+            child: Image.asset(
+              'assets/images/temp_topic.png',
+              width: double.infinity,
+              height: ScreenUtil().screenHeight * 0.3,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+                language == Language.english ? lesson.name : lesson.translation,
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          Container(
+            height: 50,
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey[350]),
+            child: TabBar(
+              controller: _tabController,
+              indicator: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorPadding: EdgeInsets.zero,
+              indicatorColor: Colors.transparent,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.black,
+              tabs: [
+                Tab(
+                  icon: Text(
+                    AppLocalizations.of(context)!.about,
                   ),
                 ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: <Widget>[
-                      buildAboutLesson(language),
-                      buildDetailLesson(isDarkTheme, lesson!.lessonID),
-                    ],
-                  ),
+                Tab(
+                  icon: Text(AppLocalizations.of(context)!.lesson),
                 ),
               ],
             ),
+          ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                buildAboutLesson(language),
+                buildDetailLesson(isDarkTheme, lesson.lessonID),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -120,8 +115,8 @@ class _LessonViewState extends ConsumerState<LessonView>
       child: SingleChildScrollView(
         child: Text(
           language == Language.english
-              ? lesson!.description
-              : lesson!.descriptionTranslation,
+              ? lesson.description
+              : lesson.descriptionTranslation,
           style: const TextStyle(
             fontSize: 16,
           ),

@@ -14,6 +14,7 @@ class CustomButton extends StatelessWidget {
   final Widget? image;
   final double marginVertical;
   final ButtonState buttonState;
+  final double? textSize;
 
   const CustomButton({
     super.key,
@@ -28,6 +29,7 @@ class CustomButton extends StatelessWidget {
     this.image,
     this.marginVertical = 10,
     this.buttonState = ButtonState.normal,
+    this.textSize,
   });
 
   @override
@@ -68,10 +70,10 @@ class CustomButton extends StatelessWidget {
                   child: image!,
                 ),
               buttonState == ButtonState.loading
-                  ? const SizedBox(
-                      height: 15,
-                      width: 15,
-                      child: CircularProgressIndicator(
+                  ? SizedBox(
+                      height: ScreenUtil().setHeight(15),
+                      width: ScreenUtil().setHeight(15),
+                      child: const CircularProgressIndicator(
                         color: Colors.white,
                       ),
                     )
@@ -80,7 +82,7 @@ class CustomButton extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: textColor,
-                        fontSize: ScreenUtil().setSp(16),
+                        fontSize: textSize ?? ScreenUtil().setSp(16),
                         fontWeight: fontWeight,
                       ),
                     ),

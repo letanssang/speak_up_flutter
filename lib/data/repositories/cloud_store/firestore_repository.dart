@@ -230,6 +230,23 @@ class FirestoreRepository {
     return sentences;
   }
 
+  Future<List<Sentence>> getSentenceListFromIdiom(int idiomID) async {
+    final sentencesSnapshot = await _firestore
+        .collection('sentencesA')
+        .where('ParentType', isEqualTo: 5)
+        .where('ParentID', isEqualTo: idiomID)
+        .where('Status', isEqualTo: 1)
+        .get();
+    List<Sentence> sentences = [];
+    for (var docSnapshot in sentencesSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      Sentence sentence = Sentence.fromJson(data);
+      sentences.add(sentence);
+    }
+    sentences.sort((a, b) => a.sentenceID.compareTo(b.sentenceID));
+    return sentences;
+  }
+
   Future<void> updateDisplayName(String name, String uid) async {
     await _firestore.collection('users').doc(uid).update({'name': name});
   }

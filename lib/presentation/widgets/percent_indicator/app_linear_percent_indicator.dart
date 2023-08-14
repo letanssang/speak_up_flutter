@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class AppLinearPercentIndicator extends StatelessWidget {
@@ -21,8 +22,9 @@ class AppLinearPercentIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
       child: LinearPercentIndicator(
+        animateFromLastPercent: true,
         lineHeight: lineHeight,
         percent: percent,
         backgroundColor: Colors.grey,
@@ -30,7 +32,7 @@ class AppLinearPercentIndicator extends StatelessWidget {
         trailing: trailing,
         animation: true,
         animationDuration: 1000,
-        barRadius: const Radius.circular(8),
+        barRadius: Radius.circular(ScreenUtil().setWidth(8)),
       ),
     );
   }

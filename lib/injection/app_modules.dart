@@ -31,6 +31,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_type_list_use_ca
 import 'package:speak_up/domain/use_cases/cloud_store/get_lesson_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_phrasal_verb_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_phrasal_verb_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_pattern_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_topic_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
@@ -167,9 +168,13 @@ class AppModules {
     injector.registerLazySingleton<GetSentencePatternListUseCase>(
         () => GetSentencePatternListUseCase());
     // Get sentence list from pattern use case
-
     injector.registerLazySingleton<GetSentenceListFromPatternUseCase>(
         () => GetSentenceListFromPatternUseCase());
+
+    // Get sentence list from idiom use case
+    injector.registerLazySingleton<GetSentenceListFromIdiomUseCase>(
+        () => GetSentenceListFromIdiomUseCase());
+
     // Get idiom type list use case
     injector.registerLazySingleton<GetIdiomTypeListUseCase>(
         () => GetIdiomTypeListUseCase());

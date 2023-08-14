@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
@@ -10,7 +11,9 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';
 import 'package:speak_up/presentation/pages/topic/topic_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/divider/app_divider.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final topicViewModelProvider =
@@ -29,7 +32,7 @@ class TopicView extends ConsumerStatefulWidget {
 }
 
 class _TopicViewState extends ConsumerState<TopicView> {
-  Topic? topic;
+  Topic topic = Topic.initial();
 
   @override
   void initState() {
@@ -43,20 +46,18 @@ class _TopicViewState extends ConsumerState<TopicView> {
     topic = ModalRoute.of(context)!.settings.arguments as Topic;
     await ref
         .read(topicViewModelProvider.notifier)
-        .fetchSentenceList(topic!.topicID);
+        .fetchSentenceList(topic.topicID);
   }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(topicViewModelProvider);
     final isDarkTheme = ref.watch(themeProvider);
+    final language = ref.watch(appLanguageProvider);
     return Scaffold(
       appBar: AppBar(
-        title: topic != null ? Text(topic!.topicName) : null,
-        // TODO: Add divider
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(height: 1),
-        ),
+        title: Text(
+            language == Language.english ? topic.topicName : topic.translation),
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? buildBodySuccess(
@@ -69,33 +70,94 @@ class _TopicViewState extends ConsumerState<TopicView> {
 
   Widget buildBodySuccess(List<Sentence> sentences, bool isDarkTheme,
       List<bool> isExpandedTranslations) {
-    return ListView.builder(
-      itemCount: sentences.length,
-      itemBuilder: (context, index) {
-        final sentence = sentences[index];
-        return index % 2 == 0
-            ? buildQuestionerMessage(
-                isDarkTheme, sentence, isExpandedTranslations[index], () {
-                ref
-                    .read(topicViewModelProvider.notifier)
-                    .onTapSpeaker(sentence.audioEndpoint);
-              }, () {
-                ref
-                    .read(topicViewModelProvider.notifier)
-                    .onTapExpandedTranslation(index);
-              })
-            : buildRespondentMessage(
-                context, isDarkTheme, sentence, isExpandedTranslations[index],
-                () {
-                ref
-                    .read(topicViewModelProvider.notifier)
-                    .onTapSpeaker(sentence.audioEndpoint);
-              }, () {
-                ref
-                    .read(topicViewModelProvider.notifier)
-                    .onTapExpandedTranslation(index);
-              });
-      },
+    return Column(
+      children: [
+        Flexible(
+          flex: 6,
+          child: CustomScrollView(
+            slivers: [
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: 32, bottom: 16.0, left: 16.0, right: 16.0),
+                  child: Text(
+                    'Repeat the sentences and practice your pronunciation!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final sentence = sentences[index];
+                    return index % 2 == 0
+                        ? buildQuestionerMessage(isDarkTheme, sentence,
+                            isExpandedTranslations[index], () {
+                            ref
+                                .read(topicViewModelProvider.notifier)
+                                .onTapSpeaker(sentence.audioEndpoint);
+                          }, () {
+                            ref
+                                .read(topicViewModelProvider.notifier)
+                                .onTapExpandedTranslation(index);
+                          })
+                        : buildRespondentMessage(context, isDarkTheme, sentence,
+                            isExpandedTranslations[index], () {
+                            ref
+                                .read(topicViewModelProvider.notifier)
+                                .onTapSpeaker(sentence.audioEndpoint);
+                          }, () {
+                            ref
+                                .read(topicViewModelProvider.notifier)
+                                .onTapExpandedTranslation(index);
+                          });
+                  },
+                  childCount: sentences.length,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const AppDivider(),
+        Flexible(
+            child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildCustomButton('Repeat'),
+              CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                radius: 24,
+                child: IconButton(
+                    onPressed: null,
+                    icon: Icon(
+                      Icons.play_arrow_outlined,
+                      color: Colors.white,
+                    )),
+              ),
+              buildCustomButton('Speak'),
+            ],
+          ),
+        ))
+      ],
+    );
+  }
+
+  Widget buildCustomButton(String text) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16), color: Colors.grey[200]),
+      margin: const EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+        child: Text(text,
+            style: const TextStyle(
+              fontSize: 16,
+            )),
+      ),
     );
   }
 

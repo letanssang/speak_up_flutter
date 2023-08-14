@@ -7,6 +7,7 @@ import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/utilities/constant/category_icon_list.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CategoriesView extends ConsumerWidget {
   const CategoriesView({Key? key}) : super(key: key);
@@ -17,14 +18,7 @@ class CategoriesView extends ConsumerWidget {
         ModalRoute.of(context)!.settings.arguments as List<Category>;
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
-        title: const Text('Categories'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-          ),
-        ],
+        title: Text(AppLocalizations.of(context)!.categories),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
