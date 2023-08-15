@@ -4,7 +4,7 @@ final config = RecognitionConfig(
     encoding: AudioEncoding.LINEAR16,
     model: RecognitionModel.basic,
     enableAutomaticPunctuation: true,
-    sampleRateHertz: 16000,
+    sampleRateHertz: 44100,
     languageCode: 'en-US');
 
 const String googleSpeechAssetKeyPath =

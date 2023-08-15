@@ -26,15 +26,14 @@ import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_perce
 final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
     IdiomLearningViewModel, IdiomLearningState>(
   (ref) => IdiomLearningViewModel(
-    injector.get<GetSentenceListFromIdiomUseCase>(),
-    injector.get<PlayAudioFromUrlUseCase>(),
-    injector.get<PlayAudioFromAssetUseCase>(),
-    injector.get<PlayAudioFromFileUseCase>(),
-    injector.get<StopAudioUseCase>(),
-    injector.get<StartRecordingUseCase>(),
-    injector.get<StopRecordingUseCase>(),
-    injector.get<GetTextFromSpeechUseCase>()
-  ),
+      injector.get<GetSentenceListFromIdiomUseCase>(),
+      injector.get<PlayAudioFromUrlUseCase>(),
+      injector.get<PlayAudioFromAssetUseCase>(),
+      injector.get<PlayAudioFromFileUseCase>(),
+      injector.get<StopAudioUseCase>(),
+      injector.get<StartRecordingUseCase>(),
+      injector.get<StopRecordingUseCase>(),
+      injector.get<GetTextFromSpeechUseCase>()),
 );
 
 class IdiomLearningView extends ConsumerStatefulWidget {
@@ -179,7 +178,10 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
       final path = await ref
           .read(idiomLearningViewModelProvider.notifier)
           .onStopRecording();
-      ref.read(idiomLearningViewModelProvider.notifier).playRecord(path);
+      if (path != null)
+        ref
+            .read(idiomLearningViewModelProvider.notifier)
+            .getTextFromSpeech(path);
     }
   }
 
