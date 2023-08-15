@@ -7,12 +7,14 @@ import 'package:speak_up/data/repositories/account_settings/account_settings_rep
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
 import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
+import 'package:speak_up/data/repositories/record/record_repository.dart';
 import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
@@ -39,8 +41,11 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_top
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:record/record.dart';
 
 class AppModules {
   static Future<void> inject() async {
@@ -67,6 +72,9 @@ class AppModules {
     // Audio Player
     injector.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
 
+    //Record
+    injector.registerLazySingleton<Record>(() => Record());
+
     // Account settings repository
     injector.registerLazySingleton<AccountSettingsRepository>(() =>
         AccountSettingsRepository(injector.get<SharedPreferencesManager>()));
@@ -79,9 +87,14 @@ class AppModules {
     // Firestore repository
     injector.registerLazySingleton<FirestoreRepository>(
         () => FirestoreRepository(injector.get<FirebaseFirestore>()));
+
     // Audio Player Repository
     injector.registerLazySingleton<AudioPlayerRepository>(
         () => AudioPlayerRepository(injector.get<AudioPlayer>()));
+
+    // Record repository
+    injector.registerLazySingleton<RecordRepository>(
+        () => RecordRepository(injector.get<Record>()));
 
     // Get app theme use case
     injector
@@ -201,7 +214,19 @@ class AppModules {
     injector.registerLazySingleton<PlayAudioFromAssetUseCase>(
         () => PlayAudioFromAssetUseCase());
 
+    //Play audio from file use case
+    injector.registerLazySingleton<PlayAudioFromFileUseCase>(
+        () => PlayAudioFromFileUseCase());
+
     // Stop audio use case
     injector.registerLazySingleton<StopAudioUseCase>(() => StopAudioUseCase());
+
+    // Start recording use case
+    injector.registerLazySingleton<StartRecordingUseCase>(
+        () => StartRecordingUseCase());
+
+    //Stop recording use case
+    injector.registerLazySingleton<StopRecordingUseCase>(
+        () => StopRecordingUseCase());
   }
 }

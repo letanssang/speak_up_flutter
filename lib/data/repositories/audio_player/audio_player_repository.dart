@@ -8,7 +8,6 @@ class AudioPlayerRepository {
 
   Future<void> playAudioFromUrl(String url) async {
     try {
-      await _audioPlayer.stop();
       await _audioPlayer.play(UrlSource(url));
     } catch (e) {
       debugPrint(e.toString());
@@ -17,8 +16,15 @@ class AudioPlayerRepository {
 
   Future<void> playAudioFromAsset(String path) async {
     try {
-      await _audioPlayer.stop();
       await _audioPlayer.play(AssetSource(path));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> playAudioFromFile(String path) async {
+    try {
+      await _audioPlayer.play(DeviceFileSource(path));
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -26,7 +32,7 @@ class AudioPlayerRepository {
 
   Future<void> stopAudio() async {
     if (_audioPlayer.state == PlayerState.playing) {
-      await _audioPlayer.stop();
+      _audioPlayer.stop();
     }
   }
 }

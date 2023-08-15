@@ -1,10 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.dart';
 import 'package:speak_up/presentation/resources/app_audios.dart';
 import 'package:speak_up/presentation/utilities/constant/string.dart';
@@ -15,13 +19,19 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   final GetSentenceListFromIdiomUseCase _getSentenceListFromIdiomUseCase;
   final PlayAudioFromUrlUseCase _playAudioFromUrlUseCase;
   final PlayAudioFromAssetUseCase _playAudioFromAssetUseCase;
+  final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
   final StopAudioUseCase _stopAudioUseCase;
+  final StartRecordingUseCase _startRecordingUseCase;
+  final StopRecordingUseCase _stopRecordingUseCase;
 
   IdiomLearningViewModel(
     this._getSentenceListFromIdiomUseCase,
     this._playAudioFromUrlUseCase,
     this._playAudioFromAssetUseCase,
+    this._playAudioFromFileUseCase,
     this._stopAudioUseCase,
+    this._startRecordingUseCase,
+    this._stopRecordingUseCase,
   ) : super(IdiomLearningState(
           idiom: Idiom.initial(),
         ));
@@ -63,13 +73,32 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
 
   Future<void> onStartRecording() async {
     state = state.copyWith(recordButtonState: ButtonState.loading);
+    try {
+      await _startRecordingUseCase.run();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
-  Future<void> onStopRecording() async {
+  Future<String?> onStopRecording() async {
+    //when not recording, do nothing
+    if (state.recordButtonState == ButtonState.normal) return null;
     state = state.copyWith(recordButtonState: ButtonState.normal);
+    try {
+      return _stopRecordingUseCase.run();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
   }
 
   Future<void> correctAnswer() async {
     _playAudioFromAssetUseCase.run(AppAudios.congrats);
+  }
+
+  Future<void> playRecord(String? path) async {
+    if (path != null) {
+      await _playAudioFromFileUseCase.run(path);
+    }
   }
 }

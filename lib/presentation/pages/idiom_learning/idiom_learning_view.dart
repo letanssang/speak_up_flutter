@@ -6,9 +6,12 @@ import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_view_model.dart';
@@ -25,7 +28,10 @@ final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
     injector.get<GetSentenceListFromIdiomUseCase>(),
     injector.get<PlayAudioFromUrlUseCase>(),
     injector.get<PlayAudioFromAssetUseCase>(),
+    injector.get<PlayAudioFromFileUseCase>(),
     injector.get<StopAudioUseCase>(),
+    injector.get<StartRecordingUseCase>(),
+    injector.get<StopRecordingUseCase>(),
   ),
 );
 
@@ -168,8 +174,10 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           .read(idiomLearningViewModelProvider.notifier)
           .onStartRecording();
     } else {
-      await ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
-      ref.read(idiomLearningViewModelProvider.notifier).correctAnswer();
+      final path = await ref
+          .read(idiomLearningViewModelProvider.notifier)
+          .onStopRecording();
+      ref.read(idiomLearningViewModelProvider.notifier).playRecord(path);
     }
   }
 
