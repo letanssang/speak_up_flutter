@@ -34,11 +34,8 @@ class _CategoryViewState extends ConsumerState<CategoryView>
     with TickerProviderStateMixin {
   Category category = Category.initial();
 
-  late TabController _tabController;
-
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _init();

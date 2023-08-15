@@ -59,6 +59,9 @@ dependencies:
   audioplayers: ^5.0.0
   record: ^4.4.4
 
+  # Speech Recognition
+  google_speech: ^2.2.0
+
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +87,7 @@ flutter:
     - assets/images/logos/
     - assets/images/categories/
     - assets/audios/
+    - assets/keys/
 
   fonts:
     - family: SF Pro Display
