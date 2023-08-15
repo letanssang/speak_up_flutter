@@ -30,7 +30,7 @@ class RecordButton extends StatelessWidget {
             ? const RecordLoadingIndicator()
             : Icon(
                 Icons.mic,
-                size: ScreenUtil().setWidth(48),
+                size: ScreenUtil().setWidth(32),
                 color: Colors.grey[800],
               ),
       ),

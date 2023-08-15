@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
@@ -23,6 +24,7 @@ final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
   (ref) => IdiomLearningViewModel(
     injector.get<GetSentenceListFromIdiomUseCase>(),
     injector.get<PlayAudioFromUrlUseCase>(),
+    injector.get<PlayAudioFromAssetUseCase>(),
     injector.get<StopAudioUseCase>(),
   ),
 );
@@ -61,7 +63,6 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   Future<void> onNextPageButtonTap() async {
     final state = ref.watch(idiomLearningViewModelProvider);
     ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
-    ref.read(idiomLearningViewModelProvider.notifier).tempDisableNextButton();
     if (_pageController.page!.toInt() == state.totalPage - 1) {
       ref
           .read(idiomLearningViewModelProvider.notifier)
@@ -106,6 +107,9 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
                   onTap: () {
                     Navigator.of(context).pop();
                     ref.read(appNavigatorProvider).pop();
+                    ref
+                        .read(idiomLearningViewModelProvider.notifier)
+                        .stopAudio();
                   }),
               TextButton(
                   onPressed: () {
@@ -165,6 +169,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           .onStartRecording();
     } else {
       await ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
+      ref.read(idiomLearningViewModelProvider.notifier).correctAnswer();
     }
   }
 
@@ -215,8 +220,18 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
               fontSize: ScreenUtil().setSp(24),
               fontWeight: FontWeight.bold,
             )),
+        IconButton(
+          onPressed: () => ref
+              .read(idiomLearningViewModelProvider.notifier)
+              .playAudio(sentence.audioEndpoint),
+          icon: Icon(
+            Icons.volume_up_outlined,
+            size: ScreenUtil().setWidth(32),
+            color: Colors.grey[800],
+          ),
+        ),
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Text(
             sentence.text,
             style: TextStyle(

@@ -57,6 +57,7 @@ dependencies:
 
   # Audio Playback
   audioplayers: ^5.0.0
+  record: ^4.4.4
 
 
 dev_dependencies:
@@ -82,6 +83,7 @@ flutter:
     - assets/images/
     - assets/images/logos/
     - assets/images/categories/
+    - assets/audios/
 
   fonts:
     - family: SF Pro Display
