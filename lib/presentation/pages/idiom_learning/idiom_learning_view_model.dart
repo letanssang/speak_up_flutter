@@ -5,6 +5,7 @@ import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
@@ -19,6 +20,7 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   final GetSentenceListFromIdiomUseCase _getSentenceListFromIdiomUseCase;
   final PlayAudioFromUrlUseCase _playAudioFromUrlUseCase;
+  final PlaySlowAudioFromUrlUseCase _playSlowAudioFromUrlUseCase;
   final PlayAudioFromAssetUseCase _playAudioFromAssetUseCase;
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
   final StopAudioUseCase _stopAudioUseCase;
@@ -29,6 +31,7 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   IdiomLearningViewModel(
     this._getSentenceListFromIdiomUseCase,
     this._playAudioFromUrlUseCase,
+    this._playSlowAudioFromUrlUseCase,
     this._playAudioFromAssetUseCase,
     this._playAudioFromFileUseCase,
     this._stopAudioUseCase,
@@ -62,6 +65,11 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     await _playAudioFromUrlUseCase.run(url);
   }
 
+  Future<void> playSlowAudio(String endpoint) async {
+    String url = idiomAudioURL + endpoint + audioExtension;
+    await _playSlowAudioFromUrlUseCase.run(url);
+  }
+
   Future<void> stopAudio() async {
     await _stopAudioUseCase.run();
   }
@@ -83,16 +91,16 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     }
   }
 
-  Future<String?> onStopRecording() async {
+  Future<void> onStopRecording() async {
     //when not recording, do nothing
-    if (state.recordButtonState == ButtonState.normal) return null;
+    if (state.recordButtonState == ButtonState.normal) return;
     state = state.copyWith(recordButtonState: ButtonState.normal);
     try {
-      return _stopRecordingUseCase.run();
+      final recordPath = await _stopRecordingUseCase.run();
+      state = state.copyWith(recordPath: recordPath);
     } catch (e) {
       debugPrint(e.toString());
     }
-    return null;
   }
 
   Future<void> correctAnswer() async {
@@ -105,9 +113,10 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     }
   }
 
-  Future<String> getTextFromSpeech(String audioPath) async {
+  Future<String> getTextFromSpeech() async {
+    if (state.recordPath == null) return 'record path is null';
     try {
-      final text = await _getTextFromSpeechUseCase.run(audioPath);
+      final text = await _getTextFromSpeechUseCase.run(state.recordPath!);
       debugPrint('text: $text');
       return text;
     } catch (e) {

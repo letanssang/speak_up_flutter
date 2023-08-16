@@ -8,6 +8,7 @@ import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
@@ -30,6 +31,7 @@ final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
   (ref) => IdiomLearningViewModel(
       injector.get<GetSentenceListFromIdiomUseCase>(),
       injector.get<PlayAudioFromUrlUseCase>(),
+      injector.get<PlaySlowAudioFromUrlUseCase>(),
       injector.get<PlayAudioFromAssetUseCase>(),
       injector.get<PlayAudioFromFileUseCase>(),
       injector.get<StopAudioUseCase>(),
@@ -88,6 +90,14 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
       ref.read(idiomLearningViewModelProvider.notifier).playAudio(
           state.exampleSentences[_pageController.page!.toInt()].audioEndpoint);
     }
+  }
+
+  Future<void> onPlayRecordButtonTap() async {
+    final recordPath = ref.read(idiomLearningViewModelProvider).recordPath;
+    if (recordPath == null) return;
+    await ref
+        .read(idiomLearningViewModelProvider.notifier)
+        .playRecord(recordPath);
   }
 
   void showExitBottomSheet() {
@@ -176,15 +186,8 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           .read(idiomLearningViewModelProvider.notifier)
           .onStartRecording();
     } else {
-      final path = await ref
-          .read(idiomLearningViewModelProvider.notifier)
-          .onStopRecording();
-      if (path != null) {
-        ref.read(idiomLearningViewModelProvider.notifier).playRecord(path);
-        ref
-            .read(idiomLearningViewModelProvider.notifier)
-            .getTextFromSpeech(path);
-      }
+      await ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
+      ref.read(idiomLearningViewModelProvider.notifier).getTextFromSpeech();
     }
   }
 
@@ -245,12 +248,18 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
                 size: 32,
                 color: Colors.grey[800],
               ),
+              onPressed: () => ref
+                  .read(idiomLearningViewModelProvider.notifier)
+                  .playAudio(sentence.audioEndpoint),
             ),
             CustomIconButton(
                 icon: AppIcons.snail(
-              size: 32,
-              color: Colors.grey[800],
-            )),
+                  size: 32,
+                  color: Colors.grey[800],
+                ),
+                onPressed: () => ref
+                    .read(idiomLearningViewModelProvider.notifier)
+                    .playSlowAudio(sentence.audioEndpoint)),
             Flexible(child: Container()),
           ],
         ),
@@ -286,8 +295,8 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     return Center(
       child: Column(
         children: [
-          SizedBox(
-            height: ScreenUtil().setHeight(32),
+          const SizedBox(
+            height: 32,
           ),
           DefinitionCard(
             name: state.idiom.name,
@@ -315,6 +324,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
       children: [
         Flexible(child: Container()),
         CustomIconButton(
+          onPressed: onPlayRecordButtonTap,
           height: 64,
           width: 64,
           icon: AppIcons.playRecord(

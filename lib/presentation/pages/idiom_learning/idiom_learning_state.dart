@@ -16,5 +16,6 @@ class IdiomLearningState with _$IdiomLearningState {
     @Default([]) List<Sentence> exampleSentences,
     @Default(ButtonState.normal) ButtonState recordButtonState,
     @Default(ButtonState.normal) ButtonState nextButtonState,
+    String? recordPath,
   }) = _IdiomLearningState;
 }
