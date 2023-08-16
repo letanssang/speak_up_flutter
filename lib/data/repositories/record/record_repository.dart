@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:record/record.dart';
 
 class RecordRepository {
@@ -7,10 +9,19 @@ class RecordRepository {
 
   Future<void> startRecording() async {
     try {
+      final AudioEncoder? encoder;
+      if (Platform.isIOS) {
+        encoder = AudioEncoder.flac;
+      } else if (Platform.isAndroid) {
+        encoder = AudioEncoder.wav;
+      } else {
+        encoder = AudioEncoder.aacLc;
+      }
       if (await isPermissionGranted()) {
         await _record.start(
           numChannels: 1,
-          encoder: AudioEncoder.wav,
+          encoder: encoder,
+          samplingRate: 44000,
         );
       }
     } catch (e) {

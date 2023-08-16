@@ -180,6 +180,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           .read(idiomLearningViewModelProvider.notifier)
           .onStopRecording();
       if (path != null) {
+        ref.read(idiomLearningViewModelProvider.notifier).playRecord(path);
         ref
             .read(idiomLearningViewModelProvider.notifier)
             .getTextFromSpeech(path);

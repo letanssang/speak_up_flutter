@@ -17,6 +17,6 @@ class SpeechToTextRepository {
   }
 
   Future<List<int>> _getAudioContent(String audioPath) async {
-    return File(audioPath).readAsBytesSync().toList();
+    return await File(audioPath).readAsBytes();
   }
 }
