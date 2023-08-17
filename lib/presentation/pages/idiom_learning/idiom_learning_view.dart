@@ -23,7 +23,7 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
-import 'package:speak_up/presentation/widgets/definition_card/definition_card.dart';
+import 'package:speak_up/presentation/widgets/flash_card_item/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 
 final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
@@ -104,43 +104,49 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Container(
-            width: ScreenUtil().screenWidth,
-            height: 250,
-            padding: const EdgeInsets.all(32),
-            child: Column(children: [
-              Flexible(child: Container()),
-              Text(AppLocalizations.of(context)!.areYouSure,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  )),
-              const SizedBox(
-                height: 16,
+          return Wrap(
+            children: [
+              SizedBox(
+                width: ScreenUtil().screenWidth,
+                child: Column(children: [
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  Text(AppLocalizations.of(context)!.areYouSure,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  CustomButton(
+                      text: AppLocalizations.of(context)!.exit,
+                      fontWeight: FontWeight.bold,
+                      textSize: 16,
+                      marginVertical: 16,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        ref.read(appNavigatorProvider).pop();
+                        ref
+                            .read(idiomLearningViewModelProvider.notifier)
+                            .stopAudio();
+                      }),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.cancel,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      )),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                ]),
               ),
-              CustomButton(
-                  text: AppLocalizations.of(context)!.exit,
-                  fontWeight: FontWeight.bold,
-                  textSize: 16,
-                  marginVertical: 16,
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    ref.read(appNavigatorProvider).pop();
-                    ref
-                        .read(idiomLearningViewModelProvider.notifier)
-                        .stopAudio();
-                  }),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    AppLocalizations.of(context)!.cancel,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                  )),
-              Flexible(child: Container()),
-            ]),
+            ],
           );
         });
   }
@@ -149,31 +155,37 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Container(
-            width: ScreenUtil().screenWidth,
-            height: 250,
-            padding: const EdgeInsets.all(32),
-            child: Column(children: [
-              Flexible(child: Container()),
-              Text(AppLocalizations.of(context)!.congratulations,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  )),
-              const SizedBox(
-                height: 16,
+          return Wrap(
+            children: [
+              SizedBox(
+                width: ScreenUtil().screenWidth,
+                child: Column(children: [
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  Text(AppLocalizations.of(context)!.congratulations,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  CustomButton(
+                      text: AppLocalizations.of(context)!.exit,
+                      fontWeight: FontWeight.bold,
+                      textSize: 16,
+                      marginVertical: 16,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        ref.read(appNavigatorProvider).pop();
+                      }),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                ]),
               ),
-              CustomButton(
-                  text: AppLocalizations.of(context)!.exit,
-                  fontWeight: FontWeight.bold,
-                  textSize: 16,
-                  marginVertical: 16,
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    ref.read(appNavigatorProvider).pop();
-                  }),
-              Flexible(child: Container()),
-            ]),
+            ],
           );
         });
   }
@@ -298,7 +310,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           const SizedBox(
             height: 32,
           ),
-          DefinitionCard(
+          FlashCardItem(
             name: state.idiom.name,
             description: state.idiom.description,
             descriptionTranslation: state.idiom.descriptionTranslation,

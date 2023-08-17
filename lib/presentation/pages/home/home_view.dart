@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -32,6 +34,8 @@ class HomeView extends ConsumerStatefulWidget {
 }
 
 class _HomeViewState extends ConsumerState<HomeView> {
+  final int _randomIndex1 = Random().nextInt(2);
+  final int _randomIndex2 = Random().nextInt(2) + 2;
   @override
   void initState() {
     super.initState();
@@ -107,8 +111,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      buildExploreItem(state.lessons[0]),
-                      buildExploreItem(state.lessons[1]),
+                      buildExploreItem(state.lessons[_randomIndex1]),
+                      buildExploreItem(state.lessons[_randomIndex2]),
                     ],
                   )
                 : Container(),
@@ -121,59 +125,70 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget buildExploreItem(Lesson lesson) {
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
-    return SizedBox(
-      width: ScreenUtil().screenWidth * 0.45,
-      height: ScreenUtil().screenHeight * 0.33,
-      child: InkWell(
-        onTap: () {
-          ref
-              .read(appNavigatorProvider)
-              .navigateTo(AppRoutes.lesson, arguments: lesson);
-        },
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          color: isDarkTheme ? Colors.grey[800] : Colors.white,
-          surfaceTintColor: Colors.white,
-          elevation: 3,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: AspectRatio(
-                    aspectRatio: 1.2,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(lesson.imageURL)),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: ScreenUtil().screenHeight < 800
+            ? ScreenUtil().screenHeight * 0.38
+            : ScreenUtil().screenHeight * 0.33,
+      ),
+      child: SizedBox(
+        width: ScreenUtil().screenWidth * 0.45,
+        child: InkWell(
+          onTap: () {
+            ref
+                .read(appNavigatorProvider)
+                .navigateTo(AppRoutes.lesson, arguments: lesson);
+          },
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            color: isDarkTheme ? Colors.grey[800] : Colors.white,
+            surfaceTintColor: Colors.white,
+            elevation: 3,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: AspectRatio(
+                      aspectRatio: 1.2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(lesson.imageURL)),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    language == Language.english
-                        ? lesson.name
-                        : lesson.translation,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: isDarkTheme ? Colors.white : Colors.black),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 16, 8, 32),
+                    child: Center(
+                      child: Text(
+                        language == Language.english
+                            ? lesson.name
+                            : lesson.translation,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isDarkTheme ? Colors.white : Colors.black,
+                            fontSize: ScreenUtil().setSp(14)),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -186,12 +201,19 @@ class _HomeViewState extends ConsumerState<HomeView> {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: CircleAvatar(
-            radius: 20,
-            child: ClipOval(
-              child: user.photoURL != null
-                  ? Image.network(user.photoURL!)
-                  : AppImages.avatar(),
+          child: InkWell(
+            onTap: () {
+              ref.read(appNavigatorProvider).navigateTo(
+                    AppRoutes.editProfile,
+                  );
+            },
+            child: CircleAvatar(
+              radius: 20,
+              child: ClipOval(
+                child: user.photoURL != null
+                    ? Image.network(user.photoURL!)
+                    : AppImages.avatar(),
+              ),
             ),
           ),
         ),

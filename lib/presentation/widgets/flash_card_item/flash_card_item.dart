@@ -2,7 +2,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DefinitionCard extends StatefulWidget {
+class FlashCardItem extends StatefulWidget {
   final String name;
   final String description;
   final String tapFrontDescription;
@@ -10,7 +10,7 @@ class DefinitionCard extends StatefulWidget {
   final String descriptionTranslation;
   final Function()? onPressed;
 
-  const DefinitionCard({
+  const FlashCardItem({
     super.key,
     required this.name,
     required this.description,
@@ -21,10 +21,10 @@ class DefinitionCard extends StatefulWidget {
   });
 
   @override
-  State<DefinitionCard> createState() => _DefinitionCardState();
+  State<FlashCardItem> createState() => _FlashCardItemState();
 }
 
-class _DefinitionCardState extends State<DefinitionCard> {
+class _FlashCardItemState extends State<FlashCardItem> {
   bool isTranslated = false;
   @override
   Widget build(BuildContext context) {
