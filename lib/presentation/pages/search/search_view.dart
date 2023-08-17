@@ -18,12 +18,12 @@ class SearchView extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               color: Colors.grey[200],
             ),
-            child: Row(
+            child: const Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.search,
                 ),
-                const SizedBox(
+                SizedBox(
                   width: 8,
                 ),
                 Expanded(

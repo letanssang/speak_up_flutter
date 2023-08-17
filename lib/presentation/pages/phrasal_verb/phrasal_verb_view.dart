@@ -50,7 +50,7 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
           ...ref
               .watch(phrasalVerbViewModelProvider)
               .phrasalVerbs
-              .map((e) => Text('${e.name}')),
+              .map((e) => Text(e.name)),
         ],
       ),
     );

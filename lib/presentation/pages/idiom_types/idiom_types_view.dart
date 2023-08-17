@@ -1,56 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_type_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
+import 'package:speak_up/presentation/pages/idiom_types/idiom_types_state.dart';
+import 'package:speak_up/presentation/pages/idiom_types/idiom_types_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/bottom_sheets/learning_mode_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:speak_up/presentation/widgets/pattern_lesson_detail/pattern_lesson_detail_state.dart';
-import 'package:speak_up/presentation/widgets/pattern_lesson_detail/pattern_lesson_detail_view_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-final patternLessonDetailViewModelProvider = StateNotifierProvider.autoDispose<
-    PatternLessonDetailViewModel, PatternLessonDetailState>((ref) {
-  return PatternLessonDetailViewModel(
-    injector.get<GetSentencePatternListUseCase>(),
-  );
-});
+final idiomTypesViewModelProvider =
+    StateNotifierProvider.autoDispose<IdiomTypesViewModel, IdiomTypesState>(
+  (ref) => IdiomTypesViewModel(
+    injector.get<GetIdiomTypeListUseCase>(),
+  ),
+);
 
-class PatternLessonDetailView extends ConsumerStatefulWidget {
-  const PatternLessonDetailView({super.key});
+class IdiomTypesView extends ConsumerStatefulWidget {
+  const IdiomTypesView({super.key});
+
   @override
-  ConsumerState<PatternLessonDetailView> createState() =>
-      _PatternLessonDetailViewState();
+  ConsumerState<IdiomTypesView> createState() => _IdiomTypesViewState();
 }
 
-class _PatternLessonDetailViewState
-    extends ConsumerState<PatternLessonDetailView> {
+class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
   @override
-  initState() {
+  void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _init();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _init();
     });
   }
 
   Future<void> _init() async {
-    await ref
-        .read(patternLessonDetailViewModelProvider.notifier)
-        .fetchSentencePatternList();
+    await ref.read(idiomTypesViewModelProvider.notifier).fetchIdiomTypeList();
+  }
+
+  void showOptionButtonSheet(int index) {
+    final idiomType = ref.read(idiomTypesViewModelProvider).idiomTypes[index];
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => LearningModeBottomSheet(
+              title: idiomType.name,
+              onTapLecture: () {
+                ref
+                    .read(appNavigatorProvider)
+                    .navigateTo(AppRoutes.idiom, arguments: idiomType);
+              },
+              onTapFlashcard: () {
+                ref
+                    .read(appNavigatorProvider)
+                    .navigateTo(AppRoutes.flashCards, arguments: idiomType);
+              },
+            ));
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(patternLessonDetailViewModelProvider);
+    final state = ref.watch(idiomTypesViewModelProvider);
     final isDarkTheme = ref.watch(themeProvider);
+    final language = ref.watch(appLanguageProvider);
     switch (state.loadingStatus) {
       case LoadingStatus.success:
         return ListView.builder(
-          itemCount: state.sentencePatterns.length,
+          itemCount: state.idiomTypes.length,
           itemBuilder: (context, index) {
             return Padding(
               padding:
@@ -61,10 +81,7 @@ class _PatternLessonDetailViewState
                 surfaceTintColor: Colors.white,
                 child: ListTile(
                   onTap: () {
-                    ref.read(appNavigatorProvider).navigateTo(
-                          AppRoutes.pattern,
-                          arguments: state.sentencePatterns[index],
-                        );
+                    showOptionButtonSheet(index);
                   },
                   leading: CircleAvatar(
                       child: Text(
@@ -75,7 +92,9 @@ class _PatternLessonDetailViewState
                     ),
                   )),
                   title: Text(
-                    state.sentencePatterns[index].name,
+                    language == Language.english
+                        ? state.idiomTypes[index].name
+                        : state.idiomTypes[index].translation,
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(16),
                       fontWeight: FontWeight.bold,
@@ -83,7 +102,7 @@ class _PatternLessonDetailViewState
                   ),
                   trailing: Icon(
                     Icons.play_circle_outline_outlined,
-                    size: ScreenUtil().setSp(32),
+                    size: ScreenUtil().setWidth(32),
                     color: isDarkTheme
                         ? Colors.white
                         : Theme.of(context).primaryColor,

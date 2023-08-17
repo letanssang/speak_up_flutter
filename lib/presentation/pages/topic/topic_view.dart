@@ -123,24 +123,22 @@ class _TopicViewState extends ConsumerState<TopicView> {
         ),
         const AppDivider(),
         Flexible(
-            child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildCustomButton('Repeat'),
-              CircleAvatar(
-                backgroundColor: Theme.of(context).primaryColor,
-                radius: 24,
-                child: IconButton(
-                    onPressed: null,
-                    icon: Icon(
-                      Icons.play_arrow_outlined,
-                      color: Colors.white,
-                    )),
-              ),
-              buildCustomButton('Speak'),
-            ],
-          ),
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            buildCustomButton('Repeat'),
+            CircleAvatar(
+              backgroundColor: Theme.of(context).primaryColor,
+              radius: 24,
+              child: const IconButton(
+                  onPressed: null,
+                  icon: Icon(
+                    Icons.play_arrow_outlined,
+                    color: Colors.white,
+                  )),
+            ),
+            buildCustomButton('Speak'),
+          ],
         ))
       ],
     );

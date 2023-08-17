@@ -15,25 +15,36 @@ class RecordButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: ScreenUtil().setHeight(80),
-      width: ScreenUtil().setHeight(120),
-      padding: EdgeInsets.all(ScreenUtil().setWidth(16)),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(32),
-        color: Colors.grey[100],
-      ),
-      child: InkWell(
-        onTap: onTap,
-        child: buttonState == ButtonState.loading
-            ? const RecordLoadingIndicator()
-            : Icon(
-                Icons.mic,
-                size: ScreenUtil().setWidth(48),
-                color: Colors.grey[800],
-              ),
-      ),
+    return Column(
+      children: [
+        if (buttonState == ButtonState.loading)
+          Text('Tap to stop recording',
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(14),
+                color: Colors.grey[700],
+              )),
+        SizedBox(height: ScreenUtil().setHeight(8)),
+        Container(
+          height: ScreenUtil().setHeight(80),
+          width: ScreenUtil().setHeight(120),
+          padding: EdgeInsets.all(ScreenUtil().setWidth(16)),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(32),
+            color: Theme.of(context).primaryColor,
+          ),
+          child: InkWell(
+            onTap: onTap,
+            child: buttonState == ButtonState.loading
+                ? const RecordLoadingIndicator()
+                : Icon(
+                    Icons.mic,
+                    size: ScreenUtil().setWidth(32),
+                    color: Colors.white,
+                  ),
+          ),
+        ),
+      ],
     );
   }
 }

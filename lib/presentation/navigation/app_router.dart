@@ -6,6 +6,7 @@ import 'package:speak_up/presentation/pages/category/category_view.dart';
 import 'package:speak_up/presentation/pages/change_password/change_password_view.dart';
 import 'package:speak_up/presentation/pages/edit_profile/edit_profile_view.dart';
 import 'package:speak_up/presentation/pages/expression/expression_view.dart';
+import 'package:speak_up/presentation/pages/flash_cards/flash_cards_view.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_view.dart';
 import 'package:speak_up/presentation/pages/lesson/lesson_view.dart';
@@ -148,6 +149,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const IdiomLearningView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.flashCards:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const FlashCardsView(),
             settings: settings,
           );
         }

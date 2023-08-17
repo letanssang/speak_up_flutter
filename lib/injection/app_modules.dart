@@ -1,18 +1,27 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_speech/google_speech.dart';
+import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
 import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
+import 'package:speak_up/data/repositories/record/record_repository.dart';
+import 'package:speak_up/data/repositories/speech_to_text/speech_to_text_repository.dart';
+import 'package:speak_up/data/services/google_speech/google_speech_helper.dart';
 import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
@@ -38,8 +47,14 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_top
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/injector.dart';
+
+const String audioPlayerInstanceName = 'audioPlayer';
+const String slowAudioPlayerInstanceName = 'slowAudioPlayer';
 
 class AppModules {
   static Future<void> inject() async {
@@ -64,7 +79,15 @@ class AppModules {
         () => FirebaseFirestore.instance);
 
     // Audio Player
-    injector.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
+    injector.registerLazySingleton<AudioPlayer>(() => AudioPlayer(),
+        instanceName: audioPlayerInstanceName);
+
+    // Slow Audio Player
+    injector.registerLazySingleton<AudioPlayer>(() => AudioPlayer(),
+        instanceName: slowAudioPlayerInstanceName);
+
+    //Record
+    injector.registerLazySingleton<Record>(() => Record());
 
     // Account settings repository
     injector.registerLazySingleton<AccountSettingsRepository>(() =>
@@ -78,9 +101,35 @@ class AppModules {
     // Firestore repository
     injector.registerLazySingleton<FirestoreRepository>(
         () => FirestoreRepository(injector.get<FirebaseFirestore>()));
+
     // Audio Player Repository
-    injector.registerLazySingleton<AudioPlayerRepository>(
-        () => AudioPlayerRepository(injector.get<AudioPlayer>()));
+    injector.registerLazySingleton<AudioPlayerRepository>(() =>
+        AudioPlayerRepository(
+          injector.get<AudioPlayer>(instanceName: audioPlayerInstanceName),
+          injector.get<AudioPlayer>(instanceName: slowAudioPlayerInstanceName),
+        ));
+
+    // Record repository
+    injector.registerLazySingleton<RecordRepository>(
+        () => RecordRepository(injector.get<Record>()));
+
+    // Google Speech Service Account
+    String googleSpeechToTextApiKey =
+        (await rootBundle.loadString(googleSpeechAssetKeyPath));
+
+    injector.registerLazySingleton<ServiceAccount>(() {
+      return ServiceAccount.fromString(googleSpeechToTextApiKey);
+    });
+
+    //Speech To Text
+    injector.registerLazySingleton<SpeechToText>(() {
+      return SpeechToText.viaServiceAccount(injector.get<ServiceAccount>());
+    });
+
+    //Speech To Text Repository
+    injector.registerLazySingleton<SpeechToTextRepository>(() {
+      return SpeechToTextRepository(injector.get<SpeechToText>());
+    });
 
     // Get app theme use case
     injector
@@ -196,7 +245,31 @@ class AppModules {
     injector.registerLazySingleton<PlayAudioFromUrlUseCase>(
         () => PlayAudioFromUrlUseCase());
 
+    // Play slow audio from url use case
+    injector.registerLazySingleton<PlaySlowAudioFromUrlUseCase>(
+        () => PlaySlowAudioFromUrlUseCase());
+
+    //Play audio from asset use case
+    injector.registerLazySingleton<PlayAudioFromAssetUseCase>(
+        () => PlayAudioFromAssetUseCase());
+
+    //Play audio from file use case
+    injector.registerLazySingleton<PlayAudioFromFileUseCase>(
+        () => PlayAudioFromFileUseCase());
+
     // Stop audio use case
     injector.registerLazySingleton<StopAudioUseCase>(() => StopAudioUseCase());
+
+    // Start recording use case
+    injector.registerLazySingleton<StartRecordingUseCase>(
+        () => StartRecordingUseCase());
+
+    //Stop recording use case
+    injector.registerLazySingleton<StopRecordingUseCase>(
+        () => StopRecordingUseCase());
+
+    // Get Text From Speech Use Case
+    injector.registerLazySingleton<GetTextFromSpeechUseCase>(
+        () => GetTextFromSpeechUseCase());
   }
 }

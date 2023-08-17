@@ -5,26 +5,39 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_view_model.dart';
+import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
+import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
-import 'package:speak_up/presentation/widgets/definition_card/definition_card.dart';
+import 'package:speak_up/presentation/widgets/flash_card_item/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 
 final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
     IdiomLearningViewModel, IdiomLearningState>(
   (ref) => IdiomLearningViewModel(
-    injector.get<GetSentenceListFromIdiomUseCase>(),
-    injector.get<PlayAudioFromUrlUseCase>(),
-    injector.get<StopAudioUseCase>(),
-  ),
+      injector.get<GetSentenceListFromIdiomUseCase>(),
+      injector.get<PlayAudioFromUrlUseCase>(),
+      injector.get<PlaySlowAudioFromUrlUseCase>(),
+      injector.get<PlayAudioFromAssetUseCase>(),
+      injector.get<PlayAudioFromFileUseCase>(),
+      injector.get<StopAudioUseCase>(),
+      injector.get<StartRecordingUseCase>(),
+      injector.get<StopRecordingUseCase>(),
+      injector.get<GetTextFromSpeechUseCase>()),
 );
 
 class IdiomLearningView extends ConsumerStatefulWidget {
@@ -61,7 +74,6 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   Future<void> onNextPageButtonTap() async {
     final state = ref.watch(idiomLearningViewModelProvider);
     ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
-    ref.read(idiomLearningViewModelProvider.notifier).tempDisableNextButton();
     if (_pageController.page!.toInt() == state.totalPage - 1) {
       ref
           .read(idiomLearningViewModelProvider.notifier)
@@ -80,45 +92,61 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     }
   }
 
+  Future<void> onPlayRecordButtonTap() async {
+    final recordPath = ref.read(idiomLearningViewModelProvider).recordPath;
+    if (recordPath == null) return;
+    await ref
+        .read(idiomLearningViewModelProvider.notifier)
+        .playRecord(recordPath);
+  }
+
   void showExitBottomSheet() {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Container(
-            width: ScreenUtil().screenWidth,
-            height: ScreenUtil().setHeight(300),
-            padding: EdgeInsets.all(ScreenUtil().setWidth(32)),
-            child: Column(children: [
-              Flexible(child: Container()),
-              Text(AppLocalizations.of(context)!.areYouSure,
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(24),
-                    fontWeight: FontWeight.bold,
-                  )),
+          return Wrap(
+            children: [
               SizedBox(
-                height: ScreenUtil().setHeight(16),
+                width: ScreenUtil().screenWidth,
+                child: Column(children: [
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  Text(AppLocalizations.of(context)!.areYouSure,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  CustomButton(
+                      text: AppLocalizations.of(context)!.exit,
+                      fontWeight: FontWeight.bold,
+                      textSize: 16,
+                      marginVertical: 16,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        ref.read(appNavigatorProvider).pop();
+                        ref
+                            .read(idiomLearningViewModelProvider.notifier)
+                            .stopAudio();
+                      }),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.cancel,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      )),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                ]),
               ),
-              CustomButton(
-                  text: AppLocalizations.of(context)!.exit,
-                  fontWeight: FontWeight.bold,
-                  textSize: ScreenUtil().setSp(16),
-                  marginVertical: ScreenUtil().setHeight(16),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    ref.read(appNavigatorProvider).pop();
-                  }),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    AppLocalizations.of(context)!.cancel,
-                    style: TextStyle(
-                        fontSize: ScreenUtil().setSp(16),
-                        fontWeight: FontWeight.bold),
-                  )),
-              Flexible(child: Container()),
-            ]),
+            ],
           );
         });
   }
@@ -127,31 +155,37 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Container(
-            width: ScreenUtil().screenWidth,
-            height: ScreenUtil().setHeight(300),
-            padding: EdgeInsets.all(ScreenUtil().setWidth(32)),
-            child: Column(children: [
-              Flexible(child: Container()),
-              Text(AppLocalizations.of(context)!.congratulations,
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(24),
-                    fontWeight: FontWeight.bold,
-                  )),
+          return Wrap(
+            children: [
               SizedBox(
-                height: ScreenUtil().setHeight(16),
+                width: ScreenUtil().screenWidth,
+                child: Column(children: [
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  Text(AppLocalizations.of(context)!.congratulations,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  CustomButton(
+                      text: AppLocalizations.of(context)!.exit,
+                      fontWeight: FontWeight.bold,
+                      textSize: 16,
+                      marginVertical: 16,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        ref.read(appNavigatorProvider).pop();
+                      }),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                ]),
               ),
-              CustomButton(
-                  text: AppLocalizations.of(context)!.exit,
-                  fontWeight: FontWeight.bold,
-                  textSize: ScreenUtil().setSp(16),
-                  marginVertical: ScreenUtil().setHeight(16),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    ref.read(appNavigatorProvider).pop();
-                  }),
-              Flexible(child: Container()),
-            ]),
+            ],
           );
         });
   }
@@ -165,6 +199,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           .onStartRecording();
     } else {
       await ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
+      ref.read(idiomLearningViewModelProvider.notifier).getTextFromSpeech();
     }
   }
 
@@ -177,6 +212,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           onPressed: showExitBottomSheet,
           icon: const Icon(
             Icons.close_outlined,
+            size: 32,
           ),
         ),
         title: state.loadingStatus == LoadingStatus.success
@@ -215,8 +251,32 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
               fontSize: ScreenUtil().setSp(24),
               fontWeight: FontWeight.bold,
             )),
+        Row(
+          children: [
+            Flexible(child: Container()),
+            CustomIconButton(
+              icon: Icon(
+                Icons.volume_up_outlined,
+                size: 32,
+                color: Colors.grey[800],
+              ),
+              onPressed: () => ref
+                  .read(idiomLearningViewModelProvider.notifier)
+                  .playAudio(sentence.audioEndpoint),
+            ),
+            CustomIconButton(
+                icon: AppIcons.snail(
+                  size: 32,
+                  color: Colors.grey[800],
+                ),
+                onPressed: () => ref
+                    .read(idiomLearningViewModelProvider.notifier)
+                    .playSlowAudio(sentence.audioEndpoint)),
+            Flexible(child: Container()),
+          ],
+        ),
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Text(
             sentence.text,
             style: TextStyle(
@@ -234,31 +294,10 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
             ),
           ),
         ),
-        Flexible(flex: 2, child: Container()),
-        if (buttonState == ButtonState.loading)
-          Text('Tap to stop recording',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                color: Colors.grey[700],
-              )),
-        SizedBox(
-          height: ScreenUtil().setHeight(16),
-        ),
-        RecordButton(
-          buttonState: buttonState,
-          onTap: onRecordButtonTap,
-        ),
         Flexible(child: Container()),
-        CustomButton(
-          text: AppLocalizations.of(context)!.next,
-          onTap: onNextPageButtonTap,
-          fontWeight: FontWeight.bold,
-          textSize: ScreenUtil().setSp(18),
-          buttonState:
-              ref.watch(idiomLearningViewModelProvider).nextButtonState,
-        ),
+        buildBottomMenu(buttonState),
         SizedBox(
-          height: ScreenUtil().setHeight(32),
+          height: ScreenUtil().setHeight(64),
         ),
       ],
     );
@@ -268,10 +307,10 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     return Center(
       child: Column(
         children: [
-          SizedBox(
-            height: ScreenUtil().setHeight(32),
+          const SizedBox(
+            height: 32,
           ),
-          DefinitionCard(
+          FlashCardItem(
             name: state.idiom.name,
             description: state.idiom.description,
             descriptionTranslation: state.idiom.descriptionTranslation,
@@ -283,18 +322,49 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
                 .playAudio(state.idiom.audioEndpoint),
           ),
           Flexible(child: Container()),
-          CustomButton(
-            text: AppLocalizations.of(context)!.next,
-            onTap: onNextPageButtonTap,
-            fontWeight: FontWeight.bold,
-            textSize: ScreenUtil().setSp(18),
-            buttonState: state.nextButtonState,
-          ),
+          buildBottomMenu(state.recordButtonState),
           SizedBox(
-            height: ScreenUtil().setHeight(32),
+            height: ScreenUtil().setHeight(64),
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildBottomMenu(ButtonState buttonState) {
+    return Row(
+      children: [
+        Flexible(child: Container()),
+        CustomIconButton(
+          onPressed: onPlayRecordButtonTap,
+          height: 64,
+          width: 64,
+          icon: AppIcons.playRecord(
+            size: 32,
+            color: Colors.grey[800],
+          ),
+        ),
+        const SizedBox(
+          width: 32,
+        ),
+        RecordButton(
+          buttonState: buttonState,
+          onTap: onRecordButtonTap,
+        ),
+        const SizedBox(
+          width: 32,
+        ),
+        CustomIconButton(
+            height: 64,
+            width: 64,
+            onPressed: onNextPageButtonTap,
+            icon: Icon(
+              Icons.navigate_next_outlined,
+              size: 32,
+              color: Colors.grey[800],
+            )),
+        Flexible(child: Container()),
+      ],
     );
   }
 }

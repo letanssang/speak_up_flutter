@@ -84,6 +84,28 @@ class AppIcons {
     );
   }
 
+  static Widget snail({
+    Color? color,
+    double? size,
+  }) {
+    return SvgIcon.from(
+      '$_iconsPath/snail.svg',
+      color: color,
+      size: size,
+    );
+  }
+
+  static Widget playRecord({
+    Color? color,
+    double? size,
+  }) {
+    return SvgIcon.from(
+      '$_iconsPath/play_record.svg',
+      color: color,
+      size: size,
+    );
+  }
+
   static Widget activeLifestyle({
     Color? color,
     double? size,

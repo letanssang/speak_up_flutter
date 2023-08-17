@@ -20,6 +20,7 @@ class AppRoutes {
   static const String phrasalVerb = '/phrasal_verb';
   static const String idiom = '/idiom';
   static const String idiomLearning = '/idiom_learning';
+  static const String flashCards = '/flash_cards';
 
   //profile
   static const String editProfile = '/edit_profile';
