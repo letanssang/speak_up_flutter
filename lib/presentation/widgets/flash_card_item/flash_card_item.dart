@@ -2,21 +2,29 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+enum FlashCardSize {
+  small,
+  medium,
+  large,
+}
+
 class FlashCardItem extends StatefulWidget {
-  final String name;
-  final String description;
+  final String frontText;
+  final String backText;
   final String tapFrontDescription;
   final String tapBackDescription;
-  final String descriptionTranslation;
+  final String backTranslation;
+  final FlashCardSize flashCardSize;
   final Function()? onPressed;
 
   const FlashCardItem({
     super.key,
-    required this.name,
-    required this.description,
+    required this.frontText,
+    required this.backText,
     required this.tapFrontDescription,
     required this.tapBackDescription,
-    required this.descriptionTranslation,
+    required this.backTranslation,
+    this.flashCardSize = FlashCardSize.medium,
     this.onPressed,
   });
 
@@ -37,13 +45,26 @@ class _FlashCardItemState extends State<FlashCardItem> {
 
   Card buildBackCard(BuildContext context) {
     return Card(
+      elevation: 5,
       color: Theme.of(context).primaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
       child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF2A0C4E),
+              Color(0xFF3C1D74),
+              Color(0xFF50248F),
+              Color(0xFF8A5AC7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         padding: const EdgeInsets.all(16),
-        height: ScreenUtil().screenWidth * 0.8,
+        height: widget.flashCardSize == FlashCardSize.medium
+            ? ScreenUtil().screenWidth * 0.8
+            : ScreenUtil().screenHeight * 0.5,
         width: ScreenUtil().screenWidth * 0.8,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -58,9 +79,7 @@ class _FlashCardItemState extends State<FlashCardItem> {
               child: Center(
                 child: SingleChildScrollView(
                   child: Text(
-                    isTranslated
-                        ? widget.descriptionTranslation
-                        : widget.description,
+                    isTranslated ? widget.backTranslation : widget.backText,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 24,
@@ -104,12 +123,24 @@ class _FlashCardItemState extends State<FlashCardItem> {
   Card buildFrontCard(BuildContext context) {
     return Card(
       color: Theme.of(context).primaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
       child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF2A0C4E),
+              Color(0xFF3C1D74),
+              Color(0xFF50248F),
+              Color(0xFF8A5AC7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         padding: EdgeInsets.all(ScreenUtil().setWidth(16)),
-        height: ScreenUtil().screenWidth * 0.8,
+        height: widget.flashCardSize == FlashCardSize.medium
+            ? ScreenUtil().screenWidth * 0.8
+            : ScreenUtil().screenHeight * 0.5,
         width: ScreenUtil().screenWidth * 0.8,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +154,7 @@ class _FlashCardItemState extends State<FlashCardItem> {
             Expanded(
               child: Center(
                 child: Text(
-                  widget.name,
+                  widget.frontText,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(24),

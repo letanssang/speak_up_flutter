@@ -3,6 +3,7 @@
         "audioplayers",
         "FLAC",
         "LTRB",
+        "swipable",
         "vsync"
     ]
 }

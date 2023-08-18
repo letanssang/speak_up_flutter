@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:speak_up/data/providers/app_navigator_provider.dart';
-import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/widgets/divider/app_divider.dart';
 
 class LearningModeBottomSheet extends ConsumerWidget {

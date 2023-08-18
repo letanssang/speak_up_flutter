@@ -311,9 +311,9 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
             height: 32,
           ),
           FlashCardItem(
-            name: state.idiom.name,
-            description: state.idiom.description,
-            descriptionTranslation: state.idiom.descriptionTranslation,
+            frontText: state.idiom.name,
+            backText: state.idiom.description,
+            backTranslation: state.idiom.descriptionTranslation,
             tapFrontDescription:
                 AppLocalizations.of(context)!.tapToSeeTheMeaning,
             tapBackDescription: AppLocalizations.of(context)!.tapToSeeTheIdiom,

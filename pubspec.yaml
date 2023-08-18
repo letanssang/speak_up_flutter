@@ -37,6 +37,7 @@ dependencies:
   loading_indicator: ^3.1.1
   cupertino_icons: ^1.0.2
   flip_card: ^0.7.0
+  swipable_stack: ^2.0.0
 
   # Local Data Storage
   shared_preferences: ^2.2.0

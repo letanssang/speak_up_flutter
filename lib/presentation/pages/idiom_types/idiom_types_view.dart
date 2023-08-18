@@ -11,6 +11,7 @@ import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/idiom_types/idiom_types_state.dart';
 import 'package:speak_up/presentation/pages/idiom_types/idiom_types_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
+import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/learning_mode_bottom_sheet.dart';
@@ -57,7 +58,10 @@ class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
               onTapFlashcard: () {
                 ref
                     .read(appNavigatorProvider)
-                    .navigateTo(AppRoutes.flashCards, arguments: idiomType);
+                    .navigateTo(AppRoutes.flashCards, arguments: {
+                  'flashCardType': FlashCardType.idiom,
+                  'parent': idiomType,
+                });
               },
             ));
   }
