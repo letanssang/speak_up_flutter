@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_state.dart';
@@ -11,6 +12,7 @@ import 'package:speak_up/presentation/widgets/flash_card_item/flash_card_item.da
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 import 'package:swipable_stack/swipable_stack.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final flashCardsViewModelProvider =
     StateNotifierProvider.autoDispose<FlashCardsViewModel, FlashCardsState>(
@@ -85,6 +87,24 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
       children: [
         Positioned.fill(
           child: SwipableStack(
+            overlayBuilder: (context, swipeProperty) {
+              return Center(
+                child: swipeProperty.direction == SwipeDirection.left
+                    ? buildOverlayText(
+                        Colors.red,
+                        'Review later',
+                        SwipeDirection.left,
+                      )
+                    : buildOverlayText(
+                        Colors.green,
+                        'I got it',
+                        SwipeDirection.right,
+                      ),
+              );
+            },
+            cancelAnimationCurve: Curves.linearToEaseOut,
+            horizontalSwipeThreshold: 0.8,
+            verticalSwipeThreshold: 0.8,
             itemCount: state.flashCards.length,
             controller: _swipableStackController,
             swipeAnchor: SwipeAnchor.bottom,
@@ -100,58 +120,71 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
         Center(
           child: Column(
             children: [
-              const SizedBox(
-                height: 32,
-              ),
               Flexible(child: Container()),
               Row(
                 children: [
                   Flexible(child: Container()),
-                  Container(
-                    width: ScreenUtil().screenWidth * 0.35,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        bottomLeft: Radius.circular(16),
+                  InkWell(
+                    onTap: () {
+                      _swipableStackController.next(
+                        swipeDirection: SwipeDirection.left,
+                        duration: const Duration(milliseconds: 1000),
+                      );
+                    },
+                    child: Container(
+                      width: ScreenUtil().screenWidth * 0.35,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          bottomLeft: Radius.circular(16),
+                        ),
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        color: Colors.white,
                       ),
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      color: Colors.white,
+                      child: Center(
+                          child: Text(
+                        'Review later',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
                     ),
-                    child: Center(
-                        child: Text(
-                      'Review later',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: ScreenUtil().setSp(16),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
                   ),
                   const SizedBox(
                     width: 16,
                   ),
-                  Container(
-                    width: ScreenUtil().screenWidth * 0.35,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
+                  InkWell(
+                    onTap: () {
+                      _swipableStackController.next(
+                        swipeDirection: SwipeDirection.right,
+                        duration: const Duration(milliseconds: 1000),
+                      );
+                    },
+                    child: Container(
+                      width: ScreenUtil().screenWidth * 0.35,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(16),
+                          bottomRight: Radius.circular(16),
+                        ),
+                        color: Theme.of(context).primaryColor,
                       ),
-                      color: Theme.of(context).primaryColor,
+                      height: 64,
+                      child: Center(
+                          child: Text(
+                        'I got it',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
                     ),
-                    height: 64,
-                    child: Center(
-                        child: Text(
-                      'I got it',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: ScreenUtil().setSp(16),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
                   ),
                   Flexible(child: Container()),
                 ],
@@ -166,19 +199,72 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
     );
   }
 
+  Widget buildOverlayText(Color color, String text, SwipeDirection direction) {
+    return Column(
+      children: [
+        SizedBox(
+          height: ScreenUtil().screenHeight * 0.2,
+        ),
+        Row(
+          children: [
+            Flexible(
+              child: Container(),
+            ),
+            if (direction == SwipeDirection.left)
+              const SizedBox(
+                width: 64,
+              ),
+            Transform.rotate(
+              angle: direction == SwipeDirection.left ? 0.1 : -0.1,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    width: 5,
+                    color: color,
+                  ),
+                ),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            if (direction == SwipeDirection.right)
+              const SizedBox(
+                width: 128,
+              ),
+            Flexible(
+              child: Container(),
+            ),
+          ],
+        ),
+        Flexible(
+          child: Container(),
+        ),
+      ],
+    );
+  }
+
   Widget buildCurrentFlashCardItem(FlashCardsState state, int index) {
     return Padding(
       padding: EdgeInsets.only(
-          top: 32,
+          top: ScreenUtil().screenHeight * 0.1,
           left: 16,
           right: 16,
-          bottom: ScreenUtil().screenHeight * 0.3),
+          bottom: ScreenUtil().screenHeight * 0.2),
       child: FlashCardItem(
           flashCardSize: FlashCardSize.large,
           frontText: state.flashCards[index].frontText,
           backText: state.flashCards[index].backText,
-          tapFrontDescription: 'tap',
-          tapBackDescription: 'tap',
+          tapFrontDescription: AppLocalizations.of(context)!.tapToSeeTheMeaning,
+          tapBackDescription: flashCardType.getTapBackDescription(context),
           backTranslation: state.flashCards[index].backTranslation ?? ''),
     );
   }
