@@ -320,6 +320,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
             onPressed: () => ref
                 .read(idiomLearningViewModelProvider.notifier)
                 .playAudio(state.idiom.audioEndpoint),
+            isHasAudio: true,
           ),
           Flexible(child: Container()),
           buildBottomMenu(state.recordButtonState),

@@ -15,6 +15,7 @@ class FlashCardItem extends StatefulWidget {
   final String tapBackDescription;
   final String backTranslation;
   final FlashCardSize flashCardSize;
+  final bool isHasAudio;
   final Function()? onPressed;
 
   const FlashCardItem({
@@ -25,6 +26,7 @@ class FlashCardItem extends StatefulWidget {
     required this.tapBackDescription,
     required this.backTranslation,
     this.flashCardSize = FlashCardSize.medium,
+    this.isHasAudio = false,
     this.onPressed,
   });
 
@@ -34,6 +36,7 @@ class FlashCardItem extends StatefulWidget {
 
 class _FlashCardItemState extends State<FlashCardItem> {
   bool isTranslated = false;
+
   @override
   Widget build(BuildContext context) {
     return FlipCard(
@@ -93,13 +96,14 @@ class _FlashCardItemState extends State<FlashCardItem> {
             Row(
               children: [
                 Flexible(child: Container()),
-                IconButton(
-                    onPressed: widget.onPressed,
-                    icon: Icon(
-                      Icons.volume_up,
-                      color: Colors.white,
-                      size: ScreenUtil().setWidth(32),
-                    )),
+                if (widget.isHasAudio)
+                  IconButton(
+                      onPressed: widget.onPressed,
+                      icon: Icon(
+                        Icons.volume_up,
+                        color: Colors.white,
+                        size: ScreenUtil().setWidth(32),
+                      )),
                 IconButton(
                     onPressed: () {
                       setState(() {
@@ -164,13 +168,14 @@ class _FlashCardItemState extends State<FlashCardItem> {
                 ),
               ),
             ),
-            IconButton(
-                onPressed: widget.onPressed,
-                icon: Icon(
-                  Icons.volume_up,
-                  color: Colors.white,
-                  size: ScreenUtil().setWidth(32),
-                )),
+            if (widget.isHasAudio)
+              IconButton(
+                  onPressed: widget.onPressed,
+                  icon: Icon(
+                    Icons.volume_up,
+                    color: Colors.white,
+                    size: ScreenUtil().setWidth(32),
+                  )),
           ],
         ),
       ),
