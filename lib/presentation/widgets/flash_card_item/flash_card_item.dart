@@ -15,20 +15,19 @@ class FlashCardItem extends StatefulWidget {
   final String tapBackDescription;
   final String backTranslation;
   final FlashCardSize flashCardSize;
-  final bool isHasAudio;
-  final Function()? onPressed;
+  final Function()? onPressedFrontCard;
+  final Function()? onPressedBackCard;
 
-  const FlashCardItem({
-    super.key,
-    required this.frontText,
-    required this.backText,
-    required this.tapFrontDescription,
-    required this.tapBackDescription,
-    required this.backTranslation,
-    this.flashCardSize = FlashCardSize.medium,
-    this.isHasAudio = false,
-    this.onPressed,
-  });
+  const FlashCardItem(
+      {super.key,
+      required this.frontText,
+      required this.backText,
+      required this.tapFrontDescription,
+      required this.tapBackDescription,
+      required this.backTranslation,
+      this.flashCardSize = FlashCardSize.medium,
+      this.onPressedFrontCard,
+      this.onPressedBackCard});
 
   @override
   State<FlashCardItem> createState() => _FlashCardItemState();
@@ -96,14 +95,13 @@ class _FlashCardItemState extends State<FlashCardItem> {
             Row(
               children: [
                 Flexible(child: Container()),
-                if (widget.isHasAudio)
-                  IconButton(
-                      onPressed: widget.onPressed,
-                      icon: Icon(
-                        Icons.volume_up,
-                        color: Colors.white,
-                        size: ScreenUtil().setWidth(32),
-                      )),
+                IconButton(
+                    onPressed: widget.onPressedBackCard,
+                    icon: Icon(
+                      Icons.volume_up,
+                      color: Colors.white,
+                      size: ScreenUtil().setWidth(32),
+                    )),
                 IconButton(
                     onPressed: () {
                       setState(() {
@@ -168,14 +166,13 @@ class _FlashCardItemState extends State<FlashCardItem> {
                 ),
               ),
             ),
-            if (widget.isHasAudio)
-              IconButton(
-                  onPressed: widget.onPressed,
-                  icon: Icon(
-                    Icons.volume_up,
-                    color: Colors.white,
-                    size: ScreenUtil().setWidth(32),
-                  )),
+            IconButton(
+                onPressed: widget.onPressedFrontCard,
+                icon: Icon(
+                  Icons.volume_up,
+                  color: Colors.white,
+                  size: ScreenUtil().setWidth(32),
+                )),
           ],
         ),
       ),

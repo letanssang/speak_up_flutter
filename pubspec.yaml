@@ -62,6 +62,7 @@ dependencies:
 
   # Speech Recognition
   google_speech: ^2.2.0
+  flutter_tts: ^3.7.0
 
 
 dev_dependencies:

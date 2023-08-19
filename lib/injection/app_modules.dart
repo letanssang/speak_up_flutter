@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:record/record.dart';
@@ -12,6 +13,7 @@ import 'package:speak_up/data/repositories/authentication/authentication_reposit
 import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
 import 'package:speak_up/data/repositories/record/record_repository.dart';
 import 'package:speak_up/data/repositories/speech_to_text/speech_to_text_repository.dart';
+import 'package:speak_up/data/repositories/text_to_speech/text_to_speech_repository.dart';
 import 'package:speak_up/data/services/google_speech/google_speech_helper.dart';
 import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_case.dart';
@@ -50,6 +52,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.da
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/injector.dart';
 
@@ -129,6 +132,14 @@ class AppModules {
     //Speech To Text Repository
     injector.registerLazySingleton<SpeechToTextRepository>(() {
       return SpeechToTextRepository(injector.get<SpeechToText>());
+    });
+
+    //Text To Speech
+    injector.registerLazySingleton<FlutterTts>(() => FlutterTts());
+
+    //Text To Speech Repository
+    injector.registerLazySingleton<TextToSpeechRepository>(() {
+      return TextToSpeechRepository(injector.get<FlutterTts>());
     });
 
     // Get app theme use case
@@ -271,5 +282,9 @@ class AppModules {
     // Get Text From Speech Use Case
     injector.registerLazySingleton<GetTextFromSpeechUseCase>(
         () => GetTextFromSpeechUseCase());
+
+    // Speak From Text Use Case
+    injector.registerLazySingleton<SpeakFromTextUseCase>(
+        () => SpeakFromTextUseCase());
   }
 }

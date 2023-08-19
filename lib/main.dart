@@ -16,6 +16,8 @@ import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'injection/injector.dart';
 import 'presentation/navigation/app_router.dart';
 
+final appRootNavigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -52,10 +54,21 @@ class MyApp extends ConsumerWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             locale: language.getLocale(),
-            home: Navigator(
-              key: ref.read(appNavigatorProvider).navigatorKey,
-              initialRoute: AppRoutes.splash,
-              onGenerateRoute: AppRouter.onGenerateRoute,
+            navigatorKey: appRootNavigatorKey,
+            home: WillPopScope(
+              onWillPop: () async {
+                final navigator = ref.read(appNavigatorProvider);
+                if (navigator.canGoBack()) {
+                  navigator.pop();
+                  return false;
+                }
+                return true;
+              },
+              child: Navigator(
+                key: ref.read(appNavigatorProvider).navigatorKey,
+                initialRoute: AppRoutes.splash,
+                onGenerateRoute: AppRouter.onGenerateRoute,
+              ),
             ),
           );
         });

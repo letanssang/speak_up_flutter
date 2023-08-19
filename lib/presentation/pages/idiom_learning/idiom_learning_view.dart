@@ -14,6 +14,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idi
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_view_model.dart';
@@ -37,7 +38,8 @@ final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
       injector.get<StopAudioUseCase>(),
       injector.get<StartRecordingUseCase>(),
       injector.get<StopRecordingUseCase>(),
-      injector.get<GetTextFromSpeechUseCase>()),
+      injector.get<GetTextFromSpeechUseCase>(),
+      injector.get<SpeakFromTextUseCase>()),
 );
 
 class IdiomLearningView extends ConsumerStatefulWidget {
@@ -62,9 +64,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   Future<void> _init() async {
     idiom = ModalRoute.of(context)!.settings.arguments as Idiom;
     await ref.read(idiomLearningViewModelProvider.notifier).setIdiom(idiom);
-    ref
-        .read(idiomLearningViewModelProvider.notifier)
-        .playAudio(idiom.audioEndpoint);
+    ref.read(idiomLearningViewModelProvider.notifier).speakFromText(idiom.name);
     await ref
         .read(idiomLearningViewModelProvider.notifier)
         .fetchExampleSentences();
@@ -317,10 +317,12 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
             tapFrontDescription:
                 AppLocalizations.of(context)!.tapToSeeTheMeaning,
             tapBackDescription: AppLocalizations.of(context)!.tapToSeeTheIdiom,
-            onPressed: () => ref
+            onPressedFrontCard: () => ref
                 .read(idiomLearningViewModelProvider.notifier)
-                .playAudio(state.idiom.audioEndpoint),
-            isHasAudio: true,
+                .speakFromText(state.idiom.name),
+            onPressedBackCard: () => ref
+                .read(idiomLearningViewModelProvider.notifier)
+                .speakFromText(state.idiom.description),
           ),
           Flexible(child: Container()),
           buildBottomMenu(state.recordButtonState),
