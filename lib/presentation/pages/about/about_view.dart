@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 
 class AboutView extends StatelessWidget {
   const AboutView({super.key});
@@ -8,7 +9,7 @@ class AboutView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
+        leading: const AppBackButton(),
         title: const Text('About'),
       ),
       body: SizedBox(

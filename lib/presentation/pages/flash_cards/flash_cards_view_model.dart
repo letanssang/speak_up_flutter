@@ -16,14 +16,14 @@ class FlashCardsViewModel extends StateNotifier<FlashCardsState> {
     this._speakFromTextUseCase,
   ) : super(const FlashCardsState());
 
-  void init(FlashCardType flashCardType, dynamic parent) {
-    state = state.copyWith(flashCardType: flashCardType, parent: parent);
+  void init(LessonType lessonType, dynamic parent) {
+    state = state.copyWith(lessonType: lessonType, parent: parent);
   }
 
   Future<void> fetchFlashCards() async {
     state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
-    switch (state.flashCardType) {
-      case FlashCardType.idiom:
+    switch (state.lessonType) {
+      case LessonType.idiom:
         await _fetchIdiomFlashCards();
         break;
       default:

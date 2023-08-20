@@ -55,11 +55,19 @@ class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
                     .read(appNavigatorProvider)
                     .navigateTo(AppRoutes.idiom, arguments: idiomType);
               },
+              onTapQuiz: () {
+                ref
+                    .read(appNavigatorProvider)
+                    .navigateTo(AppRoutes.quiz, arguments: {
+                  'lessonType': LessonType.idiom,
+                  'parent': idiomType,
+                });
+              },
               onTapFlashcard: () {
                 ref
                     .read(appNavigatorProvider)
                     .navigateTo(AppRoutes.flashCards, arguments: {
-                  'flashCardType': FlashCardType.idiom,
+                  'lessonType': LessonType.idiom,
                   'parent': idiomType,
                 });
               },

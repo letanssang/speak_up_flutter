@@ -9,7 +9,8 @@ import 'package:speak_up/presentation/pages/flash_cards/flash_cards_state.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
-import 'package:speak_up/presentation/widgets/flash_card_item/flash_card_item.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
+import 'package:speak_up/presentation/widgets/cards/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 import 'package:swipable_stack/swipable_stack.dart';
@@ -30,7 +31,7 @@ class FlashCardsView extends ConsumerStatefulWidget {
 }
 
 class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
-  late final FlashCardType flashCardType;
+  late final LessonType _lessonType;
   late final dynamic parentType;
   final _swipableStackController = SwipableStackController();
 
@@ -45,12 +46,12 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
   Future<void> _init() async {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    flashCardType = args['flashCardType'] as FlashCardType;
+    _lessonType = args['lessonType'] as LessonType;
     parentType = args['parent'];
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref
           .read(flashCardsViewModelProvider.notifier)
-          .init(flashCardType, parentType);
+          .init(_lessonType, parentType);
       await ref.read(flashCardsViewModelProvider.notifier).fetchFlashCards();
 
       await ref.read(flashCardsViewModelProvider.notifier).speakFromText(
@@ -74,6 +75,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
     final state = ref.watch(flashCardsViewModelProvider);
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: AppLinearPercentIndicator(
           percent: state.loadingStatus == LoadingStatus.success
               ? state.currentIndex / state.flashCards.length
@@ -275,7 +277,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
           frontText: state.flashCards[index].frontText,
           backText: state.flashCards[index].backText,
           tapFrontDescription: AppLocalizations.of(context)!.tapToSeeTheMeaning,
-          tapBackDescription: flashCardType.getTapBackDescription(context),
+          tapBackDescription: _lessonType.getTapBackDescription(context),
           backTranslation: state.flashCards[index].backTranslation ?? '',
           onPressedFrontCard: () {
             ref

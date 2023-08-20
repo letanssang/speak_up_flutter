@@ -24,7 +24,7 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
-import 'package:speak_up/presentation/widgets/flash_card_item/flash_card_item.dart';
+import 'package:speak_up/presentation/widgets/cards/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 
 final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<

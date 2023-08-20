@@ -5,6 +5,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_pat
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_state.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_view_model.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 
 final patternViewModelProvider =
     StateNotifierProvider.autoDispose<PatternViewModel, PatternState>(
@@ -42,6 +43,7 @@ class _PatternViewState extends ConsumerState<PatternView> {
     final state = ref.watch(patternViewModelProvider);
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: Text(pattern.name),
       ),
       body: Column(children: [
