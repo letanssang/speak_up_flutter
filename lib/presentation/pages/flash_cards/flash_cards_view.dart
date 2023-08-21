@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_state.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
-import 'package:speak_up/presentation/widgets/flash_card_item/flash_card_item.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
+import 'package:speak_up/presentation/widgets/cards/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 import 'package:swipable_stack/swipable_stack.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final flashCardsViewModelProvider =
     StateNotifierProvider.autoDispose<FlashCardsViewModel, FlashCardsState>(
   (ref) => FlashCardsViewModel(
     injector.get<GetIdiomListByTypeUseCase>(),
+    injector.get<SpeakFromTextUseCase>(),
   ),
 );
 
@@ -29,9 +31,10 @@ class FlashCardsView extends ConsumerStatefulWidget {
 }
 
 class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
-  late final FlashCardType flashCardType;
+  late final LessonType _lessonType;
   late final dynamic parentType;
   final _swipableStackController = SwipableStackController();
+
   @override
   void initState() {
     super.initState();
@@ -43,13 +46,16 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
   Future<void> _init() async {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    flashCardType = args['flashCardType'] as FlashCardType;
+    _lessonType = args['lessonType'] as LessonType;
     parentType = args['parent'];
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref
           .read(flashCardsViewModelProvider.notifier)
-          .init(flashCardType, parentType);
+          .init(_lessonType, parentType);
       await ref.read(flashCardsViewModelProvider.notifier).fetchFlashCards();
+
+      await ref.read(flashCardsViewModelProvider.notifier).speakFromText(
+          ref.read(flashCardsViewModelProvider).flashCards[0].frontText);
     });
     _swipableStackController.addListener(() {
       ref
@@ -68,18 +74,20 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
   Widget build(BuildContext context) {
     final state = ref.watch(flashCardsViewModelProvider);
     return Scaffold(
-        appBar: AppBar(
-          title: AppLinearPercentIndicator(
-            percent: state.loadingStatus == LoadingStatus.success
-                ? state.currentIndex / state.flashCards.length
-                : 0,
-          ),
+      appBar: AppBar(
+        leading: const AppBackButton(),
+        title: AppLinearPercentIndicator(
+          percent: state.loadingStatus == LoadingStatus.success
+              ? state.currentIndex / state.flashCards.length
+              : 0,
         ),
-        body: state.loadingStatus == LoadingStatus.success
-            ? buildLoadingSuccessBody(state, context)
-            : state.loadingStatus == LoadingStatus.inProgress
-                ? const Center(child: AppLoadingIndicator())
-                : const Center(child: Text('Something went wrong')));
+      ),
+      body: state.loadingStatus == LoadingStatus.success
+          ? buildLoadingSuccessBody(state, context)
+          : state.loadingStatus == LoadingStatus.error
+              ? const Center(child: Text('Something went wrong'))
+              : const Center(child: AppLoadingIndicator()),
+    );
   }
 
   Widget buildLoadingSuccessBody(FlashCardsState state, BuildContext context) {
@@ -91,17 +99,23 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
               return Center(
                 child: swipeProperty.direction == SwipeDirection.left
                     ? buildOverlayText(
-                        Colors.red,
-                        'Review later',
+                        Colors.green,
+                        'I got it',
                         SwipeDirection.left,
                       )
                     : buildOverlayText(
-                        Colors.green,
-                        'I got it',
+                        Colors.red,
+                        'Review later',
                         SwipeDirection.right,
                       ),
               );
             },
+            onSwipeCompleted: (index, direction) {
+              ref
+                  .read(flashCardsViewModelProvider.notifier)
+                  .speakFromText(state.flashCards[index + 1].frontText);
+            },
+            dragStartCurve: Curves.linearToEaseOut,
             cancelAnimationCurve: Curves.linearToEaseOut,
             horizontalSwipeThreshold: 0.8,
             verticalSwipeThreshold: 0.8,
@@ -127,7 +141,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                   InkWell(
                     onTap: () {
                       _swipableStackController.next(
-                        swipeDirection: SwipeDirection.left,
+                        swipeDirection: SwipeDirection.right,
                         duration: const Duration(milliseconds: 1000),
                       );
                     },
@@ -161,7 +175,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                   InkWell(
                     onTap: () {
                       _swipableStackController.next(
-                        swipeDirection: SwipeDirection.right,
+                        swipeDirection: SwipeDirection.left,
                         duration: const Duration(milliseconds: 1000),
                       );
                     },
@@ -212,7 +226,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
             ),
             if (direction == SwipeDirection.left)
               const SizedBox(
-                width: 64,
+                width: 128,
               ),
             Transform.rotate(
               angle: direction == SwipeDirection.left ? 0.1 : -0.1,
@@ -238,7 +252,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
             ),
             if (direction == SwipeDirection.right)
               const SizedBox(
-                width: 128,
+                width: 64,
               ),
             Flexible(
               child: Container(),
@@ -264,8 +278,18 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
           frontText: state.flashCards[index].frontText,
           backText: state.flashCards[index].backText,
           tapFrontDescription: AppLocalizations.of(context)!.tapToSeeTheMeaning,
-          tapBackDescription: flashCardType.getTapBackDescription(context),
-          backTranslation: state.flashCards[index].backTranslation ?? ''),
+          tapBackDescription: _lessonType.getTapBackDescription(context),
+          backTranslation: state.flashCards[index].backTranslation ?? '',
+          onPressedFrontCard: () {
+            ref
+                .read(flashCardsViewModelProvider.notifier)
+                .speakFromText(state.flashCards[index].frontText);
+          },
+          onPressedBackCard: () {
+            ref
+                .read(flashCardsViewModelProvider.notifier)
+                .speakFromText(state.flashCards[index].backText);
+          }),
     );
   }
 }

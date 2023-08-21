@@ -5,6 +5,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_phrasal_verb_list_by_t
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_state.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view_model.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 
 final phrasalVerbViewModelProvider =
     StateNotifierProvider.autoDispose<PhrasalVerbViewModel, PhrasalVerbState>(
@@ -22,6 +23,7 @@ class PhrasalVerbView extends ConsumerStatefulWidget {
 
 class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
   PhrasalVerbType phrasalVerbType = PhrasalVerbType.initial();
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +44,7 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: Text(phrasalVerbType.name),
       ),
       body: Column(

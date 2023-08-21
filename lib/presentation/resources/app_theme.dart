@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speak_up/presentation/resources/app_colors.dart';
 
 ThemeData getAppLightTheme() {
   return ThemeData(
@@ -21,9 +22,9 @@ ThemeData getAppLightTheme() {
       elevation: 0,
       surfaceTintColor: Colors.white,
     ),
-    primaryColor: const Color(0xFF50248F),
+    primaryColor: AppColors.primaryColor,
     colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF50248F), surfaceVariant: Colors.transparent),
+        seedColor: AppColors.primaryColor, surfaceVariant: Colors.transparent),
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.black),
   );
@@ -50,9 +51,9 @@ ThemeData getAppDarkTheme() {
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.white,
     ),
-    primaryColor: const Color(0xFF50248F),
+    primaryColor: AppColors.primaryColor,
     colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF50248F), surfaceVariant: Colors.transparent),
+        seedColor: AppColors.primaryColor, surfaceVariant: Colors.transparent),
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.white),
   );

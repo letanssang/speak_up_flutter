@@ -5,6 +5,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_expression_list_by_typ
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/expression/expression_state.dart';
 import 'package:speak_up/presentation/pages/expression/expression_view_model.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 
 final expressionViewModelProvider =
     StateNotifierProvider.autoDispose<ExpressionViewModel, ExpressionState>(
@@ -22,6 +23,7 @@ class ExpressionView extends ConsumerStatefulWidget {
 
 class _ExpressionViewState extends ConsumerState<ExpressionView> {
   ExpressionType expressionType = ExpressionType.initial();
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +45,7 @@ class _ExpressionViewState extends ConsumerState<ExpressionView> {
     final state = ref.watch(expressionViewModelProvider);
     return Scaffold(
         appBar: AppBar(
+          leading: const AppBackButton(),
           title: Text(expressionType.name),
         ),
         body: Column(

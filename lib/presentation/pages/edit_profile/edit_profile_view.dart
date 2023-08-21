@@ -15,6 +15,7 @@ import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
 import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
 
@@ -103,7 +104,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     addErrorMessageListener(context);
     return Scaffold(
         appBar: AppBar(
-          leading: const BackButton(),
+          leading: const AppBackButton(),
           title: Text(AppLocalizations.of(context)!.personalInformation),
         ),
         body: Form(

@@ -12,6 +12,7 @@ import 'package:speak_up/presentation/pages/sign_in/sign_in_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
@@ -24,6 +25,7 @@ final signInViewModelProvider =
 
 class SignInView extends ConsumerWidget {
   const SignInView({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(signInViewModelProvider);
@@ -52,7 +54,7 @@ class SignInView extends ConsumerWidget {
     });
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
+        leading: const AppBackButton(),
       ),
       body: Stack(
         children: [

@@ -11,6 +11,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idi
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.dart';
 import 'package:speak_up/presentation/resources/app_audios.dart';
 import 'package:speak_up/presentation/utilities/constant/string.dart';
@@ -27,6 +28,7 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   final StartRecordingUseCase _startRecordingUseCase;
   final StopRecordingUseCase _stopRecordingUseCase;
   final GetTextFromSpeechUseCase _getTextFromSpeechUseCase;
+  final SpeakFromTextUseCase _speakingFromTextUseCase;
 
   IdiomLearningViewModel(
     this._getSentenceListFromIdiomUseCase,
@@ -38,6 +40,7 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     this._startRecordingUseCase,
     this._stopRecordingUseCase,
     this._getTextFromSpeechUseCase,
+    this._speakingFromTextUseCase,
   ) : super(IdiomLearningState(
           idiom: Idiom.initial(),
         ));
@@ -123,5 +126,9 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
       debugPrint(e.toString());
       return '';
     }
+  }
+
+  Future<void> speakFromText(String text) async {
+    await _speakingFromTextUseCase.run(text);
   }
 }

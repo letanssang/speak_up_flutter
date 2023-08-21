@@ -13,6 +13,7 @@ import 'package:speak_up/presentation/pages/topic/topic_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/divider/app_divider.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
@@ -56,6 +57,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
     final language = ref.watch(appLanguageProvider);
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: Text(
             language == Language.english ? topic.topicName : topic.translation),
       ),

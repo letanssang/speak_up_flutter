@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
@@ -9,7 +10,7 @@ import 'package:speak_up/presentation/pages/idiom_types/idiom_types_view.dart';
 import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson_detail_view.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb_types/phrasal_verb_types_view.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 
 class LessonView extends ConsumerStatefulWidget {
   const LessonView({super.key});
@@ -23,6 +24,7 @@ class _LessonViewState extends ConsumerState<LessonView>
   Lesson lesson = Lesson.initial();
 
   late TabController _tabController;
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
@@ -36,6 +38,7 @@ class _LessonViewState extends ConsumerState<LessonView>
     final language = ref.watch(appLanguageProvider);
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: Text(
           lesson.name,
         ),

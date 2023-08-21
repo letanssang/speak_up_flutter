@@ -15,6 +15,7 @@ import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/onboarding/onboarding_view.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_view.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
+import 'package:speak_up/presentation/pages/quiz/quiz_view.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_view.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_view.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_view.dart';
@@ -156,6 +157,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const FlashCardsView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.quiz:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const QuizView(),
             settings: settings,
           );
         }

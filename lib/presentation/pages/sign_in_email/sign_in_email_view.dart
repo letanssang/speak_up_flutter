@@ -11,6 +11,7 @@ import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_view_mod
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
 import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
@@ -78,7 +79,7 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
     addErrorMessageListener(context);
     return Scaffold(
         appBar: AppBar(
-          leading: const BackButton(),
+          leading: const AppBackButton(),
         ),
         body: Stack(
           children: [

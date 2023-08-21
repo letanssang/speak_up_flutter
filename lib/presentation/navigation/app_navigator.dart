@@ -51,4 +51,12 @@ class AppNavigator {
     }
     currentState.pop();
   }
+
+  bool canGoBack() {
+    final currentState = navigatorKey.currentState;
+    if (currentState == null) {
+      return false;
+    }
+    return currentState.canPop();
+  }
 }

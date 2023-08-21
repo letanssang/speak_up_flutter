@@ -14,6 +14,7 @@ import 'package:speak_up/presentation/pages/sign_up/sign_up_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
 import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/text_fields/custom_text_field.dart';
 
@@ -98,7 +99,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
     addErrorMessageListener(context);
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
+        leading: const AppBackButton(),
       ),
       body: SingleChildScrollView(
         child: Form(

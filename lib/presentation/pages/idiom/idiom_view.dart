@@ -10,6 +10,7 @@ import 'package:speak_up/presentation/pages/idiom/idiom_state.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/percent_calculate.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 
@@ -50,6 +51,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
     final state = ref.watch(idiomViewModelProvider);
     return Scaffold(
         appBar: AppBar(
+          leading: const AppBackButton(),
           actions: [
             IconButton(
               onPressed: () {},

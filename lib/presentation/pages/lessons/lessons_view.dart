@@ -7,6 +7,7 @@ import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 
 class LessonsView extends ConsumerStatefulWidget {
   const LessonsView({super.key});
@@ -25,6 +26,7 @@ class _LessonsViewState extends ConsumerState<LessonsView> {
     final language = ref.watch(appLanguageProvider);
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: Text(AppLocalizations.of(context)!.featuredCourses),
       ),
       body: ListView.builder(

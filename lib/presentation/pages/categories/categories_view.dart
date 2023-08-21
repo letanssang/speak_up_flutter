@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
@@ -7,7 +8,7 @@ import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/utilities/constant/category_icon_list.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 
 class CategoriesView extends ConsumerWidget {
   const CategoriesView({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class CategoriesView extends ConsumerWidget {
         ModalRoute.of(context)!.settings.arguments as List<Category>;
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: Text(AppLocalizations.of(context)!.categories),
       ),
       body: Padding(

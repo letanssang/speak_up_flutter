@@ -1,23 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-enum FlashCardType {
+enum LessonType {
   idiom,
   phrasalVerb,
   pattern,
   expression,
 }
 
-extension FlashCardTypeExtension on FlashCardType {
+extension LessonTypeExtension on LessonType {
   String getTapBackDescription(BuildContext context) {
     switch (this) {
-      case FlashCardType.idiom:
+      case LessonType.idiom:
         return AppLocalizations.of(context)!.tapToSeeTheIdiom;
-      case FlashCardType.phrasalVerb:
+      case LessonType.phrasalVerb:
         return AppLocalizations.of(context)!.tapToSeeThePhrasalVerb;
-      case FlashCardType.pattern:
+      case LessonType.pattern:
         return AppLocalizations.of(context)!.tapToSeeThePattern;
-      case FlashCardType.expression:
+      case LessonType.expression:
         return AppLocalizations.of(context)!.tapToSeeTheExpression;
       default:
         return '';

@@ -14,6 +14,7 @@ import 'package:speak_up/presentation/pages/category/category_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final categoryViewModelProvider =
@@ -56,6 +57,7 @@ class _CategoryViewState extends ConsumerState<CategoryView>
     final language = ref.watch(appLanguageProvider);
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: language == Language.english
             ? Text(category.name)
             : Text(category.translation),
