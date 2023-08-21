@@ -115,6 +115,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                   .read(flashCardsViewModelProvider.notifier)
                   .speakFromText(state.flashCards[index + 1].frontText);
             },
+            dragStartCurve: Curves.linearToEaseOut,
             cancelAnimationCurve: Curves.linearToEaseOut,
             horizontalSwipeThreshold: 0.8,
             verticalSwipeThreshold: 0.8,
@@ -140,7 +141,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                   InkWell(
                     onTap: () {
                       _swipableStackController.next(
-                        swipeDirection: SwipeDirection.left,
+                        swipeDirection: SwipeDirection.right,
                         duration: const Duration(milliseconds: 1000),
                       );
                     },
@@ -174,7 +175,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                   InkWell(
                     onTap: () {
                       _swipableStackController.next(
-                        swipeDirection: SwipeDirection.right,
+                        swipeDirection: SwipeDirection.left,
                         duration: const Duration(milliseconds: 1000),
                       );
                     },
