@@ -220,6 +220,12 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
                 percent: state.currentPage / state.totalPage,
               )
             : const AppLinearPercentIndicator(),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.volume_up_outlined),
+          ),
+        ],
       ),
       body: PageView(
         controller: _pageController,
@@ -246,7 +252,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
         SizedBox(
           height: ScreenUtil().setHeight(32),
         ),
-        Text('Example $sentenceIndex:',
+        Text('${AppLocalizations.of(context)!.example} $sentenceIndex:',
             style: TextStyle(
               fontSize: ScreenUtil().setSp(24),
               fontWeight: FontWeight.bold,

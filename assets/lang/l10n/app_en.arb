@@ -78,5 +78,16 @@
 "lesson": "Lesson",
 "next": "Next",
 "congratulations": "Congratulations!",
+"lecture": "Lecture",
+"quiz" : "Quiz",
+"flashCard": "Flash Card",
+"daysCompleted": "Days Completed",
+"day": "Day",
+"chooseTheCorrectMeaningOf": "Choose the correct meaning of:",
+"excellent": "Excellent",
+"wrong": "Wrong",
+"example": "Example",
+"iGotIt": "I got it",
+"reviewLater": "Review later",
 "getStarted": "Get Started"
 }

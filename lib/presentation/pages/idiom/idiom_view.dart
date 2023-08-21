@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
@@ -9,10 +10,12 @@ import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_state.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/percent_calculate.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final idiomViewModelProvider =
     StateNotifierProvider.autoDispose<IdiomViewModel, IdiomState>(
@@ -49,6 +52,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(idiomViewModelProvider);
+    final language = ref.watch(appLanguageProvider);
     return Scaffold(
         appBar: AppBar(
           leading: const AppBackButton(),
@@ -63,7 +67,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
             ? CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(
-                    child: buildHeader(state),
+                    child: buildHeader(state, language),
                   ),
                   SliverAppBar(
                     toolbarHeight: ScreenUtil().setHeight(50),
@@ -84,21 +88,20 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
                   ),
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        if (index.isEven) {
-                          // Add the separator logic for even indexes
-                          return buildSeparator(context, state, index);
-                        } else {
-                          // Content for odd indexes (idiom items)
-                          final idiomIndex = index ~/ 2;
-                          return buildCardItem(state, idiomIndex);
-                        }
-                      },
-                      // Double the count to include separators
-                      childCount:
-                          ref.watch(idiomViewModelProvider).idioms.length * 2 -
-                              2,
-                    ),
+                        (BuildContext context, int index) {
+                      if (index.isEven) {
+                        // Add the separator logic for even indexes
+                        return buildSeparator(context, state, index);
+                      } else {
+                        // Content for odd indexes (idiom items)
+                        final idiomIndex = index ~/ 2;
+                        return buildCardItem(state, idiomIndex);
+                      }
+                    },
+                        // Double the count to include separators
+                        childCount:
+                            ref.watch(idiomViewModelProvider).idioms.length *
+                                2),
                   ),
                   SliverToBoxAdapter(
                     child: SizedBox(
@@ -143,7 +146,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
                 ),
                 Expanded(
                   child: Text(
-                    'Day ${idiomIndex + 1}',
+                    '${AppLocalizations.of(context)!.day} ${idiomIndex + 1}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(14),
@@ -199,7 +202,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
     );
   }
 
-  Padding buildHeader(IdiomState state) {
+  Padding buildHeader(IdiomState state, Language language) {
     return Padding(
       padding: const EdgeInsets.only(
         top: 16,
@@ -213,9 +216,11 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
             children: [
               Expanded(
                 child: Text(
-                  idiomType.name,
+                  language == Language.english
+                      ? idiomType.name
+                      : idiomType.translation,
                   style: TextStyle(
-                    fontSize: ScreenUtil().setSp(22),
+                    fontSize: ScreenUtil().setSp(24),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -238,7 +243,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
             height: 16,
           ),
           Text(
-            '${state.idioms.length} Days Completed',
+            '${state.idioms.length} ${AppLocalizations.of(context)!.daysCompleted}',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: ScreenUtil().setSp(16),

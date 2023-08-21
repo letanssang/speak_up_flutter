@@ -5,6 +5,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use
 import 'package:speak_up/presentation/pages/quiz/quiz_state.dart';
 import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/utilities/enums/quiz_answer_card_status.dart';
 
 class QuizViewModel extends StateNotifier<QuizState> {
   final GetIdiomListByTypeUseCase _getIdiomListByTypeUseCase;
@@ -32,28 +33,26 @@ class QuizViewModel extends StateNotifier<QuizState> {
     try {
       final idiomList =
           await _getIdiomListByTypeUseCase.run(state.parent.idiomTypeID);
-      final List<Quiz> quizzes = [
-        Quiz(
-          question: idiomList[0].name,
-          answers: [
-            idiomList[0].descriptionTranslation,
-            idiomList[1].descriptionTranslation,
-            idiomList[2].descriptionTranslation,
-            idiomList[3].descriptionTranslation,
-          ],
-          correctAnswerIndex: 0,
-        ),
-        Quiz(
-          question: idiomList[1].name,
-          answers: [
-            idiomList[0].descriptionTranslation,
-            idiomList[1].descriptionTranslation,
-            idiomList[2].descriptionTranslation,
-            idiomList[3].descriptionTranslation,
-          ],
-          correctAnswerIndex: 1,
-        ),
-      ];
+
+      final List<Quiz> quizzes = idiomList.map((idiom) {
+        final correctAnswer = idiom.descriptionTranslation;
+        final randomIdioms = List<String>.from(idiomList.map((item) {
+          return item.descriptionTranslation;
+        }))
+          ..remove(correctAnswer);
+        randomIdioms.shuffle();
+        final wrongAnswers = randomIdioms.take(3).toList();
+
+        final allAnswers = [correctAnswer, ...wrongAnswers];
+        allAnswers.shuffle();
+
+        return Quiz(
+          question: idiom.name,
+          answers: allAnswers,
+          correctAnswerIndex: allAnswers.indexOf(correctAnswer),
+        );
+      }).toList();
+
       state = state.copyWith(
         quizzes: quizzes,
         loadingStatus: LoadingStatus.success,
@@ -61,6 +60,26 @@ class QuizViewModel extends StateNotifier<QuizState> {
     } catch (e) {
       debugPrint(e.toString());
       state = state.copyWith(loadingStatus: LoadingStatus.error);
+    }
+  }
+
+  Future<void> onSelectedAnswerOption(int chosenAnswerIndex) async {
+    state = state.copyWith(
+        quizAnswerCardStatus: QuizAnswerCardStatus.after,
+        chosenAnswerIndex: chosenAnswerIndex);
+  }
+
+  Future<void> onNextQuestion() async {
+    if (state.currentIndex < state.quizzes.length - 1) {
+      state = state.copyWith(
+        currentIndex: state.currentIndex + 1,
+        quizAnswerCardStatus: QuizAnswerCardStatus.before,
+      );
+    } else {
+      state = state.copyWith(
+        currentIndex: 0,
+        quizAnswerCardStatus: QuizAnswerCardStatus.before,
+      );
     }
   }
 }

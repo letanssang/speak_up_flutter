@@ -81,6 +81,12 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
               ? state.currentIndex / state.flashCards.length
               : 0,
         ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.volume_up_outlined),
+          ),
+        ],
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? buildLoadingSuccessBody(state, context)
@@ -100,12 +106,12 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                 child: swipeProperty.direction == SwipeDirection.left
                     ? buildOverlayText(
                         Colors.green,
-                        'I got it',
+                        AppLocalizations.of(context)!.iGotIt,
                         SwipeDirection.left,
                       )
                     : buildOverlayText(
                         Colors.red,
-                        'Review later',
+                        AppLocalizations.of(context)!.reviewLater,
                         SwipeDirection.right,
                       ),
               );
@@ -160,7 +166,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                       ),
                       child: Center(
                           child: Text(
-                        'Review later',
+                        AppLocalizations.of(context)!.reviewLater,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: ScreenUtil().setSp(16),
@@ -191,7 +197,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                       height: 64,
                       child: Center(
                           child: Text(
-                        'I got it',
+                        AppLocalizations.of(context)!.iGotIt,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: ScreenUtil().setSp(16),

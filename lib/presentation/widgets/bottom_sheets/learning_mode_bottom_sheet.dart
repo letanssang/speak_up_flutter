@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/presentation/widgets/divider/app_divider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class LearningModeBottomSheet extends ConsumerWidget {
+class LearningModeBottomSheet extends StatelessWidget {
   final String title;
   final Function()? onTapLecture;
   final Function()? onTapQuiz;
@@ -18,64 +18,63 @@ class LearningModeBottomSheet extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Wrap(
       children: [
-        Column(
+        Row(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 32, left: 32, bottom: 16),
-                    child: Text(title,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(18),
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
-                        )),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.close,
-                    size: 40,
-                  ),
-                ),
-                SizedBox(width: ScreenUtil().setWidth(16)),
-              ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 32, left: 32, bottom: 16),
+                child: Text(title,
+                    maxLines: 2,
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(18),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    )),
+              ),
             ),
-            const AppDivider(),
-            const SizedBox(height: 16),
-            buildOptionItem(
-                context,
-                1,
-                const Icon(
-                  Icons.book,
-                  color: Colors.white,
-                ),
-                'Lecture',
-                onTap: onTapLecture),
-            buildOptionItem(context, 2,
-                const Icon(Icons.question_answer, color: Colors.white), 'Quiz',
-                onTap: onTapQuiz),
-            buildOptionItem(
-                context,
-                3,
-                const Icon(
-                  Icons.collections_bookmark,
-                  color: Colors.white,
-                ),
-                'Flashcard',
-                onTap: onTapFlashcard),
-            const SizedBox(height: 32),
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.close,
+                size: 40,
+              ),
+            ),
+            SizedBox(width: ScreenUtil().setWidth(16)),
           ],
         ),
+        const AppDivider(),
+        const SizedBox(height: 16),
+        buildOptionItem(
+            context,
+            1,
+            const Icon(
+              Icons.book,
+              color: Colors.white,
+            ),
+            AppLocalizations.of(context)!.lecture,
+            onTap: onTapLecture),
+        buildOptionItem(
+          context,
+          2,
+          const Icon(Icons.question_answer, color: Colors.white),
+          AppLocalizations.of(context)!.quiz,
+          onTap: onTapQuiz,
+        ),
+        buildOptionItem(
+            context,
+            3,
+            const Icon(
+              Icons.collections_bookmark,
+              color: Colors.white,
+            ),
+            AppLocalizations.of(context)!.flashCard,
+            onTap: onTapFlashcard),
+        const SizedBox(height: 64),
       ],
     );
   }

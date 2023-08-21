@@ -40,7 +40,7 @@ class _LessonViewState extends ConsumerState<LessonView>
       appBar: AppBar(
         leading: const AppBackButton(),
         title: Text(
-          lesson.name,
+          language == Language.english ? lesson.name : lesson.translation,
         ),
       ),
       body: Column(
@@ -48,24 +48,33 @@ class _LessonViewState extends ConsumerState<LessonView>
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(32),
-            ),
-            child: Image.asset(
-              'assets/images/temp_topic.png',
-              width: double.infinity,
-              height: ScreenUtil().screenHeight * 0.3,
-              fit: BoxFit.cover,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.asset(
+                'assets/images/temp_topic.png',
+                width: ScreenUtil().screenWidth,
+                height: ScreenUtil().screenWidth * 0.6,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-                language == Language.english ? lesson.name : lesson.translation,
+            padding: const EdgeInsets.only(top: 16, left: 16),
+            child: Text(lesson.name,
                 textAlign: TextAlign.start,
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(26),
                   fontWeight: FontWeight.bold,
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8, left: 16, bottom: 16),
+            child: Text(lesson.translation,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
                 )),
           ),
           Container(
