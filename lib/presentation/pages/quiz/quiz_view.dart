@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
@@ -13,7 +14,6 @@ import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/cards/quiz_answer_card.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final quizViewModelProvider =
     StateNotifierProvider.autoDispose<QuizViewModel, QuizState>(
@@ -61,27 +61,33 @@ class _QuizViewState extends ConsumerState<QuizView> {
         (previous, next) {
       if (next == QuizAnswerCardStatus.after) {
         final state = ref.watch(quizViewModelProvider);
-        showModalBottomSheet(
-            isDismissible: false,
-            useSafeArea: true,
-            context: context,
-            builder: (_) {
-              return QuizResultBottomSheet(
-                isCorrectAnswer: state.chosenAnswerIndex ==
-                    state.quizzes[state.currentIndex].correctAnswerIndex,
-                onTap: () {
-                  ref.read(quizViewModelProvider.notifier).onNextQuestion();
-                  Navigator.pop(context);
-                  _pageViewController.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
+        Future.delayed(
+          const Duration(milliseconds: 500),
+          () {
+            showModalBottomSheet(
+                enableDrag: false,
+                isDismissible: false,
+                useSafeArea: true,
+                context: context,
+                builder: (_) {
+                  return QuizResultBottomSheet(
+                    isCorrectAnswer: state.chosenAnswerIndex ==
+                        state.quizzes[state.currentIndex].correctAnswerIndex,
+                    onTap: () {
+                      ref.read(quizViewModelProvider.notifier).onNextQuestion();
+                      Navigator.pop(context);
+                      _pageViewController.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    title: state.quizzes[state.currentIndex].question,
+                    correctAnswer: state.quizzes[state.currentIndex].answers[
+                        state.quizzes[state.currentIndex].correctAnswerIndex],
                   );
-                },
-                title: state.quizzes[state.currentIndex].question,
-                correctAnswer: state.quizzes[state.currentIndex].answers[
-                    state.quizzes[state.currentIndex].correctAnswerIndex],
-              );
-            });
+                });
+          },
+        );
       }
     });
   }
@@ -150,7 +156,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
                 Flexible(child: Container()),
                 ConstrainedBox(
                   constraints: BoxConstraints(
-                      maxHeight: ScreenUtil().screenHeight * 0.5),
+                      maxHeight: ScreenUtil().screenHeight * 0.6),
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
@@ -158,7 +164,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 5.0,
                       mainAxisSpacing: 5.0,
-                      childAspectRatio: 1.2,
+                      childAspectRatio: 0.9,
                     ),
                     itemCount: 4,
                     itemBuilder: (context, optionIndex) {
@@ -177,7 +183,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
                     },
                   ),
                 ),
-                SizedBox(height: ScreenUtil().screenHeight * 0.05),
+                Flexible(child: Container()),
               ],
             ),
           ),

@@ -25,20 +25,35 @@ class QuizAnswerCard extends StatelessWidget {
       child: Card(
         color: quizAnswerCardStatus.getColor(index, isCorrectAnswer),
         elevation: 3,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Text(
-                answer,
-                textAlign: TextAlign.center,
-                style: TextStyle(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (quizAnswerCardStatus == QuizAnswerCardStatus.after)
+                Icon(
+                  isCorrectAnswer
+                      ? Icons.check_circle_rounded
+                      : Icons.cancel_rounded,
                   color: Colors.white,
-                  fontSize: ScreenUtil().setSp(14),
-                  fontWeight: FontWeight.bold,
+                  size: ScreenUtil().setSp(24),
+                ),
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Text(
+                      answer,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: ScreenUtil().setSp(14),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

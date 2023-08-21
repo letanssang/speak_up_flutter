@@ -9,6 +9,7 @@ class AudioPlayerRepository {
 
   Future<void> playAudioFromUrl(String url) async {
     try {
+      await _audioPlayer.setPlayerMode(PlayerMode.lowLatency);
       await _audioPlayer.play(UrlSource(url));
     } catch (e) {
       debugPrint(e.toString());

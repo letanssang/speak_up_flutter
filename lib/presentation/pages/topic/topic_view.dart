@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
@@ -78,15 +79,15 @@ class _TopicViewState extends ConsumerState<TopicView> {
           flex: 6,
           child: CustomScrollView(
             slivers: [
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                       top: 32, bottom: 16.0, left: 16.0, right: 16.0),
                   child: Text(
-                    'Repeat the sentences and practice your pronunciation!',
+                    AppLocalizations.of(context)!.listenToTheConversation,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: ScreenUtil().setSp(16),
                     ),
                   ),
                 ),
