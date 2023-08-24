@@ -45,3 +45,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 assets/keys/google_cloud_speech_to_text_key.json
+/assets/keys/words_api_key.dart

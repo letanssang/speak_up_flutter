@@ -199,10 +199,9 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           .onStartRecording();
     } else {
       await ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
-      final text = await ref
+      await ref
           .read(idiomLearningViewModelProvider.notifier)
           .getTextFromSpeech();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -7,15 +8,17 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speak_up/data/local/preference_services/shared_preferences_manager.dart';
+import 'package:speak_up/data/remote/dictionary_client/dictionary_client.dart';
+import 'package:speak_up/data/remote/google_speech/google_speech_helper.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
 import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
+import 'package:speak_up/data/repositories/dictionary/dictionary_repository.dart';
 import 'package:speak_up/data/repositories/record/record_repository.dart';
 import 'package:speak_up/data/repositories/speech_to_text/speech_to_text_repository.dart';
 import 'package:speak_up/data/repositories/text_to_speech/text_to_speech_repository.dart';
-import 'package:speak_up/data/services/google_speech/google_speech_helper.dart';
-import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
@@ -49,6 +52,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_top
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
+import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -61,6 +65,22 @@ const String slowAudioPlayerInstanceName = 'slowAudioPlayer';
 
 class AppModules {
   static Future<void> inject() async {
+    //Dio
+    final dio = Dio();
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        // TODO: Add your api key
+        options.queryParameters['X-Mashape-Key'] = 'test';
+        // TODO: Add your api host
+        options.queryParameters['X-Mashape-Host'] = 'test';
+        return handler.next(options);
+      },
+    ));
+    // Dictionary client
+    injector
+        .registerLazySingleton<DictionaryClient>(() => DictionaryClient(dio));
+
+    injector.registerLazySingleton<Dio>(() => dio);
     // SharedPreferences client
     injector.registerSingletonAsync<SharedPreferences>(() async {
       return SharedPreferences.getInstance();
@@ -91,6 +111,10 @@ class AppModules {
 
     //Record
     injector.registerLazySingleton<Record>(() => Record());
+
+    // Dictionary repository
+    injector.registerLazySingleton<DictionaryRepository>(
+        () => DictionaryRepository(injector.get<DictionaryClient>()));
 
     // Account settings repository
     injector.registerLazySingleton<AccountSettingsRepository>(() =>
@@ -286,5 +310,9 @@ class AppModules {
     // Speak From Text Use Case
     injector.registerLazySingleton<SpeakFromTextUseCase>(
         () => SpeakFromTextUseCase());
+
+    // Get word list from search use case
+    injector.registerLazySingleton<GetWordListFromSearchUseCase>(
+        () => GetWordListFromSearchUseCase());
   }
 }
