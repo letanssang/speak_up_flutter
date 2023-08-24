@@ -6,7 +6,8 @@ class GetWordListFromSearchUseCase
     extends FutureUseCase<String, List<String>?> {
   @override
   Future<List<String>?> run(String input) async {
-    final expression = '^$input';
+    String inputLowerCase = input.toLowerCase();
+    final expression = '^$inputLowerCase';
     final response =
         await injector.get<DictionaryRepository>().searchWord(expression);
     return response.results?.data;
