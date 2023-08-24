@@ -68,6 +68,10 @@ dependencies:
   dio: ^5.3.2
   retrofit: ^4.0.1
 
+  # Environment Variables
+  flutter_dotenv: ^5.1.0
+
+
 
 dev_dependencies:
   flutter_test:
@@ -95,7 +99,6 @@ flutter:
     - assets/images/categories/
     - assets/audios/
     - assets/keys/
-
   fonts:
     - family: SF Pro Display
       fonts:

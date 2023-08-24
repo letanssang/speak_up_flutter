@@ -9,6 +9,6 @@ class GetWordListFromSearchUseCase
     final expression = '^$input';
     final response =
         await injector.get<DictionaryRepository>().searchWord(expression);
-    return response.results?.wordList;
+    return response.results?.data;
   }
 }

@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_speech/google_speech.dart';
@@ -10,7 +10,6 @@ import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_up/data/local/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/data/remote/dictionary_client/dictionary_client.dart';
-import 'package:speak_up/data/remote/google_speech/google_speech_helper.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
@@ -66,16 +65,9 @@ const String slowAudioPlayerInstanceName = 'slowAudioPlayer';
 class AppModules {
   static Future<void> inject() async {
     //Dio
+    await dotenv.load(fileName: "assets/keys/keys.env");
     final dio = Dio();
-    dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        // TODO: Add your api key
-        options.queryParameters['X-Mashape-Key'] = 'test';
-        // TODO: Add your api host
-        options.queryParameters['X-Mashape-Host'] = 'test';
-        return handler.next(options);
-      },
-    ));
+    dio.options.headers['x-rapidapi-key'] = dotenv.env['WORDS_API_KEY'];
     // Dictionary client
     injector
         .registerLazySingleton<DictionaryClient>(() => DictionaryClient(dio));
@@ -141,8 +133,7 @@ class AppModules {
         () => RecordRepository(injector.get<Record>()));
 
     // Google Speech Service Account
-    String googleSpeechToTextApiKey =
-        (await rootBundle.loadString(googleSpeechAssetKeyPath));
+    String googleSpeechToTextApiKey = dotenv.env['GOOGLE_SPEECH_API_KEY']!;
 
     injector.registerLazySingleton<ServiceAccount>(() {
       return ServiceAccount.fromString(googleSpeechToTextApiKey);
