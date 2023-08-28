@@ -27,7 +27,7 @@ class ChangePasswordViewModel extends StateNotifier<ChangePasswordState> {
   Future<void> onSubmitted(String currentPassword, String newPassword) async {
     if (_isSignedInUseCase.run()) {
       state = state.copyWith(
-        loadingStatus: LoadingStatus.inProgress,
+        loadingStatus: LoadingStatus.loading,
       );
       try {
         await _reAuthenticateWithCredentialUseCase.run(currentPassword);

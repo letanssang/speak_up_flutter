@@ -10,7 +10,7 @@ class ExpressionTypesViewModel extends StateNotifier<ExpressionTypesState> {
       : super(const ExpressionTypesState());
 
   Future<void> fetchExpressionTypeList() async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
       final expressionTypes = await _getExpressionTypeListUseCase.run();
       state = state.copyWith(

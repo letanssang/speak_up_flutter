@@ -21,7 +21,7 @@ class FlashCardsViewModel extends StateNotifier<FlashCardsState> {
   }
 
   Future<void> fetchFlashCards() async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     switch (state.lessonType) {
       case LessonType.idiom:
         await _fetchIdiomFlashCards();

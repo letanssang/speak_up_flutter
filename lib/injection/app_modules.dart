@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -51,6 +52,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_top
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
+import 'package:speak_up/domain/use_cases/dictionary/get_word_detail_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
@@ -62,12 +64,34 @@ import 'package:speak_up/injection/injector.dart';
 const String audioPlayerInstanceName = 'audioPlayer';
 const String slowAudioPlayerInstanceName = 'slowAudioPlayer';
 
+class LoggingInterceptor extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    debugPrint('\x1B[33mRequest URL: ${options.uri.toString()}\x1B[0m');
+    super.onRequest(options, handler);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    debugPrint('Response Code: ${response.statusCode}');
+    super.onResponse(response, handler);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    debugPrint('Error: ${err.message}');
+    super.onError(err, handler);
+  }
+}
+
 class AppModules {
   static Future<void> inject() async {
     //Dio
     await dotenv.load(fileName: "assets/keys/keys.env");
     final dio = Dio();
     dio.options.headers['x-rapidapi-key'] = dotenv.env['WORDS_API_KEY'];
+    dio.interceptors.add(LoggingInterceptor());
+
     // Dictionary client
     injector
         .registerLazySingleton<DictionaryClient>(() => DictionaryClient(dio));
@@ -305,5 +329,9 @@ class AppModules {
     // Get word list from search use case
     injector.registerLazySingleton<GetWordListFromSearchUseCase>(
         () => GetWordListFromSearchUseCase());
+
+    // Get detail word use case
+    injector.registerLazySingleton<GetWordDetailUseCase>(
+        () => GetWordDetailUseCase());
   }
 }

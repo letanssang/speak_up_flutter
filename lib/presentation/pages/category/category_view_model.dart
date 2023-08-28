@@ -7,10 +7,10 @@ class CategoryViewModel extends StateNotifier<CategoryState> {
   final GetTopicListFromCategoryUseCase _getTopicListFromCategoryUseCase;
   CategoryViewModel(
     this._getTopicListFromCategoryUseCase,
-      ) : super(const CategoryState());
+  ) : super(const CategoryState());
 
   Future<void> fetchTopicList(int categoryID) async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
       final topics = await _getTopicListFromCategoryUseCase.run(categoryID);
       state = state.copyWith(
@@ -20,6 +20,5 @@ class CategoryViewModel extends StateNotifier<CategoryState> {
     } catch (e) {
       state = state.copyWith(loadingStatus: LoadingStatus.error);
     }
-
   }
 }

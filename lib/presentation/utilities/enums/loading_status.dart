@@ -2,10 +2,11 @@ import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 
 enum LoadingStatus {
   initial,
-  inProgress,
+  loading,
   success,
   error,
 }
+
 extension LoadingStatusExtension on LoadingStatus {
   ButtonState get buttonState {
     switch (this) {
@@ -13,7 +14,7 @@ extension LoadingStatusExtension on LoadingStatus {
       case LoadingStatus.success:
       case LoadingStatus.error:
         return ButtonState.normal;
-      case LoadingStatus.inProgress:
+      case LoadingStatus.loading:
         return ButtonState.loading;
     }
   }

@@ -21,7 +21,7 @@ class EditProfileViewModel extends StateNotifier<EditProfileState> {
 
   Future<void> onSubmitted({String? name, String? email}) async {
     if (!_isSignedInUseCase.run()) return;
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     final user = _getCurrentUserUseCase.run();
     try {
       if (name != null && name != user.displayName) {

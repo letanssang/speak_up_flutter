@@ -10,7 +10,7 @@ class PatternViewModel extends StateNotifier<PatternState> {
   ) : super(const PatternState());
   Future<void> fetchExampleList(int patternId) async {
     state = state.copyWith(
-      loadingStatus: LoadingStatus.inProgress,
+      loadingStatus: LoadingStatus.loading,
     );
     try {
       final sentenceExamples =

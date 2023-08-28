@@ -22,6 +22,7 @@ class AppRoutes {
   static const String idiomLearning = '/idiom_learning';
   static const String flashCards = '/flash_cards';
   static const String quiz = '/quiz';
+  static const String word = '/word';
 
   //profile
   static const String editProfile = '/edit_profile';

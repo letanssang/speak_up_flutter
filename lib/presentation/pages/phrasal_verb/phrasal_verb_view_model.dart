@@ -9,7 +9,7 @@ class PhrasalVerbViewModel extends StateNotifier<PhrasalVerbState> {
     this._getPhrasalVerbListByTypeUseCase,
   ) : super(const PhrasalVerbState());
   Future<void> fetchPhrasalVerbList(int type) async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
       final phrasalVerbList = await _getPhrasalVerbListByTypeUseCase.run(type);
       state = state.copyWith(

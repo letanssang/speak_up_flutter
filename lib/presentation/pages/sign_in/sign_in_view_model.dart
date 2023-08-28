@@ -19,7 +19,7 @@ class SignInViewModel extends StateNotifier<SignInState> {
   }
 
   Future<void> signInWithGoogle() async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     await _signInWithGoogleUseCase.run();
     try {
       final userCredential = await _signInWithGoogleUseCase.run();
