@@ -1,29 +1,34 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:speak_up/domain/entities/word_definition/word_definition.dart';
+
 part 'word_detail_response.g.dart';
 
 @JsonSerializable()
 class WordDetailResponse {
   @JsonKey(name: 'results')
   List<WordDefinition>? results;
+
   //pronunciation
-  Map<String, String>? pronunciation;
-  List<String>? examples;
+  dynamic pronunciation;
+
   WordDetailResponse({this.results});
+
   factory WordDetailResponse.initial() => WordDetailResponse();
+
   factory WordDetailResponse.fromJson(Map<String, dynamic> json) =>
       _$WordDetailResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$WordDetailResponseToJson(this);
 }
-// {  
-//    "results":[  
-//       {  
+// {
+//    "results":[
+//       {
 //          "definition":"speech you make to yourself",
 //          "partOfSpeech":"noun",
-//          "synonyms":[  
+//          "synonyms":[
 //             "monologue"
 //          ],
-//          "typeOf":[  
+//          "typeOf":[
 //             "speech",
 //             "voice communication",
 //             "speech communication",
@@ -32,33 +37,33 @@ class WordDetailResponse {
 //             "language",
 //             "oral communication"
 //          ],
-//          "derivation":[  
+//          "derivation":[
 //             "soliloquize"
 //          ]
 //       },
-//       {  
+//       {
 //          "definition":"a (usually long) dramatic speech intended to give the illusion of unspoken reflections",
 //          "partOfSpeech":"noun",
-//          "typeOf":[  
+//          "typeOf":[
 //             "actor's line",
 //             "speech",
 //             "words"
 //          ],
-//          "derivation":[  
+//          "derivation":[
 //             "soliloquize"
 //          ]
 //       }
 //    ],
-//    "syllables":{  
+//    "syllables":{
 //       "count":4,
-//       "list":[  
+//       "list":[
 //          "so",
 //          "lil",
 //          "o",
 //          "quy"
 //       ]
 //    },
-//    "pronunciation":{  
+//    "pronunciation":{
 //       "all":"sə'lɪləkwi"
 //    }
 // }

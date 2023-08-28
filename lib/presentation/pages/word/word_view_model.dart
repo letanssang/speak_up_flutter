@@ -22,6 +22,10 @@ class WordViewModel extends StateNotifier<WordState> {
       final wordDetail = await _getDetailWordUseCase.run(word);
       state = state.copyWith(
         detailWord: wordDetail,
+        isExpandedList: List.generate(
+          wordDetail.results!.length,
+          (index) => false,
+        ),
         loadingStatus: LoadingStatus.success,
       );
     } on DioException {
@@ -37,5 +41,13 @@ class WordViewModel extends StateNotifier<WordState> {
 
   Future<void> speakFromText(String text) async {
     await _speakFromTextUseCase.run(text);
+  }
+
+  void changeExpandedList(int index, bool isExpanded) {
+    final isExpandedList = state.isExpandedList.toList();
+    isExpandedList[index] = !isExpandedList[index];
+    state = state.copyWith(
+      isExpandedList: isExpandedList,
+    );
   }
 }
