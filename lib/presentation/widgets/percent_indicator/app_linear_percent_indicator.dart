@@ -22,7 +22,7 @@ class AppLinearPercentIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
+      padding: padding,
       child: LinearPercentIndicator(
         animateFromLastPercent: true,
         lineHeight: lineHeight,

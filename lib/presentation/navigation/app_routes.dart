@@ -23,6 +23,7 @@ class AppRoutes {
   static const String flashCards = '/flash_cards';
   static const String quiz = '/quiz';
   static const String word = '/word';
+  static const String phonetic = '/phonetic';
 
   //profile
   static const String editProfile = '/edit_profile';
