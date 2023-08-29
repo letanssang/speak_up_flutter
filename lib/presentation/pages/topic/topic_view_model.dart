@@ -21,7 +21,7 @@ class TopicViewModel extends StateNotifier<TopicState> {
   }
 
   Future<void> fetchSentenceList(int topicID) async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
       final sentences = await getSentenceListFromTopicUseCase.run(topicID);
       final List<bool> isExpandedTranslations =

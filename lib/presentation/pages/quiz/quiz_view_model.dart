@@ -19,7 +19,7 @@ class QuizViewModel extends StateNotifier<QuizState> {
   }
 
   Future<void> fetchQuizzes() async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     switch (state.lessonType) {
       case LessonType.idiom:
         await _fetchIdiomQuizzes();

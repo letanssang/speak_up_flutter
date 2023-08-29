@@ -37,7 +37,7 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
   Future<void> onSignUpButtonPressed(
       String email, String password, String name) async {
     state = state.copyWith(
-      loadingStatus: LoadingStatus.inProgress,
+      loadingStatus: LoadingStatus.loading,
     );
     try {
       CreateUserWithEmailParams params = CreateUserWithEmailParams(

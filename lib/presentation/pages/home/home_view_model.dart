@@ -14,7 +14,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
   ) : super(const HomeState());
 
   Future<void> getLessonList() async {
-    state = state.copyWith(lessonsLoadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(lessonsLoadingStatus: LoadingStatus.loading);
     try {
       final lessons = await _getLessonListUseCase.run();
       state = state.copyWith(

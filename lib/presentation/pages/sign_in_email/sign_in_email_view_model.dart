@@ -24,7 +24,7 @@ class SignInEmailViewModel extends StateNotifier<SignInEmailState> {
 
   Future<void> onSignInButtonPressed(String email, String password) async {
     state = state.copyWith(
-      loadingStatus: LoadingStatus.inProgress,
+      loadingStatus: LoadingStatus.loading,
     );
     try {
       SignInWithEmailParams params = SignInWithEmailParams(

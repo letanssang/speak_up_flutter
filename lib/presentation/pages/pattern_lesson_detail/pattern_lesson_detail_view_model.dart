@@ -10,7 +10,7 @@ class PatternLessonDetailViewModel
     this._getSentencePatternListUseCase,
   ) : super(const PatternLessonDetailState());
   Future<void> fetchSentencePatternList() async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
       final sentencePatterns = await _getSentencePatternListUseCase.run();
       state = state.copyWith(

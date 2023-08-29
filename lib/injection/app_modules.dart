@@ -1,21 +1,24 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speak_up/data/local/preference_services/shared_preferences_manager.dart';
+import 'package:speak_up/data/remote/dictionary_client/dictionary_client.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
 import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
+import 'package:speak_up/data/repositories/dictionary/dictionary_repository.dart';
 import 'package:speak_up/data/repositories/record/record_repository.dart';
 import 'package:speak_up/data/repositories/speech_to_text/speech_to_text_repository.dart';
 import 'package:speak_up/data/repositories/text_to_speech/text_to_speech_repository.dart';
-import 'package:speak_up/data/services/google_speech/google_speech_helper.dart';
-import 'package:speak_up/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
@@ -49,6 +52,8 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_top
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
+import 'package:speak_up/domain/use_cases/dictionary/get_word_detail_use_case.dart';
+import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -59,8 +64,39 @@ import 'package:speak_up/injection/injector.dart';
 const String audioPlayerInstanceName = 'audioPlayer';
 const String slowAudioPlayerInstanceName = 'slowAudioPlayer';
 
+class LoggingInterceptor extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    debugPrint('\x1B[33mRequest URL: ${options.uri.toString()}\x1B[0m');
+    super.onRequest(options, handler);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    debugPrint('Response Code: ${response.statusCode}');
+    super.onResponse(response, handler);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    debugPrint('Error: ${err.message}');
+    super.onError(err, handler);
+  }
+}
+
 class AppModules {
   static Future<void> inject() async {
+    //Dio
+    await dotenv.load(fileName: "assets/keys/keys.env");
+    final dio = Dio();
+    dio.options.headers['x-rapidapi-key'] = dotenv.env['WORDS_API_KEY'];
+    dio.interceptors.add(LoggingInterceptor());
+
+    // Dictionary client
+    injector
+        .registerLazySingleton<DictionaryClient>(() => DictionaryClient(dio));
+
+    injector.registerLazySingleton<Dio>(() => dio);
     // SharedPreferences client
     injector.registerSingletonAsync<SharedPreferences>(() async {
       return SharedPreferences.getInstance();
@@ -92,6 +128,10 @@ class AppModules {
     //Record
     injector.registerLazySingleton<Record>(() => Record());
 
+    // Dictionary repository
+    injector.registerLazySingleton<DictionaryRepository>(
+        () => DictionaryRepository(injector.get<DictionaryClient>()));
+
     // Account settings repository
     injector.registerLazySingleton<AccountSettingsRepository>(() =>
         AccountSettingsRepository(injector.get<SharedPreferencesManager>()));
@@ -117,8 +157,7 @@ class AppModules {
         () => RecordRepository(injector.get<Record>()));
 
     // Google Speech Service Account
-    String googleSpeechToTextApiKey =
-        (await rootBundle.loadString(googleSpeechAssetKeyPath));
+    String googleSpeechToTextApiKey = dotenv.env['GOOGLE_SPEECH_API_KEY']!;
 
     injector.registerLazySingleton<ServiceAccount>(() {
       return ServiceAccount.fromString(googleSpeechToTextApiKey);
@@ -286,5 +325,13 @@ class AppModules {
     // Speak From Text Use Case
     injector.registerLazySingleton<SpeakFromTextUseCase>(
         () => SpeakFromTextUseCase());
+
+    // Get word list from search use case
+    injector.registerLazySingleton<GetWordListFromSearchUseCase>(
+        () => GetWordListFromSearchUseCase());
+
+    // Get detail word use case
+    injector.registerLazySingleton<GetWordDetailUseCase>(
+        () => GetWordDetailUseCase());
   }
 }

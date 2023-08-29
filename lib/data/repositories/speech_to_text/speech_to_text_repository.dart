@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:google_speech/google_speech.dart';
-import 'package:speak_up/data/services/google_speech/google_speech_helper.dart';
+import 'package:speak_up/data/remote/google_speech/google_speech_helper.dart';
 
 class SpeechToTextRepository {
   final SpeechToText _speechToText;

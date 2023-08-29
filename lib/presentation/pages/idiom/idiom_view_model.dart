@@ -9,7 +9,7 @@ class IdiomViewModel extends StateNotifier<IdiomState> {
     this._getIdiomListByTypeUseCase,
   ) : super(const IdiomState());
   Future<void> fetchIdiomList(int type) async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
       final idiomList = await _getIdiomListByTypeUseCase.run(type);
       state = state.copyWith(

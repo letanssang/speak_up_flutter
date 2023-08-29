@@ -6,3 +6,16 @@ String formatIndexToString(int number) {
     return number.toString();
   }
 }
+
+String capitalizeFirstLetter(String inputString) {
+  List<String> words = inputString.split(' ');
+  List<String> capitalizedWords = words.map((word) {
+    if (word.isNotEmpty) {
+      return word[0].toUpperCase() + word.substring(1);
+    } else {
+      return '';
+    }
+  }).toList();
+  String outputString = capitalizedWords.join(' ');
+  return outputString;
+}

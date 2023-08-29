@@ -46,7 +46,7 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
         ));
 
   Future<void> fetchExampleSentences() async {
-    state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
+    state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
       List<Sentence> sentences =
           await _getSentenceListFromIdiomUseCase.run(state.idiom.idiomID);
