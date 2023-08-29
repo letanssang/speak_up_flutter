@@ -67,6 +67,9 @@ class _SearchViewState extends ConsumerState<SearchView> {
                   child: TextField(
                     controller: textEditingController,
                     focusNode: focusNode,
+                    onTapOutside: (event) {
+                      focusNode.unfocus();
+                    },
                     onChanged: (value) {
                       if (_debounce?.isActive ?? false) _debounce!.cancel();
                       ref.read(searchViewModelProvider.notifier).onLoading();
@@ -77,12 +80,21 @@ class _SearchViewState extends ConsumerState<SearchView> {
                             .fetchSuggestionList(value);
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Search',
                       border: InputBorder.none,
                     ),
                   ),
                 ),
+                if (textEditingController.text.isNotEmpty)
+                  IconButton(
+                      onPressed: () {
+                        textEditingController.clear();
+                        ref.read(searchViewModelProvider.notifier).onInitial();
+                      },
+                      icon: const Icon(
+                        Icons.cancel,
+                      )),
               ],
             ),
           ),

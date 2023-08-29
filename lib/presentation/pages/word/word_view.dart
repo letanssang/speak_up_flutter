@@ -146,33 +146,28 @@ class _WordViewState extends ConsumerState<WordView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (wordDefinition.synonyms != null)
-              buildRichText('Synonyms', wordDefinition.synonyms!.join(', ')),
-            if (wordDefinition.antonyms != null)
-              buildRichText('Antonyms', wordDefinition.antonyms!.join(', ')),
-            if (wordDefinition.typeOf != null ||
-                wordDefinition.hasTypes != null)
-              const SizedBox(
-                height: 8,
-              ),
-            if (wordDefinition.typeOf != null)
-              buildRichText('Type of', wordDefinition.typeOf!.join(', ')),
-            if (wordDefinition.hasTypes != null)
-              buildRichText('Has types', wordDefinition.hasTypes!.join(', ')),
-            if (wordDefinition.memberOf != null ||
-                wordDefinition.hasMembers != null)
-              const SizedBox(
-                height: 8,
-              ),
-            if (wordDefinition.memberOf != null)
-              buildRichText('Member of', wordDefinition.memberOf!.join(', ')),
-            if (wordDefinition.hasMembers != null)
-              buildRichText(
-                  'Has members', wordDefinition.hasMembers!.join(', ')),
-            if (wordDefinition.examples != null)
-              const SizedBox(
-                height: 8,
-              ),
+            buildPairInformation('Synonyms', wordDefinition.synonyms,
+                'Antonyms', wordDefinition.antonyms),
+            buildPairInformation('Type of', wordDefinition.typeOf, 'Has types',
+                wordDefinition.hasTypes),
+            buildPairInformation('Member of', wordDefinition.memberOf,
+                'Has members', wordDefinition.hasMembers),
+            buildPairInformation('Part of', wordDefinition.partOf, 'Has parts',
+                wordDefinition.hasParts),
+            buildPairInformation('Instance of', wordDefinition.instanceOf,
+                'Has instances', wordDefinition.hasInstances),
+            buildPairInformation('Similar to', wordDefinition.similarTo, 'Also',
+                wordDefinition.also),
+            buildPairInformation('Substance of', wordDefinition.hasSubstances,
+                'Has substances', wordDefinition.substanceOf),
+            buildPairInformation('In category', wordDefinition.inCategory,
+                'Has categories', wordDefinition.hasCategories),
+            buildPairInformation('Usage of', wordDefinition.usageOf,
+                'Has usages', wordDefinition.hasUsages),
+            buildPairInformation('In region', wordDefinition.inRegion,
+                'Region of', wordDefinition.regionOf),
+            buildPairInformation('Pertains to', wordDefinition.pertainsTo,
+                'Entails', wordDefinition.entails),
             if (wordDefinition.examples != null)
               Text(
                 'Examples:',
@@ -181,6 +176,10 @@ class _WordViewState extends ConsumerState<WordView> {
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
+              ),
+            if (wordDefinition.examples != null)
+              const SizedBox(
+                height: 8,
               ),
             if (wordDefinition.examples != null)
               ...wordDefinition.examples!
@@ -201,31 +200,53 @@ class _WordViewState extends ConsumerState<WordView> {
     );
   }
 
-  Widget buildRichText(String title, String content) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: RichText(
-        textAlign: TextAlign.start,
-        text: TextSpan(
-          style: TextStyle(
-            fontSize: ScreenUtil().setSp(16),
-            color: Colors.black, // You can set your desired text color
+  Widget buildPairInformation(
+      String title1, List<String>? list1, String title2, List<String>? list2) {
+    return Column(
+      children: [
+        if (list1 != null) buildRichText(title1, list1.join(', ')),
+        if (list2 != null) buildRichText(title2, list2.join(', ')),
+        if (list1 != null || list2 != null)
+          const SizedBox(
+            height: 8,
           ),
-          children: [
-            TextSpan(
-              text: '$title: ',
-              style: TextStyle(fontWeight: FontWeight.bold),
+      ],
+    );
+  }
+
+  Widget buildRichText(String title, String content) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: RichText(
+          textAlign: TextAlign.start,
+          text: TextSpan(
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(16),
+              color: Colors.black, // You can set your desired text color
             ),
-            TextSpan(text: content),
-          ],
+            children: [
+              TextSpan(
+                text: '$title: ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextSpan(text: content),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget buildWordDefinitionItem(WordDefinition wordDefinition) {
+    final index = ref
+        .read(wordViewModelProvider)
+        .detailWord!
+        .results!
+        .indexOf(wordDefinition);
     return ListTile(
-      title: Text(wordDefinition.definition ?? '',
+      title: Text('${formatIndexToString(index)}. ${wordDefinition.definition}',
           style: TextStyle(
             fontSize: ScreenUtil().setSp(18),
             fontWeight: FontWeight.bold,

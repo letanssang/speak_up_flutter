@@ -43,4 +43,10 @@ class SearchViewModel extends StateNotifier<SearchState> {
       loadingStatus: LoadingStatus.loading,
     );
   }
+
+  void onInitial() {
+    state = state.copyWith(
+      loadingStatus: LoadingStatus.initial,
+    );
+  }
 }
