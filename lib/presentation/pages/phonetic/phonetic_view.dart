@@ -16,6 +16,7 @@ class PhoneticView extends ConsumerStatefulWidget {
 class _PhoneticViewState extends ConsumerState<PhoneticView> {
   late YoutubePlayerController _youtubePlayerController;
   Phonetic phonetic = Phonetic.initial();
+
   @override
   void initState() {
     super.initState();
@@ -62,13 +63,6 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                  textAlign: TextAlign.center,
-                  'Check out the video below to pronounce like a native speaker',
-                  style: TextStyle(fontSize: ScreenUtil().setSp(16))),
-            ),
             YoutubePlayer(
                 controller: _youtubePlayerController,
                 showVideoProgressIndicator: true,
@@ -107,6 +101,19 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                // show Map<String,String> example
+                ...phonetic.example.entries.map(
+                  (entry) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      entry.value,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
                 IconButton(
                     onPressed: null,
                     icon: Icon(
@@ -118,9 +125,6 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
             SizedBox(
               height: 16.0,
             ),
-            Text(
-                'Example: ${phonetic.example} ${phonetic.examplePronunciation}',
-                style: TextStyle(fontSize: ScreenUtil().setSp(16))),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
               child: RichText(

@@ -257,7 +257,10 @@ class FirestoreRepository {
   }
 
   Future<List<Phonetic>> getPhoneticList() async {
-    final phoneticSnapshot = await _firestore.collection('phonetics').get();
+    final phoneticSnapshot = await _firestore
+        .collection('phonetics')
+        .where('PhoneticID', isNotEqualTo: 0)
+        .get();
     List<Phonetic> phonetics = [];
     for (var docSnapshot in phoneticSnapshot.docs) {
       Map<String, dynamic> data = docSnapshot.data();
