@@ -7,6 +7,7 @@ import 'package:speak_up/domain/entities/idiom/idiom.dart';
 import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
+import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
 import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
 import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
@@ -253,5 +254,17 @@ class FirestoreRepository {
 
   Future<void> updateEmail(String email, String uid) async {
     await _firestore.collection('users').doc(uid).update({'email': email});
+  }
+
+  Future<List<Phonetic>> getPhoneticList() async {
+    final phoneticSnapshot = await _firestore.collection('phonetics').get();
+    List<Phonetic> phonetics = [];
+    for (var docSnapshot in phoneticSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      Phonetic phonetic = Phonetic.fromJson(data);
+      phonetics.add(phonetic);
+    }
+    phonetics.sort((a, b) => a.phoneticID.compareTo(b.phoneticID));
+    return phonetics;
   }
 }

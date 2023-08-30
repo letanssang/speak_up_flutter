@@ -71,6 +71,9 @@ dependencies:
   # Environment Variables
   flutter_dotenv: ^5.1.0
 
+  # YouTube Player
+  youtube_player_flutter: ^8.1.2
+
 
 
 dev_dependencies:

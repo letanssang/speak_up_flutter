@@ -2,8 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_phonetic_list_use_case.dart';
+import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
+import 'package:speak_up/presentation/pages/ipa/ipa_view_model.dart';
+import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
+
+import 'ipa_state.dart';
+
+final IpaViewModelProvider = StateNotifierProvider<IpaViewModel, IpaState>(
+  (ref) => IpaViewModel(
+    injector.get<GetPhoneticListUseCase>(),
+  ),
+);
 
 class IpaView extends ConsumerStatefulWidget {
   const IpaView({super.key});
@@ -20,6 +34,14 @@ class _IpaViewState extends ConsumerState<IpaView>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    Future.delayed(
+      Duration.zero,
+      () => _init(),
+    );
+  }
+
+  Future<void> _init() async {
+    await ref.read(IpaViewModelProvider.notifier).getPhoneticList();
   }
 
   @override
@@ -30,6 +52,7 @@ class _IpaViewState extends ConsumerState<IpaView>
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(IpaViewModelProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('IPA'),
@@ -45,17 +68,23 @@ class _IpaViewState extends ConsumerState<IpaView>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          buildVowels(),
-          buildConsonants(),
-        ],
-      ),
+      body: state.loadingStatus == LoadingStatus.success
+          ? TabBarView(
+              controller: _tabController,
+              children: [
+                buildVowels(state.vowels),
+                buildConsonants(state.consonants),
+              ],
+            )
+          : state.loadingStatus == LoadingStatus.error
+              ? const Center(
+                  child: Text('Error'),
+                )
+              : const AppLoadingIndicator(),
     );
   }
 
-  Widget buildVowels() {
+  Widget buildVowels(List<Phonetic> vowels) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
@@ -64,14 +93,14 @@ class _IpaViewState extends ConsumerState<IpaView>
         crossAxisSpacing: 8.0,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
-      itemCount: 20,
+      itemCount: vowels.length,
       itemBuilder: (context, index) {
-        return buildPhoneticCard();
+        return buildPhoneticCard(vowels[index]);
       },
     );
   }
 
-  Widget buildConsonants() {
+  Widget buildConsonants(List<Phonetic> consonants) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
@@ -82,16 +111,17 @@ class _IpaViewState extends ConsumerState<IpaView>
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
       itemCount: 24,
       itemBuilder: (context, index) {
-        return buildPhoneticCard();
+        return buildPhoneticCard(consonants[index]);
       },
     );
   }
 
-  Widget buildPhoneticCard() {
+  Widget buildPhoneticCard(Phonetic phonetic) {
     return InkWell(
       onTap: () {
         ref.read(appNavigatorProvider).navigateTo(
               AppRoutes.phonetic,
+              arguments: phonetic,
             );
       },
       child: Container(
@@ -106,7 +136,7 @@ class _IpaViewState extends ConsumerState<IpaView>
         child: Column(
           children: [
             Text(
-              'i:',
+              phonetic.phonetic,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: ScreenUtil().setSp(24),
@@ -114,9 +144,9 @@ class _IpaViewState extends ConsumerState<IpaView>
               ),
             ),
             Text(
-              'sheet',
+              phonetic.example,
               style: TextStyle(
-                fontSize: ScreenUtil().setSp(16),
+                fontSize: ScreenUtil().setSp(14),
               ),
             ),
             AppLinearPercentIndicator(

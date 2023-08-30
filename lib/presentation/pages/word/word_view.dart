@@ -186,7 +186,7 @@ class _WordViewState extends ConsumerState<WordView> {
                   .map((e) => Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
-                          e,
+                          '• $e',
                           style: TextStyle(
                             fontSize: ScreenUtil().setSp(16),
                             color: Colors.grey[800],
