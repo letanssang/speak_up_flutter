@@ -24,6 +24,7 @@ class AppRoutes {
   static const String quiz = '/quiz';
   static const String word = '/word';
   static const String phonetic = '/phonetic';
+  static const String reels = '/reels';
 
   //profile
   static const String editProfile = '/edit_profile';

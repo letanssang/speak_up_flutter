@@ -417,39 +417,44 @@ class _HomeViewState extends ConsumerState<HomeView> {
             itemCount: 5,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              return AspectRatio(
-                aspectRatio: 0.7,
-                child: Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.black54),
-                        image: const DecorationImage(
-                          image:
-                              AssetImage('assets/images/sample_thumbnail.jpg'),
-                          fit: BoxFit.cover,
+              return InkWell(
+                onTap: () {
+                  ref.read(appNavigatorProvider).navigateTo(AppRoutes.reels);
+                },
+                child: AspectRatio(
+                  aspectRatio: 0.7,
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.black54),
+                          image: const DecorationImage(
+                            image: AssetImage(
+                                'assets/images/sample_thumbnail.jpg'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 12, // Adjust the position of the text as needed
-                      left: 16, // Adjust the position of the text as needed
-                      right: 16,
-                      child: Text(
-                        'The TH /θ/ and TH /ð/ Consonants | American English Pronunciation | American Accent Training',
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                      Positioned(
+                        bottom: 12, // Adjust the position of the text as needed
+                        left: 16, // Adjust the position of the text as needed
+                        right: 16,
+                        child: Text(
+                          'The TH /θ/ and TH /ð/ Consonants | American English Pronunciation | American Accent Training',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

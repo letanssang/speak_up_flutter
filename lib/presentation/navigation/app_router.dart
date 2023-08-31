@@ -17,6 +17,7 @@ import 'package:speak_up/presentation/pages/pattern/pattern_view.dart';
 import 'package:speak_up/presentation/pages/phonetic/phonetic_view.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_view.dart';
+import 'package:speak_up/presentation/pages/reels/reels_view.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_view.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_view.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_view.dart';
@@ -180,6 +181,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const PhoneticView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.reels:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const ReelsView(),
             settings: settings,
           );
         }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
+import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class PhoneticView extends ConsumerStatefulWidget {
@@ -14,7 +15,7 @@ class PhoneticView extends ConsumerStatefulWidget {
 }
 
 class _PhoneticViewState extends ConsumerState<PhoneticView> {
-  late YoutubePlayerController _youtubePlayerController;
+  YoutubePlayerController? _youtubePlayerController;
   Phonetic phonetic = Phonetic.initial();
 
   @override
@@ -42,13 +43,13 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
 
   @override
   void deactivate() {
-    _youtubePlayerController.pause();
+    _youtubePlayerController?.pause();
     super.deactivate();
   }
 
   @override
   void dispose() {
-    _youtubePlayerController.dispose();
+    _youtubePlayerController?.dispose();
     super.dispose();
   }
 
@@ -59,117 +60,119 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
         leading: const AppBackButton(),
         title: Text(phonetic.phonetic),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            YoutubePlayer(
-                controller: _youtubePlayerController,
-                showVideoProgressIndicator: true,
-                progressIndicatorColor: Theme.of(context).primaryColor,
-                progressColors: ProgressBarColors(
-                  playedColor: Theme.of(context).primaryColor,
-                  handleColor: Theme.of(context).primaryColor,
-                ),
-                onReady: () {
-                  _youtubePlayerController.addListener(() {});
-                },
-                bottomActions: [
-                  const SizedBox(width: 14.0),
-                  CurrentPosition(),
-                  const SizedBox(width: 8.0),
-                  ProgressBar(
-                      isExpanded: true,
-                      controller: _youtubePlayerController,
-                      colors: ProgressBarColors(
+      body: _youtubePlayerController == null
+          ? const Center(
+              child: AppLoadingIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  YoutubePlayer(
+                      controller: _youtubePlayerController!,
+                      showVideoProgressIndicator: true,
+                      progressIndicatorColor: Theme.of(context).primaryColor,
+                      progressColors: ProgressBarColors(
                         playedColor: Theme.of(context).primaryColor,
                         handleColor: Theme.of(context).primaryColor,
-                      )),
-                  RemainingDuration(),
-                ]),
-            SizedBox(
-              height: 16.0,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  phonetic.phonetic,
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
+                      ),
+                      bottomActions: [
+                        const SizedBox(width: 14.0),
+                        CurrentPosition(),
+                        const SizedBox(width: 8.0),
+                        ProgressBar(
+                            isExpanded: true,
+                            controller: _youtubePlayerController,
+                            colors: ProgressBarColors(
+                              playedColor: Theme.of(context).primaryColor,
+                              handleColor: Theme.of(context).primaryColor,
+                            )),
+                        RemainingDuration(),
+                      ]),
+                  SizedBox(
+                    height: 16.0,
                   ),
-                ),
-                IconButton(
-                    onPressed: null,
-                    icon: Icon(
-                      Icons.volume_up,
-                      size: 32,
-                    )),
-              ],
-            ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        phonetic.phonetic,
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: null,
+                          icon: Icon(
+                            Icons.volume_up,
+                            size: 32,
+                          )),
+                    ],
+                  ),
 
-            // show Map<String,String> example
-            ...phonetic.example.entries.map(
-              (entry) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${entry.key}: ',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  // show Map<String,String> example
+                  ...phonetic.example.entries.map(
+                    (entry) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${entry.key}: ',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            entry.value,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      entry.value,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 16.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: 'Mẹo: ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: ScreenUtil().setSp(18),
-                    color: Theme.of(context).primaryColor,
                   ),
-                  children: [
-                    TextSpan(
-                      text: phonetic.description,
-                      style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: ScreenUtil().setSp(18),
-                        color: Colors.black,
+                  SizedBox(
+                    height: 16.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 32, horizontal: 16),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Mẹo: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: ScreenUtil().setSp(18),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: phonetic.description,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: ScreenUtil().setSp(18),
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Flexible(child: Container()),
+                  SafeArea(
+                    child: CustomButton(
+                      text: 'Practice now',
+                    ),
+                  ),
+                ],
               ),
             ),
-            Flexible(child: Container()),
-            SafeArea(
-              child: CustomButton(
-                text: 'Practice now',
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
