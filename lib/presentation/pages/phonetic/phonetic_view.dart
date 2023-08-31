@@ -88,7 +88,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                   RemainingDuration(),
                 ]),
             SizedBox(
-              height: 32.0,
+              height: 16.0,
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -101,19 +101,6 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                // show Map<String,String> example
-                ...phonetic.example.entries.map(
-                  (entry) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      entry.value,
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
                 IconButton(
                     onPressed: null,
                     icon: Icon(
@@ -121,6 +108,32 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                       size: 32,
                     )),
               ],
+            ),
+
+            // show Map<String,String> example
+            ...phonetic.example.entries.map(
+              (entry) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${entry.key}: ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      entry.value,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             SizedBox(
               height: 16.0,
@@ -137,7 +150,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                   ),
                   children: [
                     TextSpan(
-                      text: phonetic.description.substring(5),
+                      text: phonetic.description,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: ScreenUtil().setSp(18),
@@ -149,8 +162,10 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
               ),
             ),
             Flexible(child: Container()),
-            CustomButton(
-              text: 'Practice now',
+            SafeArea(
+              child: CustomButton(
+                text: 'Practice now',
+              ),
             ),
           ],
         ),

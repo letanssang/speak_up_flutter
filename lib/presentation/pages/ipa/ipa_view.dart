@@ -143,6 +143,9 @@ class _IpaViewState extends ConsumerState<IpaView>
                 color: Theme.of(context).primaryColor,
               ),
             ),
+            Text(
+              phonetic.example.entries.first.key,
+            ),
             AppLinearPercentIndicator(
               percent: 0.2,
               lineHeight: ScreenUtil().setHeight(6),

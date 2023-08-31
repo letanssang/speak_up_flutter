@@ -52,10 +52,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homeViewModelProvider);
-    return SingleChildScrollView(
-      child: SizedBox(
-        height: ScreenUtil().screenHeight * 1.5,
-        width: ScreenUtil().screenWidth,
+    return SizedBox(
+      width: ScreenUtil().screenWidth,
+      child: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
@@ -65,6 +64,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             buildCurrentCourses(),
             buildCategories(state),
             buildExplore(state),
+            buildReels()
           ],
         ),
       ),
@@ -72,123 +72,117 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   Widget buildExplore(HomeState state) {
-    return Flexible(
-      flex: 3,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                child: Text(
-                  AppLocalizations.of(context)!.explore,
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(18),
-                    fontWeight: FontWeight.bold,
-                  ),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+              child: Text(
+                AppLocalizations.of(context)!.explore,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(18),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  ref
-                      .read(appNavigatorProvider)
-                      .navigateTo(AppRoutes.lessons, arguments: state.lessons);
-                },
-                child: Text(
-                  AppLocalizations.of(context)!.viewAll,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+            ),
+            TextButton(
+              onPressed: () {
+                ref
+                    .read(appNavigatorProvider)
+                    .navigateTo(AppRoutes.lessons, arguments: state.lessons);
+              },
+              child: Text(
+                AppLocalizations.of(context)!.viewAll,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-            ],
+            ),
+          ],
+        ),
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: ScreenUtil().screenHeight < 800
+                ? ScreenUtil().screenHeight * 0.38
+                : ScreenUtil().screenHeight * 0.33,
           ),
-          Flexible(
-            child: state.lessonsLoadingStatus == LoadingStatus.success
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      buildExploreItem(state.lessons[_randomIndex1]),
-                      buildExploreItem(state.lessons[_randomIndex2]),
-                    ],
-                  )
-                : Container(),
-          )
-        ],
-      ),
+          child: state.lessonsLoadingStatus == LoadingStatus.success
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    buildExploreItem(state.lessons[_randomIndex1]),
+                    buildExploreItem(state.lessons[_randomIndex2]),
+                  ],
+                )
+              : Container(),
+        )
+      ],
     );
   }
 
   Widget buildExploreItem(Lesson lesson) {
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: ScreenUtil().screenHeight < 800
-            ? ScreenUtil().screenHeight * 0.38
-            : ScreenUtil().screenHeight * 0.33,
-      ),
-      child: SizedBox(
-        width: ScreenUtil().screenWidth * 0.45,
-        child: InkWell(
-          onTap: () {
-            ref
-                .read(appNavigatorProvider)
-                .navigateTo(AppRoutes.lesson, arguments: lesson);
-          },
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            color: isDarkTheme ? Colors.grey[800] : Colors.white,
-            surfaceTintColor: Colors.white,
-            elevation: 3,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: AspectRatio(
-                      aspectRatio: 1.2,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(lesson.imageURL)),
-                        ),
+    return SizedBox(
+      width: ScreenUtil().screenWidth * 0.45,
+      child: InkWell(
+        onTap: () {
+          ref
+              .read(appNavigatorProvider)
+              .navigateTo(AppRoutes.lesson, arguments: lesson);
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          color: isDarkTheme ? Colors.grey[800] : Colors.white,
+          surfaceTintColor: Colors.white,
+          elevation: 3,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 1.2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(lesson.imageURL)),
                       ),
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 16, 8, 32),
-                    child: Center(
-                      child: Text(
-                        language == Language.english
-                            ? lesson.name
-                            : lesson.translation,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isDarkTheme ? Colors.white : Colors.black,
-                            fontSize: ScreenUtil().setSp(14)),
-                      ),
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 32),
+                  child: Center(
+                    child: Text(
+                      language == Language.english
+                          ? lesson.name
+                          : lesson.translation,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: isDarkTheme ? Colors.white : Colors.black,
+                          fontSize: ScreenUtil().setSp(14)),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -237,127 +231,119 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Flexible buildCurrentCourses() {
-    return Flexible(
-      flex: 3,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-              child: Text(AppLocalizations.of(context)!.continueLearning,
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(18),
-                    fontWeight: FontWeight.bold,
-                  )),
-            ),
-            SizedBox(
-              height: ScreenUtil().screenHeight * 0.2,
-              child: ListView.builder(
-                  itemCount: 3,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: ScreenUtil().screenHeight * 0.16,
-                      width: ScreenUtil().screenWidth * 0.6,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(16),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/temp_topic.png'),
-                          fit: BoxFit.cover,
-                        ),
+  Widget buildCurrentCourses() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            child: Text(AppLocalizations.of(context)!.continueLearning,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(18),
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          SizedBox(
+            height: ScreenUtil().screenHeight * 0.2,
+            child: ListView.builder(
+                itemCount: 3,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: ScreenUtil().screenHeight * 0.16,
+                    width: ScreenUtil().screenWidth * 0.6,
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(16),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/images/temp_topic.png'),
+                        fit: BoxFit.cover,
                       ),
-                    );
-                  }),
-            ),
-          ],
-        ),
+                    ),
+                  );
+                }),
+          ),
+        ],
       ),
     );
   }
 
-  Flexible buildCategories(HomeState state) {
+  Widget buildCategories(HomeState state) {
     final categories = state.categories;
-    return Flexible(
-      flex: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Text(
-                    AppLocalizations.of(context)!.categories,
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(18),
-                      fontWeight: FontWeight.bold,
-                    ),
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  AppLocalizations.of(context)!.categories,
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(18),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    ref.read(appNavigatorProvider).navigateTo(
-                        AppRoutes.categories,
-                        arguments: categories);
-                  },
-                  child: Text(
-                    AppLocalizations.of(context)!.viewAll,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+              ),
+              TextButton(
+                onPressed: () {
+                  ref
+                      .read(appNavigatorProvider)
+                      .navigateTo(AppRoutes.categories, arguments: categories);
+                },
+                child: Text(
+                  AppLocalizations.of(context)!.viewAll,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
-              ],
-            ),
-            state.categoriesLoadingStatus == LoadingStatus.success
-                ? SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: List<Widget>.generate(categories.length - 1,
-                              (index) {
-                            if (index % 2 == 0) {
-                              return buildCategoryItem(
-                                  categories[index], index);
-                            } else {
-                              return const SizedBox();
-                            }
-                          }),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children:
-                              List<Widget>.generate(categories.length, (index) {
-                            if (index % 2 != 0 ||
-                                index == categories.length - 1) {
-                              return buildCategoryItem(
-                                  categories[index], index);
-                            } else {
-                              return const SizedBox();
-                            }
-                          }),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
+              ),
+            ],
+          ),
+          state.categoriesLoadingStatus == LoadingStatus.success
+              ? SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: List<Widget>.generate(categories.length - 1,
+                            (index) {
+                          if (index % 2 == 0) {
+                            return buildCategoryItem(categories[index], index);
+                          } else {
+                            return const SizedBox();
+                          }
+                        }),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children:
+                            List<Widget>.generate(categories.length, (index) {
+                          if (index % 2 != 0 ||
+                              index == categories.length - 1) {
+                            return buildCategoryItem(categories[index], index);
+                          } else {
+                            return const SizedBox();
+                          }
+                        }),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
+        ],
       ),
     );
   }
@@ -395,6 +381,81 @@ class _HomeViewState extends ConsumerState<HomeView> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildReels() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+              child: Text(
+                'Reels',
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(18),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                AppLocalizations.of(context)!.viewAll,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: ScreenUtil().screenHeight * 0.3,
+          child: ListView.builder(
+            itemCount: 5,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return AspectRatio(
+                aspectRatio: 0.7,
+                child: Stack(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.black54),
+                        image: const DecorationImage(
+                          image:
+                              AssetImage('assets/images/sample_thumbnail.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 12, // Adjust the position of the text as needed
+                      left: 16, // Adjust the position of the text as needed
+                      right: 16,
+                      child: Text(
+                        'The TH /θ/ and TH /ð/ Consonants | American English Pronunciation | American Accent Training',
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
