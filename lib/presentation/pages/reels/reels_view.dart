@@ -1,4 +1,4 @@
-giimport 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
@@ -16,6 +16,7 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
   List<String> videoIDs = ['cdIzCt7HOXk', 'PX8ag5BqYPE', 'RTJUmIvgIkQ'];
   List<YoutubePlayerController>? youtubePlayerControllers;
   late final PreloadPageController preloadPageController;
+
   void changeVideo(int index) {
     youtubePlayerControllers![index].play();
     //pause previous video
