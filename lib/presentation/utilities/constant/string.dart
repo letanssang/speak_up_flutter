@@ -7,6 +7,9 @@ const String idiomAudioURL =
     'https://basicenglishspeaking.com/wp-content/uploads/2019/05/';
 const String audioExtension = '.mp3';
 
+//Youtube API
+const partConst = 'snippet';
+
 String getSplashTitle(int index, BuildContext context) {
   switch (index) {
     case 0:

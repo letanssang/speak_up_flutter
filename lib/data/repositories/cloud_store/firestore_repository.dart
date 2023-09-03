@@ -270,4 +270,16 @@ class FirestoreRepository {
     phonetics.sort((a, b) => a.phoneticID.compareTo(b.phoneticID));
     return phonetics;
   }
+
+  Future<List<String>> getYoutubePlaylistIDList() async {
+    final youtubePlaylistSnapshot =
+        await _firestore.collection('youtube_playlists').get();
+    List<String> youtubePlaylistIDs = [];
+    for (var docSnapshot in youtubePlaylistSnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      String youtubePlaylistID = data['PlaylistID'];
+      youtubePlaylistIDs.add(youtubePlaylistID);
+    }
+    return youtubePlaylistIDs;
+  }
 }

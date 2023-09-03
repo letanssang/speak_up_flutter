@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -11,6 +12,7 @@ import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_up/data/local/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/data/remote/dictionary_client/dictionary_client.dart';
+import 'package:speak_up/data/remote/youtube_client/youtube_client.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
@@ -19,6 +21,7 @@ import 'package:speak_up/data/repositories/dictionary/dictionary_repository.dart
 import 'package:speak_up/data/repositories/record/record_repository.dart';
 import 'package:speak_up/data/repositories/speech_to_text/speech_to_text_repository.dart';
 import 'package:speak_up/data/repositories/text_to_speech/text_to_speech_repository.dart';
+import 'package:speak_up/data/repositories/youtube_repository/youtube_repository.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_theme_use_case.dart';
 import 'package:speak_up/domain/use_cases/account_settings/save_app_language_use_case.dart';
@@ -52,6 +55,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_pat
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_topic_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_youtube_playlist_id_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_detail_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
@@ -59,6 +63,7 @@ import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
+import 'package:speak_up/domain/use_cases/youtube/get_youtube_playlist_by_id_use_case.dart';
 import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/injector.dart';
 
@@ -87,6 +92,10 @@ class LoggingInterceptor extends Interceptor {
 
 class AppModules {
   static Future<void> inject() async {
+    //Firebase
+    final firebaseApp = await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     //Dio
     await dotenv.load(fileName: "assets/keys/keys.env");
     final dio = Dio();
@@ -128,6 +137,9 @@ class AppModules {
 
     //Record
     injector.registerLazySingleton<Record>(() => Record());
+
+    // Youtube Client
+    injector.registerLazySingleton<YoutubeClient>(() => YoutubeClient(dio));
 
     // Dictionary repository
     injector.registerLazySingleton<DictionaryRepository>(
@@ -181,6 +193,10 @@ class AppModules {
     injector.registerLazySingleton<TextToSpeechRepository>(() {
       return TextToSpeechRepository(injector.get<FlutterTts>());
     });
+
+    // Youtube Repository
+    injector.registerLazySingleton<YoutubeRepository>(() => YoutubeRepository(
+        injector.get<YoutubeClient>(), firebaseApp.options.apiKey));
 
     // Get app theme use case
     injector
@@ -338,5 +354,13 @@ class AppModules {
     // Get phonetic list use case
     injector.registerLazySingleton<GetPhoneticListUseCase>(
         () => GetPhoneticListUseCase());
+
+    // Get youtube playlist id list use case
+    injector.registerLazySingleton<GetYoutubePLayListIdListUseCase>(
+        () => GetYoutubePLayListIdListUseCase());
+
+    // Get youtube playlist by id use case
+    injector.registerLazySingleton<GetYoutubePlaylistByIdUseCase>(
+        () => GetYoutubePlaylistByIdUseCase());
   }
 }

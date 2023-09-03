@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
+import 'package:speak_up/domain/entities/youtube_video/youtube_video.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -13,9 +14,9 @@ class ReelsView extends ConsumerStatefulWidget {
 }
 
 class _ReelsViewState extends ConsumerState<ReelsView> {
-  List<String> videoIDs = ['cdIzCt7HOXk', 'PX8ag5BqYPE', 'RTJUmIvgIkQ'];
   List<YoutubePlayerController>? youtubePlayerControllers;
   late final PreloadPageController preloadPageController;
+  late final List<YoutubeVideo> videos;
 
   void changeVideo(int index) {
     youtubePlayerControllers![index].play();
@@ -33,16 +34,31 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
   void initState() {
     super.initState();
     preloadPageController = PreloadPageController();
-    youtubePlayerControllers = videoIDs
+    preloadPageController.addListener(() {
+      final index = preloadPageController.page!.round();
+      if (preloadPageController.page! - index == 0.0) {
+        changeVideo(index);
+      }
+    });
+    Future.delayed(
+      Duration.zero,
+      () => _init(),
+    );
+  }
+
+  Future<void> _init() async {
+    videos = ModalRoute.of(context)!.settings.arguments as List<YoutubeVideo>;
+
+    youtubePlayerControllers = videos
         .map(
-          (videoID) => YoutubePlayerController(
-            initialVideoId: videoID,
+          (video) => YoutubePlayerController(
+            initialVideoId: video.resourceId?.videoId ?? '',
             flags: YoutubePlayerFlags(
               disableDragSeek: true,
               hideControls: true,
               hideThumbnail: true,
               //auto play first video
-              autoPlay: videoIDs.indexOf(videoID) == 0,
+              autoPlay: videos.indexOf(video) == 0,
               captionLanguage: 'en',
               enableCaption: true,
               loop: true,
@@ -51,14 +67,10 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
           ),
         )
         .toList();
-    preloadPageController.addListener(() {
-      final index = preloadPageController.page!.round();
-      if (preloadPageController.page! - index == 0.0) {
-        changeVideo(index);
-      }
-    });
+    setState(() {});
   }
 
+  @override
   void deactivate() {
     youtubePlayerControllers?.forEach((controller) => controller.pause());
     super.deactivate();
@@ -92,13 +104,14 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
   }
 
   Widget buildReelsBody() {
-    if (youtubePlayerControllers == null)
+    if (youtubePlayerControllers == null) {
       return const Center(child: AppLoadingIndicator());
+    }
     return PreloadPageView.builder(
       controller: preloadPageController,
       preloadPagesCount: 1,
       scrollDirection: Axis.vertical,
-      itemCount: videoIDs.length,
+      itemCount: videos.length,
       itemBuilder: (context, index) {
         return Padding(
           padding:

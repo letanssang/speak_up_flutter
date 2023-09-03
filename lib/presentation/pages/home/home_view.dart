@@ -10,8 +10,11 @@ import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
+import 'package:speak_up/domain/entities/youtube_video/youtube_video.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_category_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_lesson_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_youtube_playlist_id_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/youtube/get_youtube_playlist_by_id_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/home/home_state.dart';
@@ -22,9 +25,13 @@ import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 final homeViewModelProvider =
-    StateNotifierProvider.autoDispose<HomeViewModel, HomeState>((ref) =>
-        HomeViewModel(injector.get<GetLessonListUseCase>(),
-            injector.get<GetCategoryListUseCase>()));
+    StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
+        (ref) => HomeViewModel(
+              injector.get<GetLessonListUseCase>(),
+              injector.get<GetCategoryListUseCase>(),
+              injector.get<GetYoutubePLayListIdListUseCase>(),
+              injector.get<GetYoutubePlaylistByIdUseCase>(),
+            ));
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -36,6 +43,7 @@ class HomeView extends ConsumerStatefulWidget {
 class _HomeViewState extends ConsumerState<HomeView> {
   final int _randomIndex1 = Random().nextInt(2);
   final int _randomIndex2 = Random().nextInt(2) + 2;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +55,23 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Future<void> _init() async {
     await ref.read(homeViewModelProvider.notifier).getCategoryList();
     await ref.read(homeViewModelProvider.notifier).getLessonList();
+    await ref.read(homeViewModelProvider.notifier).getYoutubeVideoLists();
+  }
+
+  String getBestThumbnailUrl(YoutubeVideoThumbnails? thumbnails) {
+    if (thumbnails?.maxresThumbnail?.url != null) {
+      return thumbnails!.maxresThumbnail!.url!;
+    } else if (thumbnails?.standardThumbnail?.url != null) {
+      return thumbnails!.standardThumbnail!.url!;
+    } else if (thumbnails?.highThumbnail?.url != null) {
+      return thumbnails!.highThumbnail!.url!;
+    } else if (thumbnails?.mediumThumbnail?.url != null) {
+      return thumbnails!.mediumThumbnail!.url!;
+    } else if (thumbnails?.defaultThumbnail?.url != null) {
+      return thumbnails!.defaultThumbnail!.url!;
+    } else {
+      return '';
+    }
   }
 
   @override
@@ -64,7 +89,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             buildCurrentCourses(),
             buildCategories(state),
             buildExplore(state),
-            buildReels()
+            buildReels(state)
           ],
         ),
       ),
@@ -117,7 +142,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     buildExploreItem(state.lessons[_randomIndex2]),
                   ],
                 )
-              : Container(),
+              : Container(
+                  height: ScreenUtil().scaleHeight * 0.33,
+                ),
         )
       ],
     );
@@ -342,7 +369,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     ],
                   ),
                 )
-              : Container(),
+              : SizedBox(
+                  height: ScreenUtil().screenHeight * 0.15,
+                ),
         ],
       ),
     );
@@ -369,7 +398,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           children: [
             isDarkTheme ? categoryDarkIcons[index] : categoryIcons[index],
             SizedBox(
-              width: ScreenUtil().setWidth(3),
+              width: 3,
             ),
             Text(
               language == Language.english
@@ -384,7 +413,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget buildReels() {
+  Widget buildReels(HomeState state) {
     return Column(
       children: [
         Row(
@@ -400,66 +429,70 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                AppLocalizations.of(context)!.viewAll,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ),
+            Flexible(child: Container())
           ],
         ),
-        SizedBox(
-          height: ScreenUtil().screenHeight * 0.3,
-          child: ListView.builder(
-            itemCount: 5,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  ref.read(appNavigatorProvider).navigateTo(AppRoutes.reels);
-                },
-                child: AspectRatio(
-                  aspectRatio: 0.7,
-                  child: Stack(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.black54),
-                          image: const DecorationImage(
-                            image: AssetImage(
-                                'assets/images/sample_thumbnail.jpg'),
-                            fit: BoxFit.cover,
-                          ),
+        state.youtubeVideoListsLoadingStatus == LoadingStatus.success
+            ? SizedBox(
+                height: ScreenUtil().screenHeight * 0.3,
+                child: ListView.builder(
+                  itemCount: state.youtubeVideoLists.length,
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        ref.read(appNavigatorProvider).navigateTo(
+                            AppRoutes.reels,
+                            arguments: state.youtubeVideoLists[index]);
+                      },
+                      child: AspectRatio(
+                        aspectRatio: 0.65,
+                        child: Stack(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: Colors.black54),
+                                image: DecorationImage(
+                                  image: NetworkImage(getBestThumbnailUrl(state
+                                      .youtubeVideoLists[index]
+                                      .first
+                                      .thumbnails)),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom:
+                                  12, // Adjust the position of the text as needed
+                              left:
+                                  16, // Adjust the position of the text as needed
+                              right: 16,
+                              child: Text(
+                                state.youtubeVideoLists[index].first.title ??
+                                    '',
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Positioned(
-                        bottom: 12, // Adjust the position of the text as needed
-                        left: 16, // Adjust the position of the text as needed
-                        right: 16,
-                        child: Text(
-                          'The TH /θ/ and TH /ð/ Consonants | American English Pronunciation | American Accent Training',
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
+              )
+            : SizedBox(
+                height: ScreenUtil().screenHeight * 0.3,
+              ),
       ],
     );
   }

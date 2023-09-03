@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:speak_up/data/models/word_detail_response.dart';
-import 'package:speak_up/data/models/dictionary_search_response.dart';
+import 'package:speak_up/data/models/dictionary/dictionary_search_response.dart';
+import 'package:speak_up/data/models/dictionary/word_detail_response.dart';
 
 part 'dictionary_client.g.dart';
 
