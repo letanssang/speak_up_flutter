@@ -104,7 +104,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                             state.isExpandedTranslations[index], () {
                             ref
                                 .read(topicViewModelProvider.notifier)
-                                .playAudioFromUrl(sentence.audioEndpoint);
+                                .onTapSpeaker(sentence.audioEndpoint);
                           }, () {
                             ref
                                 .read(topicViewModelProvider.notifier)
@@ -114,7 +114,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                             state.isExpandedTranslations[index], () {
                             ref
                                 .read(topicViewModelProvider.notifier)
-                                .playAudioFromUrl(sentence.audioEndpoint);
+                                .onTapSpeaker(sentence.audioEndpoint);
                           }, () {
                             ref
                                 .read(topicViewModelProvider.notifier)
@@ -139,11 +139,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                 backgroundColor: Theme.of(context).primaryColor,
                 radius: 32,
                 child: IconButton(
-                    onPressed: () {
-                      ref
-                          .read(topicViewModelProvider.notifier)
-                          .onPlaylistPlayButtonPressed();
-                    },
+                    onPressed: () {},
                     icon: Icon(
                       state.isPlayingPlaylist ? Icons.pause : Icons.play_arrow,
                       color: Colors.white,
