@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class AppBackButton extends StatelessWidget {
   final Color color;
+  final Function()? onPressed;
   const AppBackButton({
     super.key,
     this.color = Colors.black,
+    this.onPressed,
   });
 
   @override
@@ -17,9 +19,10 @@ class AppBackButton extends StatelessWidget {
           size: 24,
           color: color,
         ),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
+        onPressed: onPressed ??
+            () {
+              Navigator.of(context).pop();
+            },
       ),
     );
   }

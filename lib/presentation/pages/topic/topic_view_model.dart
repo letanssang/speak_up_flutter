@@ -1,4 +1,6 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/domain/use_cases/audio_player/pause_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_topic_use_case.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';
@@ -8,10 +10,14 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 class TopicViewModel extends StateNotifier<TopicState> {
   final GetSentenceListFromTopicUseCase getSentenceListFromTopicUseCase;
   final PlayAudioFromUrlUseCase playAudioFromUrlUseCase;
+  final PauseAudioUseCase pauseAudioUseCase;
+  final AudioPlayer audioPlayer;
 
   TopicViewModel(
     this.getSentenceListFromTopicUseCase,
     this.playAudioFromUrlUseCase,
+    this.pauseAudioUseCase,
+    this.audioPlayer,
   ) : super(const TopicState());
 
   void onTapExpandedTranslation(int index) {

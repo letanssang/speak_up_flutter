@@ -9,6 +9,7 @@ import 'package:speak_up/presentation/pages/word/word_state.dart';
 import 'package:speak_up/presentation/pages/word/word_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final wordViewModelProvider = StateNotifierProvider<WordViewModel, WordState>(
@@ -55,6 +56,7 @@ class _WordViewState extends ConsumerState<WordView> {
     final state = ref.watch(wordViewModelProvider);
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: Text(
           capitalizeFirstLetter(word),
         ),
@@ -229,7 +231,7 @@ class _WordViewState extends ConsumerState<WordView> {
             children: [
               TextSpan(
                 text: '$title: ',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               TextSpan(text: content),
             ],

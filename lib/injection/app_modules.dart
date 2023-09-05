@@ -67,6 +67,8 @@ import 'package:speak_up/domain/use_cases/youtube/get_youtube_playlist_by_id_use
 import 'package:speak_up/firebase_options.dart';
 import 'package:speak_up/injection/injector.dart';
 
+import '../domain/use_cases/audio_player/pause_audio_use_case.dart';
+
 const String audioPlayerInstanceName = 'audioPlayer';
 const String slowAudioPlayerInstanceName = 'slowAudioPlayer';
 
@@ -323,6 +325,10 @@ class AppModules {
     //Play audio from file use case
     injector.registerLazySingleton<PlayAudioFromFileUseCase>(
         () => PlayAudioFromFileUseCase());
+
+    // Pause audio use case
+    injector
+        .registerLazySingleton<PauseAudioUseCase>(() => PauseAudioUseCase());
 
     // Stop audio use case
     injector.registerLazySingleton<StopAudioUseCase>(() => StopAudioUseCase());

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,8 +7,10 @@ import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
+import 'package:speak_up/domain/use_cases/audio_player/pause_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_topic_use_case.dart';
+import 'package:speak_up/injection/app_modules.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';
 import 'package:speak_up/presentation/pages/topic/topic_view_model.dart';
@@ -23,6 +26,8 @@ final topicViewModelProvider =
   (ref) => TopicViewModel(
     injector.get<GetSentenceListFromTopicUseCase>(),
     injector.get<PlayAudioFromUrlUseCase>(),
+    injector.get<PauseAudioUseCase>(),
+    injector.get<AudioPlayer>(instanceName: audioPlayerInstanceName),
   ),
 );
 
@@ -63,16 +68,14 @@ class _TopicViewState extends ConsumerState<TopicView> {
             language == Language.english ? topic.topicName : topic.translation),
       ),
       body: state.loadingStatus == LoadingStatus.success
-          ? buildBodySuccess(
-              state.sentences, isDarkTheme, state.isExpandedTranslations)
+          ? buildBodySuccess(state, isDarkTheme)
           : state.loadingStatus == LoadingStatus.error
               ? buildBodyError()
               : buildBodyInProgress(),
     );
   }
 
-  Widget buildBodySuccess(List<Sentence> sentences, bool isDarkTheme,
-      List<bool> isExpandedTranslations) {
+  Widget buildBodySuccess(TopicState state, bool isDarkTheme) {
     return Column(
       children: [
         Flexible(
@@ -95,30 +98,30 @@ class _TopicViewState extends ConsumerState<TopicView> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final sentence = sentences[index];
+                    final sentence = state.sentences[index];
                     return index % 2 == 0
                         ? buildQuestionerMessage(isDarkTheme, sentence,
-                            isExpandedTranslations[index], () {
+                            state.isExpandedTranslations[index], () {
                             ref
                                 .read(topicViewModelProvider.notifier)
-                                .onTapSpeaker(sentence.audioEndpoint);
+                                .playAudioFromUrl(sentence.audioEndpoint);
                           }, () {
                             ref
                                 .read(topicViewModelProvider.notifier)
                                 .onTapExpandedTranslation(index);
                           })
                         : buildRespondentMessage(context, isDarkTheme, sentence,
-                            isExpandedTranslations[index], () {
+                            state.isExpandedTranslations[index], () {
                             ref
                                 .read(topicViewModelProvider.notifier)
-                                .onTapSpeaker(sentence.audioEndpoint);
+                                .playAudioFromUrl(sentence.audioEndpoint);
                           }, () {
                             ref
                                 .read(topicViewModelProvider.notifier)
                                 .onTapExpandedTranslation(index);
                           });
                   },
-                  childCount: sentences.length,
+                  childCount: state.sentences.length,
                 ),
               ),
             ],
@@ -130,15 +133,23 @@ class _TopicViewState extends ConsumerState<TopicView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             buildCustomButton('Repeat'),
-            CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
-              radius: 24,
-              child: const IconButton(
-                  onPressed: null,
-                  icon: Icon(
-                    Icons.play_arrow_outlined,
-                    color: Colors.white,
-                  )),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                radius: 32,
+                child: IconButton(
+                    onPressed: () {
+                      ref
+                          .read(topicViewModelProvider.notifier)
+                          .onPlaylistPlayButtonPressed();
+                    },
+                    icon: Icon(
+                      state.isPlayingPlaylist ? Icons.pause : Icons.play_arrow,
+                      color: Colors.white,
+                      size: 32,
+                    )),
+              ),
             ),
             buildCustomButton('Speak'),
           ],
@@ -155,8 +166,8 @@ class _TopicViewState extends ConsumerState<TopicView> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
         child: Text(text,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(16),
             )),
       ),
     );
@@ -205,7 +216,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                   sentence.text,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
-                    fontSize: 16,
+                    fontSize: ScreenUtil().setSp(16),
                   ),
                   textAlign: TextAlign.justify,
                 ),
@@ -244,6 +255,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                   Text(
                     sentence.translation,
                     style: TextStyle(
+                      fontSize: ScreenUtil().setSp(14),
                       color: Colors.grey[800],
                     ),
                     textAlign: TextAlign.justify,
@@ -304,9 +316,9 @@ class _TopicViewState extends ConsumerState<TopicView> {
               children: [
                 Text(
                   sentence.text,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: ScreenUtil().setSp(16),
                   ),
                   textAlign: TextAlign.justify,
                 ),
@@ -343,6 +355,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                   Text(
                     sentence.translation,
                     style: TextStyle(
+                      fontSize: ScreenUtil().setSp(14),
                       color: Colors.grey[350],
                     ),
                     textAlign: TextAlign.justify,

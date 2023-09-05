@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
@@ -7,13 +8,15 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_phonetic_list_use_case
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/ipa/ipa_view_model.dart';
+import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 
 import 'ipa_state.dart';
 
-final IpaViewModelProvider = StateNotifierProvider<IpaViewModel, IpaState>(
+final ipaViewModelProvider = StateNotifierProvider<IpaViewModel, IpaState>(
   (ref) => IpaViewModel(
     injector.get<GetPhoneticListUseCase>(),
   ),
@@ -41,7 +44,7 @@ class _IpaViewState extends ConsumerState<IpaView>
   }
 
   Future<void> _init() async {
-    await ref.read(IpaViewModelProvider.notifier).getPhoneticList();
+    await ref.read(ipaViewModelProvider.notifier).getPhoneticList();
   }
 
   @override
@@ -52,18 +55,21 @@ class _IpaViewState extends ConsumerState<IpaView>
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(IpaViewModelProvider);
+    final state = ref.watch(ipaViewModelProvider);
     return Scaffold(
       appBar: AppBar(
+        leading: AppBackButton(onPressed: () {
+          ref.read(mainMenuViewModelProvider.notifier).changeTab(0);
+        }),
         title: const Text('IPA'),
         bottom: TabBar(
           controller: _tabController,
           tabs: [
             Tab(
-              text: 'Vowels',
+              text: AppLocalizations.of(context)!.vowels,
             ),
             Tab(
-              text: 'Consonants',
+              text: AppLocalizations.of(context)!.consonants,
             ),
           ],
         ),

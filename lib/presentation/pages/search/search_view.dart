@@ -1,15 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
+import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/search/search_state.dart';
 import 'package:speak_up/presentation/pages/search/search_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final searchViewModelProvider =
@@ -42,14 +45,21 @@ class _SearchViewState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(searchViewModelProvider);
-    return SafeArea(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        leading: AppBackButton(
+          onPressed: () {
+            ref.read(mainMenuViewModelProvider.notifier).changeTab(0);
+          },
+        ),
+        title: Text(
+          AppLocalizations.of(context)!.dictionary,
+        ),
+      ),
+      body: Column(
         children: [
-          const SizedBox(
-            height: 32,
-          ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -80,8 +90,8 @@ class _SearchViewState extends ConsumerState<SearchView> {
                             .fetchSuggestionList(value);
                       });
                     },
-                    decoration: const InputDecoration(
-                      hintText: 'Search',
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.search,
                       border: InputBorder.none,
                     ),
                   ),
@@ -129,15 +139,16 @@ class _SearchViewState extends ConsumerState<SearchView> {
                         );
                       }))
               : state.loadingStatus == LoadingStatus.initial
-                  ? const Expanded(
+                  ? Expanded(
                       child: Center(
-                      child: Text('Search for a word'),
+                      child: Text(AppLocalizations.of(context)!.searchForAWord),
                     ))
                   : state.loadingStatus == LoadingStatus.loading
                       ? const Expanded(child: AppLoadingIndicator())
-                      : const Expanded(
+                      : Expanded(
                           child: Center(
-                          child: Text('Error'),
+                          child: Text(
+                              AppLocalizations.of(context)!.somethingWentWrong),
                         )),
         ],
       ),

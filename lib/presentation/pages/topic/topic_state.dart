@@ -10,5 +10,7 @@ class TopicState with _$TopicState {
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default([]) List<Sentence> sentences,
     @Default([]) List<bool> isExpandedTranslations,
+    @Default(0) int currentPlayingIndex,
+    @Default(false) bool isPlayingPlaylist,
   }) = _TopicState;
 }

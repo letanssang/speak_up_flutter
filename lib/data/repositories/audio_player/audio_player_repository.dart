@@ -43,6 +43,12 @@ class AudioPlayerRepository {
     }
   }
 
+  Future<void> pauseAudio() async {
+    if (_audioPlayer.state == PlayerState.playing) {
+      _audioPlayer.pause();
+    }
+  }
+
   Future<void> stopAudio() async {
     if (_audioPlayer.state == PlayerState.playing) {
       _audioPlayer.stop();
