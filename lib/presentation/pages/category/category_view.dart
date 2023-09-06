@@ -12,9 +12,11 @@ import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/category/category_state.dart';
 import 'package:speak_up/presentation/pages/category/category_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
+import 'package:speak_up/presentation/utilities/constant/category_icon_list.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final categoryViewModelProvider =
@@ -58,9 +60,6 @@ class _CategoryViewState extends ConsumerState<CategoryView>
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: language == Language.english
-            ? Text(category.name)
-            : Text(category.translation),
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? buildBodySuccess(state.topics, isDarkTheme, language)
@@ -75,24 +74,35 @@ class _CategoryViewState extends ConsumerState<CategoryView>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(32),
-          ),
-          child: Image.asset(
-            'assets/images/temp_topic.png',
-            width: double.infinity,
-            height: ScreenUtil().screenHeight * 0.3,
-            fit: BoxFit.cover,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: categoryImageList[category.categoryID - 1],
+            ),
+            Column(
+              children: [
+                Text(category.name,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    )),
+                Text(category.translation,
+                    style: const TextStyle(
+                      fontSize: 18,
+                    )),
+              ],
+            )
+          ],
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Text(category.name,
-              style: const TextStyle(
-                fontSize: 24,
+          padding: const EdgeInsets.all(16.0),
+          child: Text('Topic:',
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(18),
                 fontWeight: FontWeight.bold,
+                color: isDarkTheme ? Colors.white : Colors.black,
               )),
         ),
         Flexible(
@@ -156,8 +166,6 @@ class _CategoryViewState extends ConsumerState<CategoryView>
   }
 
   Widget buildBodyError() {
-    return const Center(
-      child: Text('Something went wrong!'),
-    );
+    return const AppErrorView();
   }
 }

@@ -11,8 +11,10 @@ import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/search/search_state.dart';
 import 'package:speak_up/presentation/pages/search/search_view_model.dart';
+import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final searchViewModelProvider =
@@ -141,15 +143,25 @@ class _SearchViewState extends ConsumerState<SearchView> {
               : state.loadingStatus == LoadingStatus.initial
                   ? Expanded(
                       child: Center(
-                      child: Text(AppLocalizations.of(context)!.searchForAWord),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AppImages.searchSomething(
+                            width: ScreenUtil().screenWidth * 0.5,
+                            height: ScreenUtil().screenWidth * 0.5,
+                          ),
+                          const SizedBox(height: 32),
+                          Text(AppLocalizations.of(context)!.searchForAWord,
+                              style: TextStyle(
+                                fontSize: ScreenUtil().setSp(16),
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ],
+                      ),
                     ))
                   : state.loadingStatus == LoadingStatus.loading
                       ? const Expanded(child: AppLoadingIndicator())
-                      : Expanded(
-                          child: Center(
-                          child: Text(
-                              AppLocalizations.of(context)!.somethingWentWrong),
-                        )),
+                      : const Expanded(child: AppErrorView()),
         ],
       ),
     );

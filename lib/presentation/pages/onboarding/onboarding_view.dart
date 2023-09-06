@@ -40,8 +40,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
       body: Center(
           child: Column(
         children: [
-          Flexible(
-              child: Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
@@ -69,12 +68,15 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(language.toLanguageShortString(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                          )),
-                      SizedBox(
-                        width: ScreenUtil().setWidth(8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        child: Text(language.toLanguageShortString(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
                       ),
                       language.getFlag(),
                     ],
@@ -82,9 +84,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 ),
               )
             ],
-          )),
-          Expanded(
-            flex: 3,
+          ),
+          SizedBox(
+            height: ScreenUtil().screenHeight * 0.5,
             child: PageView.builder(
                 itemCount: 3,
                 controller: _pageController,
@@ -94,6 +96,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                       getSplashTitle(index, context),
                       getSplashSubtitle(index, context));
                 }),
+          ),
+          Flexible(
+            child: Container(),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -129,9 +134,11 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   Column buildPageViewItem(int index, String title, String subTitle) {
     return Column(
       children: [
-        AppImages.onboarding(
-          index,
-          width: ScreenUtil().screenWidth * 0.8,
+        Expanded(
+          child: AppImages.onboarding(
+            index,
+            width: ScreenUtil().screenWidth * 0.7,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

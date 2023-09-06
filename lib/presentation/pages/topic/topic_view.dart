@@ -225,7 +225,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                         onTap: onTapSpeaker,
                         child: Icon(
                           Icons.volume_up,
-                          size: 20,
+                          size: 24,
                           color: isExpandedTranslation
                               ? Colors.grey[800]
                               : Colors.grey,
@@ -238,7 +238,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                         onTap: onTapTranslation,
                         child: Icon(
                           Icons.translate,
-                          size: 20,
+                          size: 24,
                           color: isExpandedTranslation
                               ? Colors.grey[800]
                               : Colors.grey,
@@ -327,7 +327,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                         onTap: onTapSpeaker,
                         child: Icon(
                           Icons.volume_up,
-                          size: 20,
+                          size: 24,
                           color: Colors.grey[400],
                         ),
                       ),
@@ -338,7 +338,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                         onTap: onTapTranslation,
                         child: Icon(
                           Icons.translate,
-                          size: 20,
+                          size: 24,
                           color: isExpandedTranslation
                               ? Colors.grey[400]
                               : Colors.grey,

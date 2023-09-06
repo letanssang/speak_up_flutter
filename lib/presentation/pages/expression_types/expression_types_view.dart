@@ -9,8 +9,8 @@ import 'package:speak_up/presentation/pages/expression_types/expression_types_st
 import 'package:speak_up/presentation/pages/expression_types/expression_types_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final expressionTypesViewModelProvider = StateNotifierProvider.autoDispose<
     ExpressionTypesViewModel, ExpressionTypesState>(
@@ -99,8 +99,7 @@ class _ExpressionTypesViewState extends ConsumerState<ExpressionTypesView> {
           },
         );
       case LoadingStatus.error:
-        return Center(
-            child: Text(AppLocalizations.of(context)!.somethingWentWrong));
+        return const AppErrorView();
       default:
         return const Center(child: AppLoadingIndicator());
     }

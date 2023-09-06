@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 
-List<Widget> images = [
+List<Widget> categoryImageList = [
   AppImages.activeLifestyle(),
   AppImages.art(),
   AppImages.business(),

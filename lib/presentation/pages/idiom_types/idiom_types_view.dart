@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
@@ -15,6 +14,7 @@ import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/learning_mode_bottom_sheet.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final idiomTypesViewModelProvider =
@@ -125,8 +125,7 @@ class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
           },
         );
       case LoadingStatus.error:
-        return Center(
-            child: Text(AppLocalizations.of(context)!.somethingWentWrong));
+        return const AppErrorView();
       default:
         return const Center(child: AppLoadingIndicator());
     }

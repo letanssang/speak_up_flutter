@@ -250,6 +250,13 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                                 .read(appNavigatorProvider)
                                 .navigateTo(AppRoutes.about);
                           }),
+                          buildListTile(
+                            AppIcons.logout(size: 46),
+                            AppLocalizations.of(context)!.logOut,
+                            onTap: () async {
+                              await _buildLogoutDialogBuilder(context);
+                            },
+                          ),
                         ],
                       ),
                     )

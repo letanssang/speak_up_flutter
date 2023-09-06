@@ -64,7 +64,10 @@ class _SavedViewState extends ConsumerState<SavedView>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AppImages.nothingHere(),
+          AppImages.noData(
+            width: ScreenUtil().screenWidth * 0.5,
+            height: ScreenUtil().screenWidth * 0.5,
+          ),
           const SizedBox(
             height: 32,
           ),

@@ -7,6 +7,61 @@ class AppImages {
   static const _logoImagesPath = 'assets/images/logos';
   static const _categoriesImagesPath = 'assets/images/categories';
 
+  static Widget signIn({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/sign_in.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
+  static Widget signUp({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/sign_up.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
+  static Widget signInEmail({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/sign_in_email.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
+  static Widget error({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/error.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
+  static Widget searchSomething(
+      {double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/search_something.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
+  static Widget noData({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/no_data.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
   static Widget googleLogo({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_logoImagesPath/google.png',
@@ -19,6 +74,15 @@ class AppImages {
   static Widget usFlag({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_logoImagesPath/us.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
+  static Widget developer({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/developer.png',
       width: width,
       height: height,
       fit: boxFit,
@@ -65,15 +129,6 @@ class AppImages {
       {double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_imagesPath/onboarding$index.png',
-      width: width,
-      height: height,
-      fit: boxFit,
-    );
-  }
-
-  static Widget nothingHere({double? width, double? height, BoxFit? boxFit}) {
-    return Image.asset(
-      '$_imagesPath/nothing_here.png',
       width: width,
       height: height,
       fit: boxFit,

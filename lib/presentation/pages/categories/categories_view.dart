@@ -30,7 +30,7 @@ class CategoriesView extends ConsumerWidget {
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
           ),
-          itemCount: images.length,
+          itemCount: categoryImageList.length,
           itemBuilder: (BuildContext context, int index) {
             return buildCategoryCard(index, ref, categories[index]);
           },
@@ -55,7 +55,7 @@ class CategoriesView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            images[index],
+            categoryImageList[index],
             const SizedBox(height: 8),
             Text(
               textAlign: TextAlign.center,

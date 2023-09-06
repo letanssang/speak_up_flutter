@@ -8,6 +8,7 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_state.dart';
 import 'package:speak_up/presentation/pages/sign_in_email/sign_in_email_view_model.dart';
+import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
 import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
@@ -78,6 +79,7 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
     addFetchDataListener();
     addErrorMessageListener(context);
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           leading: const AppBackButton(),
         ),
@@ -89,15 +91,24 @@ class _SignInEmailViewState extends ConsumerState<SignInEmailView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        AppLocalizations.of(context)!.signInWithYourEmail,
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(24),
-                          fontWeight: FontWeight.bold,
+                    AppImages.signInEmail(
+                        width: ScreenUtil().screenWidth * 0.4,
+                        boxFit: BoxFit.fitWidth),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 30),
+                          child: Text(
+                            AppLocalizations.of(context)!.signInWithYourEmail,
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(24),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                     CustomTextField(
                       aboveText: AppLocalizations.of(context)!.emailAddress,

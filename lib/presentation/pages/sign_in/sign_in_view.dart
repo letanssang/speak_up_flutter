@@ -68,13 +68,17 @@ class SignInView extends ConsumerWidget {
                   child: Center(
                     child: Text(
                       textAlign: TextAlign.center,
-                      AppLocalizations.of(context)!.welcomeSignIn,
+                      AppLocalizations.of(context)!.welcome,
                       style: TextStyle(
                         fontSize: ScreenUtil().setSp(28),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
+                ),
+                AppImages.signIn(
+                  width: ScreenUtil().screenWidth * 0.5,
+                  height: ScreenUtil().screenWidth * 0.5,
                 ),
                 CustomButton(
                   text: AppLocalizations.of(context)!.continueWithGoogle,

@@ -62,6 +62,17 @@ class AppIcons {
     );
   }
 
+  static Widget logout({
+    Color? color,
+    double? size,
+  }) {
+    return SvgIcon.from(
+      '$_iconsPath/logout.svg',
+      color: color,
+      size: size,
+    );
+  }
+
   static Widget avatar({
     Color? color,
     double? size,

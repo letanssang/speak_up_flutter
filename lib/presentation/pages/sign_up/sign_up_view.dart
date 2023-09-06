@@ -11,6 +11,7 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_state.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_view_model.dart';
+import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/validator_type.dart';
 import 'package:speak_up/presentation/utilities/error/app_error_message.dart';
@@ -98,6 +99,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
     addFetchingListener(context);
     addErrorMessageListener(context);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: const AppBackButton(),
       ),
@@ -105,17 +107,28 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: EdgeInsets.all(ScreenUtil().setWidth(20)),
-                child: Text(
-                  AppLocalizations.of(context)!.createYourAccount,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+              AppImages.signUp(
+                width: ScreenUtil().screenWidth * 0.4,
+                boxFit: BoxFit.fitWidth,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 16),
+                    child: Text(
+                      textAlign: TextAlign.left,
+                      AppLocalizations.of(context)!.createYourAccount,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
               CustomTextField(
                 hintText: AppLocalizations.of(context)!.enterYourName,

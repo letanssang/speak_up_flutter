@@ -12,8 +12,8 @@ import 'package:speak_up/presentation/pages/phrasal_verb_types/phrasal_verb_type
 import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final phrasalVerbTypesViewModelProvider = StateNotifierProvider.autoDispose<
     PhrasalVerbTypesViewModel, PhrasalVerbTypesState>(
@@ -98,8 +98,7 @@ class _PhrasalVerbTypesViewState extends ConsumerState<PhrasalVerbTypesView> {
           },
         );
       case LoadingStatus.error:
-        return Center(
-            child: Text(AppLocalizations.of(context)!.somethingWentWrong));
+        return const AppErrorView();
       default:
         return const Center(child: AppLoadingIndicator());
     }
