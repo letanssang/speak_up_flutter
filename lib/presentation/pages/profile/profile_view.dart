@@ -18,6 +18,7 @@ import 'package:speak_up/presentation/pages/profile/profile_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final profileViewModelProvider =
@@ -138,7 +139,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
         appBar: AppBar(
-          leading: BackButton(
+          leading: AppBackButton(
             onPressed: () {
               ref.read(mainMenuViewModelProvider.notifier).changeTab(0);
             },

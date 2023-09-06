@@ -77,14 +77,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homeViewModelProvider);
-    return SizedBox(
-      width: ScreenUtil().screenWidth,
+    return SafeArea(
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: ScreenUtil().statusBarHeight,
-            ),
             buildAppBar(),
             buildCurrentCourses(),
             buildCategories(state),
@@ -153,14 +149,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget buildExploreItem(Lesson lesson) {
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
-    return SizedBox(
-      width: ScreenUtil().screenWidth * 0.45,
-      child: InkWell(
-        onTap: () {
-          ref
-              .read(appNavigatorProvider)
-              .navigateTo(AppRoutes.lesson, arguments: lesson);
-        },
+    return InkWell(
+      onTap: () {
+        ref
+            .read(appNavigatorProvider)
+            .navigateTo(AppRoutes.lesson, arguments: lesson);
+      },
+      child: SizedBox(
+        width: ScreenUtil().screenWidth * 0.45,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -179,14 +175,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   ),
                   child: AspectRatio(
                     aspectRatio: 1.2,
-                    child: Container(
-                      decoration: BoxDecoration(
+                    child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(lesson.imageURL)),
-                      ),
-                    ),
+                        child:
+                            Image.network(lesson.imageURL, fit: BoxFit.cover)),
                   ),
                 ),
               ),
@@ -216,13 +208,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Row buildAppBar() {
+  Widget buildAppBar() {
     final user = FirebaseAuth.instance.currentUser!;
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: InkWell(
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+      child: Row(
+        children: [
+          InkWell(
             onTap: () {
               ref.read(appNavigatorProvider).navigateTo(
                     AppRoutes.editProfile,
@@ -237,24 +229,24 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ),
             ),
           ),
-        ),
-        Text(
-          'Hi ${user.displayName}',
-          style: TextStyle(
-            fontSize: ScreenUtil().setSp(20),
-            fontWeight: FontWeight.bold,
+          const SizedBox(
+            width: 16,
           ),
-        ),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
+          Text(
+            'Hi ${user.displayName}',
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(20),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Spacer(),
+          IconButton(
             onPressed: null,
             icon: Icon(Icons.notifications_outlined,
                 color: Theme.of(context).iconTheme.color),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 
@@ -303,7 +295,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget buildCategories(HomeState state) {
     final categories = state.categories;
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -313,7 +305,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   AppLocalizations.of(context)!.categories,
                   style: TextStyle(
@@ -380,24 +372,24 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget buildCategoryItem(Category category, int index) {
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.black54),
-        color: isDarkTheme ? const Color(0xFF605F5F) : Colors.white,
-      ),
-      child: InkWell(
-        onTap: () {
-          ref
-              .read(appNavigatorProvider)
-              .navigateTo(AppRoutes.category, arguments: category);
-        },
+    return GestureDetector(
+      onTap: () {
+        ref
+            .read(appNavigatorProvider)
+            .navigateTo(AppRoutes.category, arguments: category);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          border: Border.all(color: Colors.black54),
+          color: isDarkTheme ? const Color(0xFF605F5F) : Colors.white,
+        ),
         child: Row(
           children: [
             isDarkTheme ? categoryDarkIcons[index] : categoryIcons[index],
-            SizedBox(
+            const SizedBox(
               width: 3,
             ),
             Text(
@@ -440,50 +432,51 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        ref.read(appNavigatorProvider).navigateTo(
-                            AppRoutes.reels,
-                            arguments: state.youtubeVideoLists[index]);
-                      },
-                      child: AspectRatio(
-                        aspectRatio: 0.65,
-                        child: Stack(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 4, vertical: 8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.black54),
-                                image: DecorationImage(
-                                  image: NetworkImage(getBestThumbnailUrl(state
-                                      .youtubeVideoLists[index]
-                                      .first
-                                      .thumbnails)),
-                                  fit: BoxFit.cover,
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 8),
+                      child: GestureDetector(
+                        onTap: () {
+                          ref.read(appNavigatorProvider).navigateTo(
+                              AppRoutes.reels,
+                              arguments: state.youtubeVideoLists[index]);
+                        },
+                        child: AspectRatio(
+                          aspectRatio: 0.65,
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.black54),
+                                  image: DecorationImage(
+                                    image: NetworkImage(getBestThumbnailUrl(
+                                        state.youtubeVideoLists[index].first
+                                            .thumbnails)),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              bottom:
-                                  12, // Adjust the position of the text as needed
-                              left:
-                                  16, // Adjust the position of the text as needed
-                              right: 16,
-                              child: Text(
-                                state.youtubeVideoLists[index].first.title ??
-                                    '',
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
+                              Positioned(
+                                bottom:
+                                    12, // Adjust the position of the text as needed
+                                left:
+                                    16, // Adjust the position of the text as needed
+                                right: 16,
+                                child: Text(
+                                  state.youtubeVideoLists[index].first.title ??
+                                      '',
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: ScreenUtil().setSp(12),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );

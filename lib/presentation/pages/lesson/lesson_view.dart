@@ -11,6 +11,7 @@ import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson
 import 'package:speak_up/presentation/pages/phrasal_verb_types/phrasal_verb_types_view.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
+import 'package:speak_up/presentation/widgets/tab_bars/app_tab_bar.dart';
 
 class LessonView extends ConsumerStatefulWidget {
   const LessonView({super.key});
@@ -32,6 +33,12 @@ class _LessonViewState extends ConsumerState<LessonView>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     lesson = ModalRoute.of(context)!.settings.arguments as Lesson;
     final isDarkTheme = ref.watch(themeProvider);
@@ -39,31 +46,30 @@ class _LessonViewState extends ConsumerState<LessonView>
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: Text(
-          language == Language.english ? lesson.name : lesson.translation,
-        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
-                'assets/images/temp_topic.png',
-                width: ScreenUtil().screenWidth,
-                height: ScreenUtil().screenWidth * 0.6,
-                fit: BoxFit.cover,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(
+                  lesson.imageURL,
+                  width: ScreenUtil().screenWidth * 0.9,
+                  height: ScreenUtil().screenWidth * 0.5,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16, left: 16),
             child: Text(lesson.name,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontSize: ScreenUtil().setSp(26),
+                  fontSize: ScreenUtil().setSp(24),
                   fontWeight: FontWeight.bold,
                 )),
           ),
@@ -77,34 +83,10 @@ class _LessonViewState extends ConsumerState<LessonView>
                   color: Theme.of(context).primaryColor,
                 )),
           ),
-          Container(
-            height: 50,
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey[350]),
-            child: TabBar(
-              controller: _tabController,
-              indicator: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: EdgeInsets.zero,
-              indicatorColor: Colors.transparent,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.black,
-              tabs: [
-                Tab(
-                  icon: Text(
-                    AppLocalizations.of(context)!.about,
-                  ),
-                ),
-                Tab(
-                  icon: Text(AppLocalizations.of(context)!.lesson),
-                ),
-              ],
-            ),
+          AppTabBar(
+            tabController: _tabController,
+            titleTab1: AppLocalizations.of(context)!.about,
+            titleTab2: AppLocalizations.of(context)!.lesson,
           ),
           Flexible(
             fit: FlexFit.loose,

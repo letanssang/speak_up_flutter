@@ -123,42 +123,44 @@ class _IpaViewState extends ConsumerState<IpaView>
   }
 
   Widget buildPhoneticCard(Phonetic phonetic) {
-    return InkWell(
-      onTap: () {
-        ref.read(appNavigatorProvider).navigateTo(
-              AppRoutes.phonetic,
-              arguments: phonetic,
-            );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0),
-          border: Border.all(
-            color: Theme.of(context).primaryColor,
-            width: 1,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.phonetic,
+                arguments: phonetic,
+              );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.0),
+            border: Border.all(
+              color: Theme.of(context).primaryColor,
+              width: 1,
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Text(
-              phonetic.phonetic,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: ScreenUtil().setSp(24),
-                color: Theme.of(context).primaryColor,
+          child: Column(
+            children: [
+              Text(
+                phonetic.phonetic,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: ScreenUtil().setSp(24),
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
-            ),
-            Text(
-              phonetic.example.entries.first.key,
-            ),
-            AppLinearPercentIndicator(
-              percent: 0.2,
-              lineHeight: ScreenUtil().setHeight(6),
-              progressColor: Theme.of(context).primaryColor,
-              padding: const EdgeInsets.only(top: 8),
-            ),
-          ],
+              Text(
+                phonetic.example.entries.first.key,
+              ),
+              AppLinearPercentIndicator(
+                percent: 0.2,
+                lineHeight: ScreenUtil().setHeight(6),
+                progressColor: Theme.of(context).primaryColor,
+                padding: const EdgeInsets.only(top: 8),
+              ),
+            ],
+          ),
         ),
       ),
     );

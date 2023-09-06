@@ -32,15 +32,15 @@ class _LessonsViewState extends ConsumerState<LessonsView> {
       body: ListView.builder(
         itemCount: lessons.length,
         itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              ref.read(appNavigatorProvider).navigateTo(
-                    AppRoutes.lesson,
-                    arguments: lessons[index],
-                  );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: InkWell(
+              onTap: () {
+                ref.read(appNavigatorProvider).navigateTo(
+                      AppRoutes.lesson,
+                      arguments: lessons[index],
+                    );
+              },
               child: Card(
                 elevation: 5,
                 color: isDarkTheme ? Colors.grey[850] : Colors.white,
