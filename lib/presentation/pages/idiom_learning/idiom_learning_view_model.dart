@@ -8,8 +8,9 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/update_idiom_process_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/update_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -31,7 +32,8 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   final StopRecordingUseCase _stopRecordingUseCase;
   final GetTextFromSpeechUseCase _getTextFromSpeechUseCase;
   final SpeakFromTextUseCase _speakingFromTextUseCase;
-  final UpdateIdiomProcessUseCase _updateIdiomProcessUseCase;
+  final UpdateIdiomProgressUseCase _updateIdiomProgressUseCase;
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
 
   IdiomLearningViewModel(
     this._getSentenceListFromIdiomUseCase,
@@ -44,7 +46,8 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     this._stopRecordingUseCase,
     this._getTextFromSpeechUseCase,
     this._speakingFromTextUseCase,
-    this._updateIdiomProcessUseCase,
+    this._updateIdiomProgressUseCase,
+    this._getCurrentUserUseCase,
   ) : super(IdiomLearningState(
           idiom: Idiom.initial(),
         ));
@@ -136,13 +139,13 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     await _speakingFromTextUseCase.run(text);
   }
 
-  Future<void> updateIdiomProcess() async {
-    LectureProcess process = LectureProcess(
-      lectureID: state.idiom.idiomID,
-      process: 2,
-      uid: 'uid',
-      processID: 0,
+  Future<void> updateIdiomProgress(int process) async {
+    final uid = _getCurrentUserUseCase.run().uid;
+    LectureProcess lectureProcess = LectureProcess(
+      lectureID: state.idiom.idiomTypeId,
+      progress: process + 1,
+      uid: uid,
     );
-    await _updateIdiomProcessUseCase.run(process);
+    await _updateIdiomProgressUseCase.run(lectureProcess);
   }
 }

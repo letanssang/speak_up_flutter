@@ -45,6 +45,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_category_list_use_case
 import 'package:speak_up/domain/use_cases/cloud_store/get_expression_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_expression_type_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_type_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_lesson_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_phonetic_list_use_case.dart';
@@ -57,7 +58,7 @@ import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_
 import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_youtube_playlist_id_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/update_idiom_process_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/update_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_detail_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
@@ -371,7 +372,11 @@ class AppModules {
         () => GetYoutubePlaylistByIdUseCase());
 
     //Update Idiom Process Use Case
-    injector.registerLazySingleton<UpdateIdiomProcessUseCase>(
-        () => UpdateIdiomProcessUseCase());
+    injector.registerLazySingleton<UpdateIdiomProgressUseCase>(
+        () => UpdateIdiomProgressUseCase());
+
+    // Get Idiom Progress Use Case
+    injector.registerLazySingleton<GetIdiomProgressUseCase>(
+        () => GetIdiomProgressUseCase());
   }
 }

@@ -284,17 +284,17 @@ class FirestoreRepository {
     return youtubePlaylistIDs;
   }
 
-  Future<void> updateIdiomProcess(LectureProcess process) async {
+  Future<void> updateIdiomProgress(LectureProcess process) async {
     final snapshot = await _firestore
         .collection('idiom_process')
-        .where('IdiomProcessID', isEqualTo: process.processID)
+        .where('IdiomTypeID', isEqualTo: process.lectureID)
+        .where('UserID', isEqualTo: process.uid)
         .get();
     //check if idiom process exists
     if (snapshot.docs.isEmpty) {
       //if not exists, create new idiom process
       await _firestore.collection('idiom_process').add({
-        'IdiomProcessID': process.processID,
-        'Process': process.process,
+        'Progress': process.progress,
         'IdiomTypeID': process.lectureID,
         'UserID': process.uid,
       });
@@ -303,7 +303,20 @@ class FirestoreRepository {
       await _firestore
           .collection('idiom_process')
           .doc(snapshot.docs.first.id)
-          .update({'Process': process.process});
+          .update({'Progress': process.progress});
+    }
+  }
+
+  Future<int> getIdiomProgress(int idiomTypeID, String uid) async {
+    final snapshot = await _firestore
+        .collection('idiom_process')
+        .where('IdiomTypeID', isEqualTo: idiomTypeID)
+        .where('UserID', isEqualTo: uid)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return 0;
+    } else {
+      return snapshot.docs.first['Progress'];
     }
   }
 }

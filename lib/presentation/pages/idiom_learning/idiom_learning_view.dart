@@ -10,8 +10,9 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/update_idiom_process_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/update_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -42,7 +43,8 @@ final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
       injector.get<StopRecordingUseCase>(),
       injector.get<GetTextFromSpeechUseCase>(),
       injector.get<SpeakFromTextUseCase>(),
-      injector.get<UpdateIdiomProcessUseCase>()),
+      injector.get<UpdateIdiomProgressUseCase>(),
+      injector.get<GetCurrentUserUseCase>()),
 );
 
 class IdiomLearningView extends ConsumerStatefulWidget {
@@ -55,6 +57,8 @@ class IdiomLearningView extends ConsumerStatefulWidget {
 class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   Idiom idiom = Idiom.initial();
   final _pageController = PageController(initialPage: 0);
+  int process = 0;
+  int index = 0;
 
   @override
   void initState() {
@@ -65,7 +69,13 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   }
 
   Future<void> _init() async {
-    idiom = ModalRoute.of(context)!.settings.arguments as Idiom;
+    //argument: <String, dynamic> {idiom: idiom, process: process, index: index}
+    final argument =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    idiom = argument['idiom'] as Idiom;
+    process = argument['progress'] as int;
+    index = argument['index'] as int;
+
     await ref.read(idiomLearningViewModelProvider.notifier).setIdiom(idiom);
     ref.read(idiomLearningViewModelProvider.notifier).speakFromText(idiom.name);
     await ref
@@ -160,9 +170,11 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
         builder: (BuildContext context) {
           return CompleteBottomSheet(
             onClosed: () {
-              ref
-                  .read(idiomLearningViewModelProvider.notifier)
-                  .updateIdiomProcess();
+              if (index == process) {
+                ref
+                    .read(idiomLearningViewModelProvider.notifier)
+                    .updateIdiomProgress(process);
+              }
             },
           );
         });

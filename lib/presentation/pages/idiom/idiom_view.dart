@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_progress_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_state.dart';
@@ -15,12 +17,12 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final idiomViewModelProvider =
     StateNotifierProvider.autoDispose<IdiomViewModel, IdiomState>(
   (ref) => IdiomViewModel(
     injector.get<GetIdiomListByTypeUseCase>(),
+    injector.get<GetIdiomProgressUseCase>(),
   ),
 );
 
@@ -47,6 +49,9 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
     await ref
         .read(idiomViewModelProvider.notifier)
         .fetchIdiomList(idiomType.idiomTypeID);
+    await ref
+        .read(idiomViewModelProvider.notifier)
+        .updateProgressState(idiomType.idiomTypeID);
   }
 
   @override
@@ -74,9 +79,9 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
                     leading: const SizedBox(),
                     pinned: true,
                     flexibleSpace: AppLinearPercentIndicator(
-                      percent: state.currentIdiomIndex / state.idioms.length,
+                      percent: state.progress / state.idioms.length,
                       trailing: Text(
-                        '${percentCalculate(state.currentIdiomIndex, state.idioms.length).toStringAsFixed(0)}%',
+                        '${percentCalculate(state.progress, state.idioms.length).toStringAsFixed(0)}%',
                         style: TextStyle(
                           fontSize: ScreenUtil().setSp(18),
                           color: Theme.of(context).primaryColor,
@@ -118,11 +123,18 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
   Widget buildCardItem(IdiomState state, int idiomIndex) {
     return InkWell(
       onTap: () {
-        if (idiomIndex <= state.currentIdiomIndex) {
-          ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.idiomLearning,
-                arguments: state.idioms[idiomIndex],
-              );
+        if (idiomIndex <= state.progress) {
+          ref
+              .read(appNavigatorProvider)
+              .navigateTo(AppRoutes.idiomLearning, arguments: <String, dynamic>{
+            'idiom': state.idioms[idiomIndex],
+            'progress': state.progress,
+            'index': idiomIndex,
+          }).then((_) {
+            ref
+                .read(idiomViewModelProvider.notifier)
+                .updateProgressState(idiomType.idiomTypeID);
+          });
         }
       },
       child: Container(
@@ -131,7 +143,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
         ),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: state.currentIdiomIndex >= idiomIndex
+          color: state.progress >= idiomIndex
               ? Theme.of(context).primaryColor
               : Colors.grey,
           borderRadius: BorderRadius.circular(16),
@@ -155,9 +167,9 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
                     ),
                   ),
                 ),
-                if (idiomIndex != state.currentIdiomIndex)
+                if (idiomIndex != state.progress)
                   Icon(
-                    idiomIndex > state.currentIdiomIndex
+                    idiomIndex > state.progress
                         ? Icons.lock_outline
                         : Icons.check_circle_outline,
                     color: Colors.white,
@@ -193,7 +205,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
           ),
           width: 2,
           height: 32,
-          color: index ~/ 2 < state.currentIdiomIndex + 1
+          color: index ~/ 2 < state.progress + 1
               ? Theme.of(context).primaryColor
               : Colors.grey, // Black color
         ),

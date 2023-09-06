@@ -9,6 +9,6 @@ class IdiomState with _$IdiomState {
   const factory IdiomState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default([]) List<Idiom> idioms,
-    @Default(2) int currentIdiomIndex,
+    @Default(0) int progress,
   }) = _IdiomState;
 }
