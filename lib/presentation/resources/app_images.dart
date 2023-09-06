@@ -7,6 +7,15 @@ class AppImages {
   static const _logoImagesPath = 'assets/images/logos';
   static const _categoriesImagesPath = 'assets/images/categories';
 
+  static Widget congrats({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/congrats.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
+
   static Widget signIn({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_imagesPath/sign_in.png',

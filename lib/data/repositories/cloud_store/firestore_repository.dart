@@ -5,6 +5,7 @@ import 'package:speak_up/domain/entities/expression/expression.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
 import 'package:speak_up/domain/entities/idiom_type/idiom_type.dart';
+import 'package:speak_up/domain/entities/lecture_process/lecture_process.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
 import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
@@ -281,5 +282,28 @@ class FirestoreRepository {
       youtubePlaylistIDs.add(youtubePlaylistID);
     }
     return youtubePlaylistIDs;
+  }
+
+  Future<void> updateIdiomProcess(LectureProcess process) async {
+    final snapshot = await _firestore
+        .collection('idiom_process')
+        .where('IdiomProcessID', isEqualTo: process.processID)
+        .get();
+    //check if idiom process exists
+    if (snapshot.docs.isEmpty) {
+      //if not exists, create new idiom process
+      await _firestore.collection('idiom_process').add({
+        'IdiomProcessID': process.processID,
+        'Process': process.process,
+        'IdiomTypeID': process.lectureID,
+        'UserID': process.uid,
+      });
+    } else {
+      //if exists, update process
+      await _firestore
+          .collection('idiom_process')
+          .doc(snapshot.docs.first.id)
+          .update({'Process': process.process});
+    }
   }
 }

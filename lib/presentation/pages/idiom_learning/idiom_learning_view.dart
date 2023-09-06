@@ -11,6 +11,7 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_c
 import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
+import 'package:speak_up/domain/use_cases/cloud_store/update_idiom_process_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -21,6 +22,7 @@ import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_view_m
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
@@ -39,7 +41,8 @@ final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
       injector.get<StartRecordingUseCase>(),
       injector.get<StopRecordingUseCase>(),
       injector.get<GetTextFromSpeechUseCase>(),
-      injector.get<SpeakFromTextUseCase>()),
+      injector.get<SpeakFromTextUseCase>(),
+      injector.get<UpdateIdiomProcessUseCase>()),
 );
 
 class IdiomLearningView extends ConsumerStatefulWidget {
@@ -155,37 +158,12 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Wrap(
-            children: [
-              SizedBox(
-                width: ScreenUtil().screenWidth,
-                child: Column(children: [
-                  const SizedBox(
-                    height: 32,
-                  ),
-                  Text(AppLocalizations.of(context)!.congratulations,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  CustomButton(
-                      text: AppLocalizations.of(context)!.exit,
-                      fontWeight: FontWeight.bold,
-                      textSize: 16,
-                      marginVertical: 16,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        ref.read(appNavigatorProvider).pop();
-                      }),
-                  const SizedBox(
-                    height: 32,
-                  ),
-                ]),
-              ),
-            ],
+          return CompleteBottomSheet(
+            onClosed: () {
+              ref
+                  .read(idiomLearningViewModelProvider.notifier)
+                  .updateIdiomProcess();
+            },
           );
         });
   }
