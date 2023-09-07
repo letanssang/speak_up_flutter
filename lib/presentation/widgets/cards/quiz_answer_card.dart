@@ -27,28 +27,29 @@ class QuizAnswerCard extends StatelessWidget {
         elevation: 3,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          child: Stack(
             children: [
               if (quizAnswerCardStatus == QuizAnswerCardStatus.after)
-                Icon(
-                  isCorrectAnswer
-                      ? Icons.check_circle_rounded
-                      : Icons.cancel_rounded,
-                  color: Colors.white,
-                  size: ScreenUtil().setSp(24),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Icon(
+                    isCorrectAnswer
+                        ? Icons.check_circle_rounded
+                        : Icons.cancel_rounded,
+                    color: Colors.white,
+                    size: ScreenUtil().setSp(24),
+                  ),
                 ),
-              Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Text(
-                      answer,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: ScreenUtil().setSp(14),
-                        fontWeight: FontWeight.bold,
-                      ),
+              Center(
+                child: SingleChildScrollView(
+                  child: Text(
+                    answer,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: ScreenUtil().setSp(14),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

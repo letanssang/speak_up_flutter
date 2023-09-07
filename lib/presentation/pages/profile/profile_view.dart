@@ -157,111 +157,102 @@ class ProfileViewState extends ConsumerState<ProfileView> {
         body: Stack(
           children: [
             SingleChildScrollView(
-              child: SizedBox(
-                height: ScreenUtil().screenHeight * 0.9,
-                width: ScreenUtil().screenWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: CircleAvatar(
-                              radius: 32,
-                              child: ClipOval(
-                                child: user!.photoURL != null
-                                    ? Image.network(user.photoURL!)
-                                    : AppImages.avatar(),
-                              ),
-                            ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: CircleAvatar(
+                          radius: 32,
+                          child: ClipOval(
+                            child: user!.photoURL != null
+                                ? Image.network(user.photoURL!)
+                                : AppImages.avatar(),
                           ),
-                          Text(
-                            user.displayName ?? '',
-                            style: TextStyle(
-                              fontSize: ScreenUtil().setSp(24.0),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Flexible(
-                      flex: 3,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          buildListTile(AppIcons.avatar(size: 48),
-                              AppLocalizations.of(context)!.editProfile,
-                              onTap: () {
-                            ref
-                                .read(appNavigatorProvider)
-                                .navigateTo(AppRoutes.editProfile);
-                          }),
-                          if (user.providerData[0].providerId == 'password')
-                            buildListTile(AppIcons.changePassword(size: 48),
-                                AppLocalizations.of(context)!.changePassword,
-                                onTap: () {
+                      Text(
+                        user.displayName ?? '',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(24.0),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      buildListTile(AppIcons.avatar(size: 48),
+                          AppLocalizations.of(context)!.editProfile, onTap: () {
+                        ref
+                            .read(appNavigatorProvider)
+                            .navigateTo(AppRoutes.editProfile);
+                      }),
+                      if (user.providerData[0].providerId == 'password')
+                        buildListTile(AppIcons.changePassword(size: 48),
+                            AppLocalizations.of(context)!.changePassword,
+                            onTap: () {
+                          ref
+                              .read(appNavigatorProvider)
+                              .navigateTo(AppRoutes.changePassword);
+                        }),
+                      buildListTile(AppIcons.notification(size: 48),
+                          AppLocalizations.of(context)!.notification,
+                          trailing: Switch(
+                            value: state.enableNotification,
+                            onChanged: (value) {
                               ref
-                                  .read(appNavigatorProvider)
-                                  .navigateTo(AppRoutes.changePassword);
-                            }),
-                          buildListTile(AppIcons.notification(size: 48),
-                              AppLocalizations.of(context)!.notification,
-                              trailing: Switch(
-                                value: state.enableNotification,
-                                onChanged: (value) {
-                                  ref
-                                      .read(profileViewModelProvider.notifier)
-                                      .switchNotification(value);
-                                },
-                              )),
-                          buildListTile(AppIcons.darkMode(size: 48),
-                              AppLocalizations.of(context)!.darkMode,
-                              trailing: Switch(
-                                value: state.isDarkMode,
-                                onChanged: (value) {
-                                  ref
-                                      .read(profileViewModelProvider.notifier)
-                                      .changeThemeData(value);
-                                  ref.read(themeProvider.notifier).state =
-                                      value;
-                                },
-                              )),
-                          buildListTile(
-                            AppIcons.changeLanguage(size: 48),
-                            AppLocalizations.of(context)!.language,
-                            trailing: ref.watch(appLanguageProvider) ==
-                                    Language.english
+                                  .read(profileViewModelProvider.notifier)
+                                  .switchNotification(value);
+                            },
+                          )),
+                      buildListTile(AppIcons.darkMode(size: 48),
+                          AppLocalizations.of(context)!.darkMode,
+                          trailing: Switch(
+                            value: state.isDarkMode,
+                            onChanged: (value) {
+                              ref
+                                  .read(profileViewModelProvider.notifier)
+                                  .changeThemeData(value);
+                              ref.read(themeProvider.notifier).state = value;
+                            },
+                          )),
+                      buildListTile(
+                        AppIcons.changeLanguage(size: 48),
+                        AppLocalizations.of(context)!.language,
+                        trailing:
+                            ref.watch(appLanguageProvider) == Language.english
                                 ? AppImages.usFlag()
                                 : AppImages.vnFlag(),
-                            onTap: () {
-                              _onTapChangeLanguage(ref);
-                              injector.get<SaveAppLanguageUseCase>().run(
-                                  ref.read(appLanguageProvider.notifier).state);
-                            },
-                          ),
-                          buildListTile(AppIcons.about(size: 48),
-                              AppLocalizations.of(context)!.about, onTap: () {
-                            ref
-                                .read(appNavigatorProvider)
-                                .navigateTo(AppRoutes.about);
-                          }),
-                          buildListTile(
-                            AppIcons.logout(size: 46),
-                            AppLocalizations.of(context)!.logOut,
-                            onTap: () async {
-                              await _buildLogoutDialogBuilder(context);
-                            },
-                          ),
-                        ],
+                        onTap: () {
+                          _onTapChangeLanguage(ref);
+                          injector.get<SaveAppLanguageUseCase>().run(
+                              ref.read(appLanguageProvider.notifier).state);
+                        },
                       ),
-                    )
-                  ],
-                ),
+                      buildListTile(AppIcons.about(size: 48),
+                          AppLocalizations.of(context)!.about, onTap: () {
+                        ref
+                            .read(appNavigatorProvider)
+                            .navigateTo(AppRoutes.about);
+                      }),
+                      buildListTile(
+                        AppIcons.logout(size: 46),
+                        AppLocalizations.of(context)!.logOut,
+                        onTap: () async {
+                          await _buildLogoutDialogBuilder(context);
+                        },
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
             if (state.isSigningOut) const AppLoadingIndicator(),

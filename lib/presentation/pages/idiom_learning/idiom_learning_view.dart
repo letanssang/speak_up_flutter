@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
@@ -18,13 +17,14 @@ import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/pages/idiom/idiom_view.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
-import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
+import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
 import 'package:speak_up/presentation/widgets/cards/flash_card_item.dart';
@@ -91,8 +91,16 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
       ref
           .read(idiomLearningViewModelProvider.notifier)
           .updateCurrentPage(state.totalPage);
+      if (index == process) {
+        ref
+            .read(idiomLearningViewModelProvider.notifier)
+            .updateIdiomProgress(process);
+        await ref
+            .read(idiomViewModelProvider.notifier)
+            .updateProgressState(process);
+      }
       Future.delayed(const Duration(milliseconds: 500), () {
-        showCompleteBottomSheet();
+        showCompleteBottomSheet(context);
       });
     } else {
       ref
@@ -111,73 +119,6 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     await ref
         .read(idiomLearningViewModelProvider.notifier)
         .playRecord(recordPath);
-  }
-
-  void showExitBottomSheet() {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Wrap(
-            children: [
-              SizedBox(
-                width: ScreenUtil().screenWidth,
-                child: Column(children: [
-                  const SizedBox(
-                    height: 32,
-                  ),
-                  Text(AppLocalizations.of(context)!.areYouSure,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  CustomButton(
-                      text: AppLocalizations.of(context)!.exit,
-                      fontWeight: FontWeight.bold,
-                      textSize: 16,
-                      marginVertical: 16,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        ref.read(appNavigatorProvider).pop();
-                        ref
-                            .read(idiomLearningViewModelProvider.notifier)
-                            .stopAudio();
-                      }),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!.cancel,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      )),
-                  const SizedBox(
-                    height: 32,
-                  ),
-                ]),
-              ),
-            ],
-          );
-        });
-  }
-
-  void showCompleteBottomSheet() {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return CompleteBottomSheet(
-            onClosed: () {
-              if (index == process) {
-                ref
-                    .read(idiomLearningViewModelProvider.notifier)
-                    .updateIdiomProgress(process);
-              }
-            },
-          );
-        });
   }
 
   Future<void> onRecordButtonTap() async {
@@ -201,7 +142,9 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: showExitBottomSheet,
+          onPressed: () {
+            showExitBottomSheet(context);
+          },
           icon: const Icon(
             Icons.close_outlined,
             size: 32,
@@ -278,7 +221,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           child: Text(
             sentence.text,
             style: TextStyle(
-              fontSize: ScreenUtil().setSp(24),
+              fontSize: ScreenUtil().setSp(20),
             ),
           ),
         ),

@@ -9,8 +9,8 @@ import 'package:speak_up/presentation/pages/quiz/quiz_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/quiz_answer_card_status.dart';
+import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/quiz_result_bottom_sheet.dart';
-import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/cards/quiz_answer_card.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
@@ -104,7 +104,15 @@ class _QuizViewState extends ConsumerState<QuizView> {
     showQuizResultBottomSheet();
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBackButton(),
+        leading: IconButton(
+          onPressed: () {
+            showExitBottomSheet(context);
+          },
+          icon: const Icon(
+            Icons.close_outlined,
+            size: 32,
+          ),
+        ),
         title: AppLinearPercentIndicator(
           percent: state.loadingStatus == LoadingStatus.success
               ? state.currentIndex / state.quizzes.length

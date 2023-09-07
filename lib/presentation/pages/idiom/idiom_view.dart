@@ -143,9 +143,17 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
         ),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: state.progress >= idiomIndex
-              ? Theme.of(context).primaryColor
-              : Colors.grey,
+          border: state.progress == idiomIndex
+              ? Border.all(
+                  color: Colors.grey,
+                  width: 2,
+                )
+              : null,
+          color: state.progress > idiomIndex
+              ? const Color(0XFF6B3D90)
+              : state.progress == idiomIndex
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -255,7 +263,9 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
             height: 16,
           ),
           Text(
-            '${state.idioms.length} ${AppLocalizations.of(context)!.daysCompleted}',
+            state.progress == state.idioms.length
+                ? AppLocalizations.of(context)!.completed
+                : '${state.idioms.length} ${AppLocalizations.of(context)!.daysCompleted}',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: ScreenUtil().setSp(16),
