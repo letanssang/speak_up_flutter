@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
@@ -32,6 +34,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
     _youtubePlayerController = YoutubePlayerController(
       initialVideoId: phonetic.youtubeVideoId,
       flags: const YoutubePlayerFlags(
+          hideThumbnail: true,
           autoPlay: true,
           captionLanguage: 'vi',
           enableCaption: true,
@@ -121,14 +124,14 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                         children: [
                           Text(
                             '${entry.key}: ',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             entry.value,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -137,7 +140,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16.0,
                   ),
                   Padding(
@@ -167,6 +170,12 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                   Flexible(child: Container()),
                   SafeArea(
                     child: CustomButton(
+                      onTap: () {
+                        _youtubePlayerController?.pause();
+                        ref.read(appNavigatorProvider).navigateTo(
+                            AppRoutes.pronunciation,
+                            arguments: phonetic.example);
+                      },
                       text: 'Practice now',
                     ),
                   ),

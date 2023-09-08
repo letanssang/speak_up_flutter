@@ -237,8 +237,8 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
         ),
         Flexible(child: Container()),
         buildBottomMenu(buttonState),
-        SizedBox(
-          height: ScreenUtil().setHeight(64),
+        const SizedBox(
+          height: 64,
         ),
       ],
     );
@@ -267,8 +267,8 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           ),
           Flexible(child: Container()),
           buildBottomMenu(state.recordButtonState),
-          SizedBox(
-            height: ScreenUtil().setHeight(64),
+          const SizedBox(
+            height: 64,
           ),
         ],
       ),
