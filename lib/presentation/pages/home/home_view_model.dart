@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_category_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_lesson_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_lesson_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/youtube/get_youtube_playlist_by_id_use_case.dart';
 import 'package:speak_up/presentation/pages/home/home_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
@@ -20,6 +20,8 @@ class HomeViewModel extends StateNotifier<HomeState> {
   ) : super(const HomeState());
 
   Future<void> getLessonList() async {
+    if (!mounted) return;
+
     state = state.copyWith(lessonsLoadingStatus: LoadingStatus.loading);
     try {
       final lessons = await _getLessonListUseCase.run();
@@ -34,6 +36,8 @@ class HomeViewModel extends StateNotifier<HomeState> {
   }
 
   Future<void> getCategoryList() async {
+    if (!mounted) return;
+    state = state.copyWith(categoriesLoadingStatus: LoadingStatus.loading);
     try {
       final categories = await _getCategoryListUseCase.run();
       state = state.copyWith(
@@ -47,6 +51,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
   }
 
   Future<void> getYoutubeVideoLists() async {
+    if (!mounted) return;
     state = state.copyWith(
       youtubeVideoListsLoadingStatus: LoadingStatus.loading,
     );

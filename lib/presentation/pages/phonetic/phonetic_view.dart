@@ -174,7 +174,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                         _youtubePlayerController?.pause();
                         ref.read(appNavigatorProvider).navigateTo(
                             AppRoutes.pronunciation,
-                            arguments: phonetic.example);
+                            arguments: phonetic.phoneticID);
                       },
                       text: 'Practice now',
                     ),

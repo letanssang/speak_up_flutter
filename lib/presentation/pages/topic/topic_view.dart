@@ -9,7 +9,7 @@ import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/use_cases/audio_player/pause_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_sentence_list_from_topic_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_topic_use_case.dart';
 import 'package:speak_up/injection/app_modules.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';

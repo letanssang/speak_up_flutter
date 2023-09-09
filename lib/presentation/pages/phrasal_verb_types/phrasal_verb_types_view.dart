@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_phrasal_verb_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_type_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb_types/phrasal_verb_types_state.dart';

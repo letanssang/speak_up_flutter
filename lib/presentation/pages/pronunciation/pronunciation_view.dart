@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
+import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
+import 'package:speak_up/presentation/pages/pronunciation/pronunciation_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
-import 'package:speak_up/presentation/utilities/constant/number.dart';
+import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
+
+final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
+    PronunciationViewModel, PronunciationState>(
+  (ref) => PronunciationViewModel(
+    injector.get<GetWordListByPhoneticIDUSeCase>(),
+  ),
+);
 
 class PronunciationView extends ConsumerStatefulWidget {
   const PronunciationView({super.key});
@@ -17,7 +29,7 @@ class PronunciationView extends ConsumerStatefulWidget {
 }
 
 class _PronunciationViewState extends ConsumerState<PronunciationView> {
-  List<MapEntry<String, String>> examples = [];
+  int phoneticID = 0;
   late PageController _pageController;
 
   @override
@@ -30,11 +42,11 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
     );
   }
 
-  void _init() {
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-    examples = arguments.entries.toList();
-    setState(() {});
+  Future<void> _init() async {
+    phoneticID = ModalRoute.of(context)!.settings.arguments as int;
+    await ref
+        .read(pronunciationViewModelProvider.notifier)
+        .fetchWordList(phoneticID);
   }
 
   @override
@@ -44,7 +56,8 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
   }
 
   Future<void> onNextButtonTap() async {
-    if (_pageController.page?.toInt() == examples.length - 1) {
+    if (_pageController.page?.toInt() ==
+        ref.watch(pronunciationViewModelProvider).wordList.length - 1) {
       showCompleteBottomSheet(context);
     } else {
       _pageController.nextPage(
@@ -56,6 +69,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(pronunciationViewModelProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -71,47 +85,51 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
           percent: 0,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: examples.length,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          examples[index].key,
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
+      body: state.loadingStatus == LoadingStatus.success
+          ? Column(
+              children: [
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: state.wordList.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                state.wordList[index].word,
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          examples[index].value,
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                state.wordList[index].pronunciation,
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-          buildBottomMenu(),
-          const SizedBox(height: 64),
-        ],
-      ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                buildBottomMenu(),
+                const SizedBox(height: 64),
+              ],
+            )
+          : state.loadingStatus == LoadingStatus.loading
+              ? const AppLoadingIndicator()
+              : const AppErrorView(),
     );
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_phrasal_verb_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_list_by_type_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_state.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view_model.dart';

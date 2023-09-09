@@ -11,9 +11,9 @@ import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/entities/youtube_video/youtube_video.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_category_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_lesson_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_lesson_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/youtube/get_youtube_playlist_by_id_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
@@ -47,8 +47,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _init();
+    Future.delayed(Duration.zero, () async {
+      await _init();
     });
   }
 

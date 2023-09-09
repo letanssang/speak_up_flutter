@@ -9,8 +9,8 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_c
 import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_sentence_list_from_idiom_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/update_idiom_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_idiom_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -142,7 +142,7 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   Future<void> updateIdiomProgress(int process) async {
     final uid = _getCurrentUserUseCase.run().uid;
     LectureProcess lectureProcess = LectureProcess(
-      lectureID: state.idiom.idiomTypeId,
+      lectureID: state.idiom.idiomTypeID,
       progress: process + 1,
       uid: uid,
     );

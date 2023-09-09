@@ -1,14 +1,15 @@
 import 'package:speak_up/data/repositories/firestore/firestore_repository.dart';
+import 'package:speak_up/data/repositories/local_database/local_database_repository.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
-class GetSentenceListFromPatternUseCase
+class GetSentenceListFromTopicUseCase
     extends FutureUseCase<int, List<Sentence>> {
   @override
-  Future<List<Sentence>> run(int input) {
+  Future<List<Sentence>> run(int input) async {
     return injector
-        .get<FirestoreRepository>()
-        .getSentenceListFromPattern(input);
+        .get<LocalDatabaseRepository>()
+        .getSentenceListFromTopic(input);
   }
 }

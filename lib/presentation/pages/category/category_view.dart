@@ -6,7 +6,7 @@ import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_topic_list_from_category_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/category/category_state.dart';
@@ -22,7 +22,7 @@ import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indi
 final categoryViewModelProvider =
     StateNotifierProvider.autoDispose<CategoryViewModel, CategoryState>(
   (ref) => CategoryViewModel(
-    injector.get<GetTopicListFromCategoryUseCase>(),
+    injector.get<GetTopicListByCategoryIDUseCase>(),
   ),
 );
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/entities/quiz/quiz.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_idiom_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_idiom_list_by_type_use_case.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_state.dart';
 import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';

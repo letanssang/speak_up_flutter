@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_idiom_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_idiom_type_list_use_case.dart';
 import 'package:speak_up/presentation/pages/idiom_types/idiom_types_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 

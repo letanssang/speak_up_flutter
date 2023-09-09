@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_expression_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_expression_list_by_type_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/expression/expression_state.dart';
 import 'package:speak_up/presentation/pages/expression/expression_view_model.dart';
