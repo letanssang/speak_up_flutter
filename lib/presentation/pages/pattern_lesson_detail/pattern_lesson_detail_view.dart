@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson_detail_state.dart';
@@ -22,6 +22,7 @@ final patternLessonDetailViewModelProvider = StateNotifierProvider.autoDispose<
 
 class PatternLessonDetailView extends ConsumerStatefulWidget {
   const PatternLessonDetailView({super.key});
+
   @override
   ConsumerState<PatternLessonDetailView> createState() =>
       _PatternLessonDetailViewState();

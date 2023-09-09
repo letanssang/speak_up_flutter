@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/sign_up/sign_up_state.dart';

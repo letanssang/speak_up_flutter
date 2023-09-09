@@ -10,14 +10,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speak_up/data/local/database_services/database_manager.dart';
 import 'package:speak_up/data/local/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/data/remote/dictionary_client/dictionary_client.dart';
 import 'package:speak_up/data/remote/youtube_client/youtube_client.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
-import 'package:speak_up/data/repositories/cloud_store/firestore_repository.dart';
 import 'package:speak_up/data/repositories/dictionary/dictionary_repository.dart';
+import 'package:speak_up/data/repositories/firestore/firestore_repository.dart';
 import 'package:speak_up/data/repositories/record/record_repository.dart';
 import 'package:speak_up/data/repositories/speech_to_text/speech_to_text_repository.dart';
 import 'package:speak_up/data/repositories/text_to_speech/text_to_speech_repository.dart';
@@ -41,26 +42,26 @@ import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart'
 import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_email_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_password_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_category_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_expression_list_by_type_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_expression_type_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_type_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_lesson_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_phonetic_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_phrasal_verb_list_by_type_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_phrasal_verb_type_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_idiom_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_pattern_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_list_from_topic_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_sentence_pattern_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_topic_list_from_category_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_youtube_playlist_id_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/update_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_detail_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_category_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_expression_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_expression_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_idiom_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_idiom_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_idiom_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_lesson_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_phonetic_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_phrasal_verb_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_phrasal_verb_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_sentence_list_from_idiom_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_sentence_list_from_pattern_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_sentence_list_from_topic_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_sentence_pattern_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_topic_list_from_category_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/update_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -105,6 +106,9 @@ class AppModules {
     final dio = Dio();
     dio.options.headers['x-rapidapi-key'] = dotenv.env['WORDS_API_KEY'];
     dio.interceptors.add(LoggingInterceptor());
+
+    // Database Manager
+    injector.registerLazySingleton<DatabaseManager>(() => DatabaseManager());
 
     // Dictionary client
     injector

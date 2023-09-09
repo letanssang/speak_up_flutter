@@ -42,7 +42,9 @@ dependencies:
 
   # Local Data Storage
   shared_preferences: ^2.2.0
+  sqflite: ^2.3.0
   enum_to_string: ^2.0.1
+  path_provider: ^2.1.1
 
   # Firebase
   firebase_core: ^2.14.0
@@ -104,6 +106,7 @@ flutter:
     - assets/audios/
     - assets/audios/ipa/
     - assets/keys/
+    - assets/database/
   fonts:
     - family: SF Pro Display
       fonts:

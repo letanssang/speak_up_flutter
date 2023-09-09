@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_category_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_lesson_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_youtube_playlist_id_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_category_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_lesson_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/youtube/get_youtube_playlist_by_id_use_case.dart';
 import 'package:speak_up/presentation/pages/home/home_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';

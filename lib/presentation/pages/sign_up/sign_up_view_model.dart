@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/save_user_data_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 import 'sign_up_state.dart';

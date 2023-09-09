@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/entities/flash_card/flash_card.dart';
-import 'package:speak_up/domain/use_cases/cloud_store/get_idiom_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_idiom_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_state.dart';
 import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
