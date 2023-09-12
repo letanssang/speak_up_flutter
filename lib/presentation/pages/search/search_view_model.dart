@@ -24,8 +24,7 @@ class SearchViewModel extends StateNotifier<SearchState> {
         suggestionList: wordList ?? [],
         loadingStatus: LoadingStatus.success,
       );
-    } on DioException catch (e) {
-      print(e);
+    } on DioException {
       state = state.copyWith(
         loadingStatus: LoadingStatus.error,
         suggestionList: [],

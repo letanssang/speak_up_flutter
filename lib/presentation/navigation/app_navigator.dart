@@ -19,6 +19,7 @@ class AppNavigator {
     String routeName, {
     dynamic arguments,
     bool shouldClearStack = false,
+    bool shouldReplace = false,
   }) async {
     final currentState = navigatorKey.currentState;
     if (currentState == null) {
@@ -32,6 +33,16 @@ class AppNavigator {
       return currentState.pushNamedAndRemoveUntil(
         routeName,
         (route) => false,
+        arguments: arguments,
+      );
+    }
+
+    if (shouldReplace) {
+      /// Push the route with the given name onto the navigator, and then remove
+      /// all the previous routes until the `predicate` returns true.
+      ///
+      return currentState.pushReplacementNamed(
+        routeName,
         arguments: arguments,
       );
     }

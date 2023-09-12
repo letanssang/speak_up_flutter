@@ -87,10 +87,11 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   Future<void> onNextPageButtonTap() async {
     final state = ref.watch(idiomLearningViewModelProvider);
     ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
+
+    ref
+        .read(idiomLearningViewModelProvider.notifier)
+        .updateCurrentPage(_pageController.page!.toInt() + 1);
     if (_pageController.page!.toInt() == state.totalPage - 1) {
-      ref
-          .read(idiomLearningViewModelProvider.notifier)
-          .updateCurrentPage(state.totalPage);
       if (index == process) {
         ref
             .read(idiomLearningViewModelProvider.notifier)
@@ -103,9 +104,6 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
         showCompleteBottomSheet(context);
       });
     } else {
-      ref
-          .read(idiomLearningViewModelProvider.notifier)
-          .updateCurrentPage(_pageController.page!.toInt() + 1);
       _pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       ref.read(idiomLearningViewModelProvider.notifier).playAudio(

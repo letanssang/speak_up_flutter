@@ -164,7 +164,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(32.0),
                         child: CircleAvatar(
                           radius: 32,
                           child: ClipOval(
@@ -263,14 +263,14 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   Widget buildListTile(Widget icon, String title,
       {Widget? trailing, Function()? onTap}) {
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: const BoxDecoration(),
       child: ListTile(
         leading: icon,
         title: Text(
           title,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 18,
           ),
         ),
         onTap: onTap,

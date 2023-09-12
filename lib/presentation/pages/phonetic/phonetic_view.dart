@@ -171,9 +171,9 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                   SafeArea(
                     child: CustomButton(
                       onTap: () {
-                        _youtubePlayerController?.pause();
                         ref.read(appNavigatorProvider).navigateTo(
                             AppRoutes.pronunciation,
+                            shouldReplace: true,
                             arguments: phonetic.phoneticID);
                       },
                       text: 'Practice now',

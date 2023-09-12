@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
+import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
@@ -18,6 +20,7 @@ final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
     PronunciationViewModel, PronunciationState>(
   (ref) => PronunciationViewModel(
     injector.get<GetWordListByPhoneticIDUSeCase>(),
+    injector.get<SpeakFromTextUseCase>(),
   ),
 );
 
@@ -56,6 +59,9 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
   }
 
   Future<void> onNextButtonTap() async {
+    ref
+        .read(pronunciationViewModelProvider.notifier)
+        .updateCurrentIndex(_pageController.page!.toInt() + 1);
     if (_pageController.page?.toInt() ==
         ref.watch(pronunciationViewModelProvider).wordList.length - 1) {
       showCompleteBottomSheet(context);
@@ -81,13 +87,16 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
             size: 32,
           ),
         ),
-        title: const AppLinearPercentIndicator(
-          percent: 0,
+        title: AppLinearPercentIndicator(
+          percent: state.loadingStatus == LoadingStatus.success
+              ? state.currentIndex / state.wordList.length
+              : 0,
         ),
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? Column(
               children: [
+                RefreshIndicator(child: Container(), onRefresh: () async {}),
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
@@ -96,27 +105,74 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                     itemBuilder: (BuildContext context, int index) {
                       return Column(
                         children: [
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                state.wordList[index].word,
-                                style: const TextStyle(
-                                  fontSize: 32,
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          ListTile(
+                            leading: AppImages.questioner(
+                              width: 48,
+                              height: 48,
+                            ),
+                            title: Text('Your turn',
+                                style: TextStyle(
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                ),
+                                )),
+                            subtitle: Text(
+                              'Tap the microphone and pronounce the word',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                state.wordList[index].pronunciation,
-                                style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          Text(
+                            state.wordList[index].word,
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
+                          Text(
+                            '/${state.wordList[index].pronunciation}/',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            state.wordList[index].translation,
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          Row(
+                            children: [
+                              Flexible(child: Container()),
+                              CustomIconButton(
+                                icon: Icon(
+                                  Icons.volume_up_outlined,
+                                  size: 32,
+                                  color: Colors.grey[800],
+                                ),
+                                onPressed: () {
+                                  ref
+                                      .read(pronunciationViewModelProvider
+                                          .notifier)
+                                      .speak(state.wordList[index].word);
+                                },
+                              ),
+                              Flexible(child: Container()),
+                            ],
                           ),
                         ],
                       );

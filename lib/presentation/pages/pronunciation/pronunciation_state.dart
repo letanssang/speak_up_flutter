@@ -8,5 +8,6 @@ class PronunciationState with _$PronunciationState {
   const factory PronunciationState({
     @Default([]) List<Word> wordList,
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
+    @Default(0) currentIndex,
   }) = _PronunciationState;
 }
