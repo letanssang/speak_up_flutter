@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
+import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
@@ -21,6 +24,8 @@ final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
   (ref) => PronunciationViewModel(
     injector.get<GetWordListByPhoneticIDUSeCase>(),
     injector.get<SpeakFromTextUseCase>(),
+    injector.get<StartRecordingUseCase>(),
+    injector.get<StopRecordingUseCase>(),
   ),
 );
 
@@ -34,6 +39,31 @@ class PronunciationView extends ConsumerStatefulWidget {
 class _PronunciationViewState extends ConsumerState<PronunciationView> {
   int phoneticID = 0;
   late PageController _pageController;
+
+  Future<void> onRecordButtonTap() async {
+    final state = ref.watch(pronunciationViewModelProvider);
+    ref.read(pronunciationViewModelProvider.notifier).stopAudio();
+    if (state.recordButtonState == ButtonState.normal) {
+      await ref
+          .read(pronunciationViewModelProvider.notifier)
+          .onStartRecording();
+    } else {
+      await ref.read(pronunciationViewModelProvider.notifier).onStopRecording();
+      await ref
+          .read(pronunciationViewModelProvider.notifier)
+          .getTextFromSpeech();
+    }
+  }
+
+  String getAssistantText(ButtonState buttonState) {
+    if (buttonState == ButtonState.normal) {
+      return 'Your turn! Tap the microphone and pronounce the word';
+    } else if (buttonState == ButtonState.loading) {
+      return 'I am listening...';
+    } else {
+      return '';
+    }
+  }
 
   @override
   void initState() {
@@ -106,24 +136,29 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                       return Column(
                         children: [
                           const SizedBox(
-                            height: 32,
+                            height: 16,
                           ),
-                          ListTile(
-                            leading: AppImages.questioner(
-                              width: 48,
-                              height: 48,
-                            ),
-                            title: Text('Your turn',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            subtitle: Text(
-                              'Tap the microphone and pronounce the word',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                AppImages.questioner(
+                                  width: 48,
+                                  height: 48,
+                                ),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    getAssistantText(state.recordButtonState),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
@@ -179,7 +214,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                     },
                   ),
                 ),
-                buildBottomMenu(),
+                buildBottomMenu(state.recordButtonState),
                 const SizedBox(height: 64),
               ],
             )
@@ -189,7 +224,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
     );
   }
 
-  Row buildBottomMenu() {
+  Row buildBottomMenu(ButtonState buttonState) {
     return Row(
       children: [
         Flexible(child: Container()),
@@ -205,9 +240,9 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
         const SizedBox(
           width: 32,
         ),
-        const RecordButton(
-          //buttonState: buttonState,
-          onTap: null,
+        RecordButton(
+          buttonState: buttonState,
+          onTap: onRecordButtonTap,
         ),
         const SizedBox(
           width: 32,

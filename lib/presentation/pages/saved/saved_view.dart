@@ -93,7 +93,9 @@ class _SavedViewState extends ConsumerState<SavedView>
             height: 32,
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              ref.read(mainMenuViewModelProvider.notifier).changeTab(0);
+            },
             child: const Text('Explore'),
           )
         ],

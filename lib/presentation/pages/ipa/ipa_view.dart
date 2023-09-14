@@ -12,7 +12,6 @@ import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 
 import 'ipa_state.dart';
 
@@ -140,25 +139,37 @@ class _IpaViewState extends ConsumerState<IpaView>
               width: 1,
             ),
           ),
-          child: Column(
+          child: Stack(
             children: [
-              Text(
-                phonetic.phonetic,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: ScreenUtil().setSp(24),
-                  color: Theme.of(context).primaryColor,
+              Center(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      phonetic.phonetic,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: ScreenUtil().setSp(24),
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    Text(
+                      phonetic.example.entries.first.key,
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                phonetic.example.entries.first.key,
-              ),
-              AppLinearPercentIndicator(
-                percent: 0.2,
-                lineHeight: ScreenUtil().setHeight(6),
-                progressColor: Theme.of(context).primaryColor,
-                padding: const EdgeInsets.only(top: 8),
-              ),
+              Positioned(
+                  // top right
+                  top: 4,
+                  right: 4,
+                  child: Icon(
+                    Icons.check_circle_outline_rounded,
+                    size: 16,
+                    color: Theme.of(context).primaryColor,
+                  )),
             ],
           ),
         ),
