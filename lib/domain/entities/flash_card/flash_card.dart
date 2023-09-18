@@ -14,4 +14,8 @@ class FlashCard {
         backText: idiom.description,
         backTranslation: idiom.descriptionTranslation);
   }
+
+  factory FlashCard.initial() {
+    return FlashCard(frontText: '', backText: '');
+  }
 }

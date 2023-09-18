@@ -16,5 +16,6 @@ class QuizState with _$QuizState {
     @Default(0) int currentIndex,
     @Default(QuizAnswerCardStatus.before) quizAnswerCardStatus,
     @Default(0) chosenAnswerIndex,
+    @Default(0) correctAnswerNumber,
   }) = _QuizState;
 }

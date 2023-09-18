@@ -3,23 +3,27 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/presentation/resources/app_colors.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 
 import '../buttons/custom_button.dart';
 
-void showCompleteBottomSheet(BuildContext context) {
+void showCompleteBottomSheet(BuildContext context, {String? title}) {
   showModalBottomSheet(
       context: context,
       enableDrag: false,
       isDismissible: false,
       useSafeArea: true,
       builder: (BuildContext context) {
-        return const CompleteBottomSheet();
+        return CompleteBottomSheet(
+          title: title,
+        );
       });
 }
 
 class CompleteBottomSheet extends ConsumerWidget {
-  const CompleteBottomSheet({super.key});
+  final String? title;
+  const CompleteBottomSheet({this.title, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +39,17 @@ class CompleteBottomSheet extends ConsumerWidget {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: AppColors.quizResultCorrect,
                 )),
+            if (title != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(title!,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: AppImages.congrats(

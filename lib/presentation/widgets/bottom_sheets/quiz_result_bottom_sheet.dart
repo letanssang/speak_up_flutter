@@ -23,7 +23,12 @@ class QuizResultBottomSheet extends StatelessWidget {
     return Wrap(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
+          padding: const EdgeInsets.only(
+            top: 32,
+            bottom: 16.0,
+            left: 32,
+            right: 32,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,

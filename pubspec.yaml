@@ -40,6 +40,7 @@ dependencies:
   swipable_stack: ^2.0.0
   preload_page_view: ^0.2.0
 
+
   # Local Data Storage
   shared_preferences: ^2.2.0
   sqflite: ^2.3.0

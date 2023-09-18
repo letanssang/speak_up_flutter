@@ -13,5 +13,6 @@ class FlashCardsState with _$FlashCardsState {
     @Default(LessonType.idiom) LessonType lessonType,
     dynamic parent,
     @Default(0) int currentIndex,
+    @Default(false) bool isAnimating,
   }) = _FlashCardsState;
 }

@@ -3,15 +3,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_idiom_list_by_type_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_state.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/quiz_answer_card_status.dart';
+import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/quiz_result_bottom_sheet.dart';
+import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/cards/quiz_answer_card.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 
@@ -19,6 +23,7 @@ final quizViewModelProvider =
     StateNotifierProvider.autoDispose<QuizViewModel, QuizState>(
   (ref) => QuizViewModel(
     injector.get<GetIdiomListByTypeUseCase>(),
+    injector.get<SpeakFromTextUseCase>(),
   ),
 );
 
@@ -76,10 +81,17 @@ class _QuizViewState extends ConsumerState<QuizView> {
                     onTap: () {
                       ref.read(quizViewModelProvider.notifier).onNextQuestion();
                       Navigator.pop(context);
-                      _pageViewController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
+                      if (state.currentIndex < state.quizzes.length - 1) {
+                        _pageViewController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        // title: number of correct answers / total number of questions
+                        showCompleteBottomSheet(context,
+                            title:
+                                'You got ${state.correctAnswerNumber}/${state.quizzes.length} correct answers');
+                      }
                     },
                     title: state.quizzes[state.currentIndex].question,
                     correctAnswer: state.quizzes[state.currentIndex].answers[
@@ -128,9 +140,8 @@ class _QuizViewState extends ConsumerState<QuizView> {
       body: state.loadingStatus == LoadingStatus.success
           ? buildLoadingSuccessBody()
           : state.loadingStatus == LoadingStatus.error
-              ? Center(
-                  child: Text(AppLocalizations.of(context)!.somethingWentWrong))
-              : const Center(child: AppLoadingIndicator()),
+              ? const AppErrorView()
+              : const AppLoadingIndicator(),
     );
   }
 
@@ -161,10 +172,23 @@ class _QuizViewState extends ConsumerState<QuizView> {
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).primaryColor,
                     )),
+                const SizedBox(height: 16.0),
+                CustomIconButton(
+                  icon: Icon(
+                    Icons.volume_up_outlined,
+                    size: 32,
+                    color: Colors.grey[800],
+                  ),
+                  onPressed: () {
+                    ref
+                        .read(quizViewModelProvider.notifier)
+                        .speak(state.quizzes[index].question);
+                  },
+                ),
                 Flexible(child: Container()),
                 ConstrainedBox(
                   constraints: BoxConstraints(
-                      maxHeight: ScreenUtil().screenHeight * 0.6),
+                      maxHeight: ScreenUtil().screenHeight * 0.5),
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
@@ -185,13 +209,16 @@ class _QuizViewState extends ConsumerState<QuizView> {
                         onTap: () {
                           ref
                               .read(quizViewModelProvider.notifier)
-                              .onSelectedAnswerOption(optionIndex);
+                              .onSelectedAnswerOption(
+                                  quiz.correctAnswerIndex, optionIndex);
                         },
                       );
                     },
                   ),
                 ),
-                Flexible(child: Container()),
+                const SizedBox(
+                  height: 32,
+                ),
               ],
             ),
           ),

@@ -9,6 +9,7 @@ import 'package:speak_up/presentation/pages/flash_cards/flash_cards_state.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/cards/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
@@ -33,7 +34,6 @@ class FlashCardsView extends ConsumerStatefulWidget {
 class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
   late final LessonType _lessonType;
   late final dynamic parentType;
-  final _swipableStackController = SwipableStackController();
 
   @override
   void initState() {
@@ -57,22 +57,18 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
       await ref.read(flashCardsViewModelProvider.notifier).speakFromText(
           ref.read(flashCardsViewModelProvider).flashCards[0].frontText);
     });
-    _swipableStackController.addListener(() {
-      ref
-          .read(flashCardsViewModelProvider.notifier)
-          .updateCurrentIndex(_swipableStackController.currentIndex);
-    });
-  }
-
-  @override
-  void dispose() {
-    _swipableStackController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(flashCardsViewModelProvider);
+    ref.listen(
+        flashCardsViewModelProvider.select((value) => value.currentIndex),
+        (previous, next) {
+      if (next == state.flashCards.length - 1) {
+        showCompleteBottomSheet(context);
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -105,6 +101,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
   }
 
   Widget buildLoadingSuccessBody(FlashCardsState state, BuildContext context) {
+    final viewModel = ref.read(flashCardsViewModelProvider.notifier);
     return Stack(
       children: [
         Positioned.fill(
@@ -128,13 +125,14 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
               ref
                   .read(flashCardsViewModelProvider.notifier)
                   .speakFromText(state.flashCards[index + 1].frontText);
+              viewModel.nextFlashCard(direction);
             },
             dragStartCurve: Curves.linearToEaseOut,
             cancelAnimationCurve: Curves.linearToEaseOut,
             horizontalSwipeThreshold: 0.8,
             verticalSwipeThreshold: 0.8,
             itemCount: state.flashCards.length,
-            controller: _swipableStackController,
+            controller: viewModel.swipableStackController,
             swipeAnchor: SwipeAnchor.bottom,
             detectableSwipeDirections: const {
               SwipeDirection.right,
@@ -154,7 +152,14 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                   Flexible(child: Container()),
                   InkWell(
                     onTap: () {
-                      _swipableStackController.next(
+                      if (state.isAnimating) {
+                        return;
+                      }
+                      viewModel.updateAnimating(true);
+                      Future.delayed(const Duration(milliseconds: 1000), () {
+                        viewModel.updateAnimating(false);
+                      });
+                      viewModel.swipableStackController.next(
                         swipeDirection: SwipeDirection.right,
                         duration: const Duration(milliseconds: 1000),
                       );
@@ -188,7 +193,14 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                   ),
                   InkWell(
                     onTap: () {
-                      _swipableStackController.next(
+                      if (state.isAnimating) {
+                        return;
+                      }
+                      viewModel.updateAnimating(true);
+                      Future.delayed(const Duration(milliseconds: 1000), () {
+                        viewModel.updateAnimating(false);
+                      });
+                      viewModel.swipableStackController.next(
                         swipeDirection: SwipeDirection.left,
                         duration: const Duration(milliseconds: 1000),
                       );
