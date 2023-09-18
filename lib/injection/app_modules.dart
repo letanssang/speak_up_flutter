@@ -45,7 +45,9 @@ import 'package:speak_up/domain/use_cases/authentication/update_email_use_case.d
 import 'package:speak_up/domain/use_cases/authentication/update_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_detail_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
@@ -388,8 +390,16 @@ class AppModules {
     injector.registerLazySingleton<GetIdiomProgressUseCase>(
         () => GetIdiomProgressUseCase());
 
-    //Get Word List By Phonetic ID Use Case
+    // Get Word List By Phonetic ID Use Case
     injector.registerLazySingleton<GetWordListByPhoneticIDUSeCase>(
         () => GetWordListByPhoneticIDUSeCase());
+
+    // Add Flash Card Use Case
+    injector.registerLazySingleton<AddFlashCardUseCase>(
+        () => AddFlashCardUseCase());
+
+    // Get Flash Card List Use Case
+    injector.registerLazySingleton<GetFlashCardListUseCase>(
+        () => GetFlashCardListUseCase());
   }
 }

@@ -60,6 +60,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
       final youtubeVideoLists = await Future.wait(
         idList.map((e) => _getYoutubePlaylistByIdUseCase.run(e)),
       );
+      if (!mounted) return;
       state = state.copyWith(
         youtubeVideoListsLoadingStatus: LoadingStatus.success,
         youtubeVideoLists: youtubeVideoLists,

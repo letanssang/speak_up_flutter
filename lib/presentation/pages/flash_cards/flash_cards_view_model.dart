@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/entities/flash_card/flash_card.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_idiom_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_state.dart';
@@ -11,11 +13,15 @@ import 'package:swipable_stack/swipable_stack.dart';
 class FlashCardsViewModel extends StateNotifier<FlashCardsState> {
   final GetIdiomListByTypeUseCase _getIdiomListByTypeUseCase;
   final SpeakFromTextUseCase _speakFromTextUseCase;
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
+  final AddFlashCardUseCase _addFlashCardUseCase;
   late final SwipableStackController swipableStackController;
 
   FlashCardsViewModel(
     this._getIdiomListByTypeUseCase,
     this._speakFromTextUseCase,
+    this._getCurrentUserUseCase,
+    this._addFlashCardUseCase,
   ) : super(const FlashCardsState());
 
   void init(LessonType lessonType, dynamic parent) {
@@ -25,7 +31,6 @@ class FlashCardsViewModel extends StateNotifier<FlashCardsState> {
       state = state.copyWith(
         currentIndex: swipableStackController.currentIndex,
       );
-      print(swipableStackController.currentIndex);
     });
   }
 
@@ -42,9 +47,12 @@ class FlashCardsViewModel extends StateNotifier<FlashCardsState> {
 
   Future<void> _fetchIdiomFlashCards() async {
     try {
+      final currentUser = _getCurrentUserUseCase.run();
       final idiomList =
           await _getIdiomListByTypeUseCase.run(state.parent.idiomTypeID);
-      final flashCards = idiomList.map((e) => FlashCard.fromIdiom(e)).toList();
+      final flashCards = idiomList
+          .map((e) => FlashCard.fromIdiom(e, currentUser.uid))
+          .toList();
       //add empty flash card to the end of the list
       flashCards.add(FlashCard.initial());
       state = state.copyWith(
@@ -60,7 +68,6 @@ class FlashCardsViewModel extends StateNotifier<FlashCardsState> {
   void nextFlashCard(SwipeDirection direction) {
     if (state.isAnimating) return;
     state = state.copyWith(currentIndex: state.currentIndex + 1);
-    print('nextFlashCard: ${state.currentIndex}');
   }
 
   void updateAnimating(bool isAnimating) {
@@ -69,6 +76,14 @@ class FlashCardsViewModel extends StateNotifier<FlashCardsState> {
 
   Future<void> speakFromText(String text) async {
     await _speakFromTextUseCase.run(text);
+  }
+
+  Future<void> addFlashCard(FlashCard flashCard) async {
+    try {
+      await _addFlashCardUseCase.run(flashCard);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   @override

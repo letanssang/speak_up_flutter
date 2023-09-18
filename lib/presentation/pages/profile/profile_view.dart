@@ -168,14 +168,14 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                         child: CircleAvatar(
                           radius: 32,
                           child: ClipOval(
-                            child: user!.photoURL != null
-                                ? Image.network(user.photoURL!)
+                            child: user?.photoURL != null
+                                ? Image.network(user!.photoURL!)
                                 : AppImages.avatar(),
                           ),
                         ),
                       ),
                       Text(
-                        user.displayName ?? '',
+                        user?.displayName ?? '',
                         style: TextStyle(
                           fontSize: ScreenUtil().setSp(24.0),
                           fontWeight: FontWeight.bold,
@@ -195,7 +195,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                             .read(appNavigatorProvider)
                             .navigateTo(AppRoutes.editProfile);
                       }),
-                      if (user.providerData[0].providerId == 'password')
+                      if (user?.providerData[0].providerId == 'password')
                         buildListTile(AppIcons.changePassword(size: 48),
                             AppLocalizations.of(context)!.changePassword,
                             onTap: () {

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:speak_up/domain/entities/flash_card/flash_card.dart';
 import 'package:speak_up/domain/entities/lecture_process/lecture_process.dart';
 
 class FirestoreRepository {
@@ -70,5 +71,39 @@ class FirestoreRepository {
     } else {
       return snapshot.docs.first['Progress'];
     }
+  }
+
+  Future<void> addFlashCard(FlashCard flashCard, String uid) async {
+    //check contains
+    final snapshot = await _firestore
+        .collection('flash_cards')
+        .where('FlashCardID', isEqualTo: flashCard.flashcardID)
+        .where('FrontText', isEqualTo: flashCard.frontText)
+        .where('UserID', isEqualTo: uid)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      //if not exists, add new flash card
+      await _firestore.collection('flash_cards').add({
+        'FlashCardID': flashCard.flashcardID,
+        'FrontText': flashCard.frontText,
+        'BackText': flashCard.backText,
+        'BackTranslation': flashCard.backTranslation,
+        'UserID': uid,
+      });
+    }
+  }
+
+  Future<List<FlashCard>> getFlashCardList(String uid) async {
+    final snapshot = await _firestore
+        .collection('flash_cards')
+        .where('UserID', isEqualTo: uid)
+        .get();
+    List<FlashCard> flashCardList = [];
+    for (var docSnapshot in snapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      FlashCard flashCard = FlashCard.fromJson(data);
+      flashCardList.add(flashCard);
+    }
+    return flashCardList;
   }
 }

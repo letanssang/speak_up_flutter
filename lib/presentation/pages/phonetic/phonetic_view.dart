@@ -101,12 +101,12 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                     children: [
                       Text(
                         phonetic.phonetic,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      IconButton(
+                      const IconButton(
                           onPressed: null,
                           icon: Icon(
                             Icons.volume_up,

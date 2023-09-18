@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_idiom_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
@@ -21,6 +23,8 @@ final flashCardsViewModelProvider =
   (ref) => FlashCardsViewModel(
     injector.get<GetIdiomListByTypeUseCase>(),
     injector.get<SpeakFromTextUseCase>(),
+    injector.get<GetCurrentUserUseCase>(),
+    injector.get<AddFlashCardUseCase>(),
   ),
 );
 
@@ -122,6 +126,9 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
               );
             },
             onSwipeCompleted: (index, direction) {
+              if (direction == SwipeDirection.right) {
+                viewModel.addFlashCard(state.flashCards[index]);
+              }
               ref
                   .read(flashCardsViewModelProvider.notifier)
                   .speakFromText(state.flashCards[index + 1].frontText);
