@@ -5,10 +5,8 @@ import 'package:speak_up/injection/injector.dart';
 
 class GetIdiomProgressUseCase extends FutureUseCase<int, int> {
   @override
-  Future<int> run(int idiomTypeID) {
+  Future<int> run(int input) {
     final uid = injector.get<AuthenticationRepository>().getCurrentUser().uid;
-    return injector
-        .get<FirestoreRepository>()
-        .getIdiomProgress(idiomTypeID, uid);
+    return injector.get<FirestoreRepository>().getIdiomProgress(input, uid);
   }
 }

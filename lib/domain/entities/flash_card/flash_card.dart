@@ -39,4 +39,6 @@ class FlashCard {
 
   factory FlashCard.fromJson(Map<String, dynamic> json) =>
       _$FlashCardFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FlashCardToJson(this);
 }

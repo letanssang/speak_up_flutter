@@ -119,8 +119,8 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
           child: YoutubePlayer(
             aspectRatio: 9 / 16,
             controller: youtubePlayerControllers![index],
-            topActions: [],
-            bottomActions: [],
+            topActions: const [],
+            bottomActions: const [],
           ),
         );
       },

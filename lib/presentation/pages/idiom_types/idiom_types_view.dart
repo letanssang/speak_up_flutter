@@ -4,13 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_idiom_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_idiom_type_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/idiom_types/idiom_types_state.dart';
 import 'package:speak_up/presentation/pages/idiom_types/idiom_types_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
-import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/learning_mode_bottom_sheet.dart';
@@ -21,6 +22,8 @@ final idiomTypesViewModelProvider =
     StateNotifierProvider.autoDispose<IdiomTypesViewModel, IdiomTypesState>(
   (ref) => IdiomTypesViewModel(
     injector.get<GetIdiomTypeListUseCase>(),
+    injector.get<GetCurrentUserUseCase>(),
+    injector.get<GetIdiomListByTypeUseCase>(),
   ),
 );
 
@@ -55,21 +58,32 @@ class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
                     .read(appNavigatorProvider)
                     .navigateTo(AppRoutes.idiom, arguments: idiomType);
               },
-              onTapQuiz: () {
-                ref
-                    .read(appNavigatorProvider)
-                    .navigateTo(AppRoutes.quiz, arguments: {
-                  'lessonType': LessonType.idiom,
-                  'parent': idiomType,
-                });
+              onTapQuiz: () async {
+                final quizzes = await ref
+                    .read(idiomTypesViewModelProvider.notifier)
+                    .getQuizzesByIdiomTypeID(
+                      ref
+                          .read(idiomTypesViewModelProvider)
+                          .idiomTypes[index]
+                          .idiomTypeID,
+                    );
+                ref.read(appNavigatorProvider).navigateTo(
+                      AppRoutes.quiz,
+                      arguments: quizzes,
+                    );
               },
-              onTapFlashcard: () {
+              onTapFlashcard: () async {
+                final flashCards = await ref
+                    .read(idiomTypesViewModelProvider.notifier)
+                    .getFlashCardByIdiomTypeID(
+                      ref
+                          .read(idiomTypesViewModelProvider)
+                          .idiomTypes[index]
+                          .idiomTypeID,
+                    );
                 ref
                     .read(appNavigatorProvider)
-                    .navigateTo(AppRoutes.flashCards, arguments: {
-                  'lessonType': LessonType.idiom,
-                  'parent': idiomType,
-                });
+                    .navigateTo(AppRoutes.flashCards, arguments: flashCards);
               },
             ));
   }

@@ -255,7 +255,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
             backTranslation: state.idiom.descriptionTranslation,
             tapFrontDescription:
                 AppLocalizations.of(context)!.tapToSeeTheMeaning,
-            tapBackDescription: AppLocalizations.of(context)!.tapToSeeTheIdiom,
+            tapBackDescription: AppLocalizations.of(context)!.tapToReturn,
             onPressedFrontCard: () => ref
                 .read(idiomLearningViewModelProvider.notifier)
                 .speakFromText(state.idiom.name),

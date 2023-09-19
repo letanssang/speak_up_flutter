@@ -2,27 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_idiom_list_by_type_use_case.dart';
+import 'package:speak_up/domain/entities/quiz/quiz.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_state.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_view_model.dart';
-import 'package:speak_up/presentation/utilities/enums/flash_card_type.dart';
-import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/quiz_answer_card_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/quiz_result_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/cards/quiz_answer_card.dart';
-import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 
 final quizViewModelProvider =
     StateNotifierProvider.autoDispose<QuizViewModel, QuizState>(
   (ref) => QuizViewModel(
-    injector.get<GetIdiomListByTypeUseCase>(),
     injector.get<SpeakFromTextUseCase>(),
   ),
 );
@@ -35,28 +31,15 @@ class QuizView extends ConsumerStatefulWidget {
 }
 
 class _QuizViewState extends ConsumerState<QuizView> {
-  late final LessonType _lessonType;
-  late final dynamic parentType;
-  final _pageViewController = PageController(
-    initialPage: 0,
-  );
+  List<Quiz> _quizzes = [];
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      _init();
-    });
-  }
-
-  Future<void> _init() async {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    _lessonType = args['lessonType'] as LessonType;
-    parentType = args['parent'];
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ref.read(quizViewModelProvider.notifier).init(_lessonType, parentType);
-      await ref.read(quizViewModelProvider.notifier).fetchQuizzes();
+      _quizzes = ModalRoute.of(context)!.settings.arguments as List<Quiz>;
+      ();
+      setState(() {});
     });
   }
 
@@ -77,37 +60,34 @@ class _QuizViewState extends ConsumerState<QuizView> {
                 builder: (_) {
                   return QuizResultBottomSheet(
                     isCorrectAnswer: state.chosenAnswerIndex ==
-                        state.quizzes[state.currentIndex].correctAnswerIndex,
+                        _quizzes[state.currentIndex].correctAnswerIndex,
                     onTap: () {
                       ref.read(quizViewModelProvider.notifier).onNextQuestion();
                       Navigator.pop(context);
-                      if (state.currentIndex < state.quizzes.length - 1) {
-                        _pageViewController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
+                      if (state.currentIndex < _quizzes.length - 1) {
+                        ref
+                            .read(quizViewModelProvider.notifier)
+                            .pageViewController
+                            .nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
                       } else {
                         // title: number of correct answers / total number of questions
                         showCompleteBottomSheet(context,
                             title:
-                                'You got ${state.correctAnswerNumber}/${state.quizzes.length} correct answers');
+                                'You got ${state.correctAnswerNumber}/${_quizzes.length} correct answers');
                       }
                     },
-                    title: state.quizzes[state.currentIndex].question,
-                    correctAnswer: state.quizzes[state.currentIndex].answers[
-                        state.quizzes[state.currentIndex].correctAnswerIndex],
+                    title: _quizzes[state.currentIndex].question,
+                    correctAnswer: _quizzes[state.currentIndex].answers[
+                        _quizzes[state.currentIndex].correctAnswerIndex],
                   );
                 });
           },
         );
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _pageViewController.dispose();
-    super.dispose();
   }
 
   @override
@@ -126,9 +106,8 @@ class _QuizViewState extends ConsumerState<QuizView> {
           ),
         ),
         title: AppLinearPercentIndicator(
-          percent: state.loadingStatus == LoadingStatus.success
-              ? state.currentIndex / state.quizzes.length
-              : 0,
+          percent:
+              _quizzes.isNotEmpty ? state.currentIndex / _quizzes.length : 0,
         ),
         actions: [
           IconButton(
@@ -137,20 +116,18 @@ class _QuizViewState extends ConsumerState<QuizView> {
           ),
         ],
       ),
-      body: state.loadingStatus == LoadingStatus.success
+      body: _quizzes.isNotEmpty
           ? buildLoadingSuccessBody()
-          : state.loadingStatus == LoadingStatus.error
-              ? const AppErrorView()
-              : const AppLoadingIndicator(),
+          : const AppLoadingIndicator(),
     );
   }
 
   Widget buildLoadingSuccessBody() {
     final state = ref.watch(quizViewModelProvider);
     return PageView.builder(
-      controller: _pageViewController,
+      controller: ref.read(quizViewModelProvider.notifier).pageViewController,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: state.quizzes.length,
+      itemCount: _quizzes.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -165,7 +142,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
                   ),
                 ),
                 const SizedBox(height: 32.0),
-                Text(state.quizzes[index].question,
+                Text(_quizzes[index].question,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(28),
@@ -182,7 +159,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
                   onPressed: () {
                     ref
                         .read(quizViewModelProvider.notifier)
-                        .speak(state.quizzes[index].question);
+                        .speak(_quizzes[index].question);
                   },
                 ),
                 Flexible(child: Container()),
@@ -200,7 +177,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
                     ),
                     itemCount: 4,
                     itemBuilder: (context, optionIndex) {
-                      final quiz = state.quizzes[index];
+                      final quiz = _quizzes[index];
                       return QuizAnswerCard(
                         index: optionIndex,
                         answer: quiz.answers[optionIndex],
