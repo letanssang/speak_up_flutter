@@ -76,7 +76,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
 
   # YouTube Player
-  youtube_player_flutter: ^8.1.2
+  youtube_player_iframe: ^4.0.4
 
 
 

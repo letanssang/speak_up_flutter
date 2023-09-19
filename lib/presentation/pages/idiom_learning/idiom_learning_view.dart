@@ -112,11 +112,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   }
 
   Future<void> onPlayRecordButtonTap() async {
-    final recordPath = ref.read(idiomLearningViewModelProvider).recordPath;
-    if (recordPath == null) return;
-    await ref
-        .read(idiomLearningViewModelProvider.notifier)
-        .playRecord(recordPath);
+    await ref.read(idiomLearningViewModelProvider.notifier).playRecord();
   }
 
   Future<void> onRecordButtonTap() async {

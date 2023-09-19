@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:speak_up/domain/entities/youtube_video/youtube_video.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
-import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class ReelsView extends ConsumerStatefulWidget {
   const ReelsView({super.key});
@@ -14,32 +14,30 @@ class ReelsView extends ConsumerStatefulWidget {
 }
 
 class _ReelsViewState extends ConsumerState<ReelsView> {
-  List<YoutubePlayerController>? youtubePlayerControllers;
   late final PreloadPageController preloadPageController;
   late final List<YoutubeVideo> videos;
+  final Map<int, YoutubePlayerController> youtubeControllers = {};
 
-  void changeVideo(int index) {
-    youtubePlayerControllers![index].play();
-    //pause previous video
-    if (index > 0) {
-      youtubePlayerControllers![index - 1].pause();
-    }
-    //pause next video
-    if (index < youtubePlayerControllers!.length - 1) {
-      youtubePlayerControllers![index + 1].pause();
-    }
+  YoutubePlayerController createNewYoutubeController(
+      String videoID, int index) {
+    final youtubeController = YoutubePlayerController.fromVideoId(
+      videoId: videoID,
+      autoPlay: index == 0,
+      params: const YoutubePlayerParams(
+        showControls: false,
+        showFullscreenButton: false,
+        loop: true,
+        color: 'black',
+      ),
+    );
+    youtubeControllers[index] = youtubeController;
+    return youtubeController;
   }
 
   @override
   void initState() {
     super.initState();
     preloadPageController = PreloadPageController();
-    preloadPageController.addListener(() {
-      final index = preloadPageController.page!.round();
-      if (preloadPageController.page! - index == 0.0) {
-        changeVideo(index);
-      }
-    });
     Future.delayed(
       Duration.zero,
       () => _init(),
@@ -48,37 +46,14 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
 
   Future<void> _init() async {
     videos = ModalRoute.of(context)!.settings.arguments as List<YoutubeVideo>;
-
-    youtubePlayerControllers = videos
-        .map(
-          (video) => YoutubePlayerController(
-            initialVideoId: video.resourceId?.videoId ?? '',
-            flags: YoutubePlayerFlags(
-              disableDragSeek: true,
-              hideControls: true,
-              hideThumbnail: true,
-              //auto play first video
-              autoPlay: videos.indexOf(video) == 0,
-              captionLanguage: 'en',
-              enableCaption: true,
-              loop: true,
-              startAt: 0,
-            ),
-          ),
-        )
-        .toList();
     setState(() {});
   }
 
   @override
-  void deactivate() {
-    youtubePlayerControllers?.forEach((controller) => controller.pause());
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
-    youtubePlayerControllers?.forEach((controller) => controller.dispose());
+    youtubeControllers.forEach((key, value) {
+      value.close();
+    });
     super.dispose();
   }
 
@@ -92,7 +67,7 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
           // back button
           Positioned(
             // plus padding top status bar
-            top: MediaQuery.of(context).padding.top,
+            top: MediaQuery.of(context).padding.top + 32,
             left: 10,
             child: const AppBackButton(
               color: Colors.white,
@@ -104,23 +79,32 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
   }
 
   Widget buildReelsBody() {
-    if (youtubePlayerControllers == null) {
-      return const Center(child: AppLoadingIndicator());
-    }
     return PreloadPageView.builder(
       controller: preloadPageController,
       preloadPagesCount: 1,
       scrollDirection: Axis.vertical,
       itemCount: videos.length,
+      onPageChanged: (index) {
+        //remove all controllers except current index and next index
+        youtubeControllers.forEach((key, value) {
+          if (key != index && key != index - 1 && key != index + 1) {
+            value.close();
+          }
+          if (key != index) value.pauseVideo();
+        });
+        youtubeControllers[index]?.playVideo();
+      },
       itemBuilder: (context, index) {
+        final youtubeController = createNewYoutubeController(
+            videos[index].resourceId?.videoId ?? '', index);
         return Padding(
-          padding:
-              EdgeInsets.only(top: MediaQuery.of(context).padding.top + 32),
+          padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top +
+                  ScreenUtil().screenHeight * 0.1),
           child: YoutubePlayer(
             aspectRatio: 9 / 16,
-            controller: youtubePlayerControllers![index],
-            topActions: const [],
-            bottomActions: const [],
+            controller: youtubeController,
+            enableFullScreenOnVerticalDrag: false,
           ),
         );
       },

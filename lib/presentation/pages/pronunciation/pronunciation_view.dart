@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
@@ -26,6 +28,8 @@ final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
     injector.get<SpeakFromTextUseCase>(),
     injector.get<StartRecordingUseCase>(),
     injector.get<StopRecordingUseCase>(),
+    injector.get<GetTextFromSpeechUseCase>(),
+    injector.get<PlayAudioFromFileUseCase>(),
   ),
 );
 
@@ -42,7 +46,6 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
 
   Future<void> onRecordButtonTap() async {
     final state = ref.watch(pronunciationViewModelProvider);
-    ref.read(pronunciationViewModelProvider.notifier).stopAudio();
     if (state.recordButtonState == ButtonState.normal) {
       await ref
           .read(pronunciationViewModelProvider.notifier)
@@ -229,7 +232,9 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
       children: [
         Flexible(child: Container()),
         CustomIconButton(
-          onPressed: null,
+          onPressed: () {
+            ref.read(pronunciationViewModelProvider.notifier).playRecord();
+          },
           height: 64,
           width: 64,
           icon: AppIcons.playRecord(

@@ -117,9 +117,9 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     _playAudioFromAssetUseCase.run(AppAudios.congrats);
   }
 
-  Future<void> playRecord(String? path) async {
-    if (path != null) {
-      await _playAudioFromFileUseCase.run(path);
+  Future<void> playRecord() async {
+    if (state.recordPath != null) {
+      await _playAudioFromFileUseCase.run(state.recordPath!);
     }
   }
 

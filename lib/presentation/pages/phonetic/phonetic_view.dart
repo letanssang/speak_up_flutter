@@ -7,7 +7,7 @@ import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class PhoneticView extends ConsumerStatefulWidget {
   const PhoneticView({super.key});
@@ -31,28 +31,22 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
 
   Future<void> _init() async {
     phonetic = ModalRoute.of(context)!.settings.arguments as Phonetic;
-    _youtubePlayerController = YoutubePlayerController(
-      initialVideoId: phonetic.youtubeVideoId,
-      flags: const YoutubePlayerFlags(
-          hideThumbnail: true,
-          autoPlay: true,
-          captionLanguage: 'vi',
-          enableCaption: true,
-          loop: true,
-          startAt: 3),
+    _youtubePlayerController = YoutubePlayerController.fromVideoId(
+      videoId: phonetic.youtubeVideoId,
+      autoPlay: true,
+      startSeconds: 3,
+      params: const YoutubePlayerParams(
+        showControls: false,
+        showFullscreenButton: false,
+        loop: true,
+      ),
     );
     setState(() {});
   }
 
   @override
-  void deactivate() {
-    _youtubePlayerController?.pause();
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
-    _youtubePlayerController?.dispose();
+    _youtubePlayerController!.close();
     super.dispose();
   }
 
@@ -63,36 +57,22 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
         leading: const AppBackButton(),
         title: Text(phonetic.phonetic),
       ),
-      body: _youtubePlayerController == null
+      body: phonetic.youtubeVideoId.isEmpty
           ? const Center(
               child: AppLoadingIndicator(),
             )
           : Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
               child: Column(
                 children: [
-                  YoutubePlayer(
-                      controller: _youtubePlayerController!,
-                      showVideoProgressIndicator: true,
-                      progressIndicatorColor: Theme.of(context).primaryColor,
-                      progressColors: ProgressBarColors(
-                        playedColor: Theme.of(context).primaryColor,
-                        handleColor: Theme.of(context).primaryColor,
-                      ),
-                      bottomActions: [
-                        const SizedBox(width: 14.0),
-                        CurrentPosition(),
-                        const SizedBox(width: 8.0),
-                        ProgressBar(
-                            isExpanded: true,
-                            controller: _youtubePlayerController,
-                            colors: ProgressBarColors(
-                              playedColor: Theme.of(context).primaryColor,
-                              handleColor: Theme.of(context).primaryColor,
-                            )),
-                        RemainingDuration(),
-                      ]),
-                  SizedBox(
+                  _youtubePlayerController == null
+                      ? Container(
+                          width: ScreenUtil().screenWidth - 16,
+                          height: ScreenUtil().screenWidth / 16 * 9,
+                          color: Colors.black,
+                        )
+                      : YoutubePlayer(controller: _youtubePlayerController!),
+                  const SizedBox(
                     height: 16.0,
                   ),
                   Row(
