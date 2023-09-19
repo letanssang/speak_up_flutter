@@ -25,6 +25,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
     state = state.copyWith(lessonsLoadingStatus: LoadingStatus.loading);
     try {
       final lessons = await _getLessonListUseCase.run();
+      if (!mounted) return;
       state = state.copyWith(
         lessonsLoadingStatus: LoadingStatus.success,
         lessons: lessons,
@@ -40,6 +41,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
     state = state.copyWith(categoriesLoadingStatus: LoadingStatus.loading);
     try {
       final categories = await _getCategoryListUseCase.run();
+      if (!mounted) return;
       state = state.copyWith(
         categoriesLoadingStatus: LoadingStatus.success,
         categories: categories,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_flash_card_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/saved_flashcards/saved_flashcards_state.dart';
 import 'package:speak_up/presentation/pages/saved_flashcards/saved_flashcards_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
@@ -55,7 +57,11 @@ class _SavedFlashCardsViewState extends ConsumerState<SavedFlashCardsView> {
             children: [
               Flexible(
                 child: ListView.builder(
-                  itemCount: state.flashCardList.length,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                  itemCount: state.flashCardList.length - 1,
                   itemBuilder: (context, index) => ListTile(
                     leading: CircleAvatar(
                         child: Text(
@@ -74,7 +80,12 @@ class _SavedFlashCardsViewState extends ConsumerState<SavedFlashCardsView> {
                 ),
               ),
               CustomButton(
-                onTap: () {},
+                onTap: () {
+                  ref.read(appNavigatorProvider).navigateTo(
+                        AppRoutes.flashCards,
+                        arguments: state.flashCardList,
+                      );
+                },
                 text: 'Practice now',
               ),
               const SizedBox(
