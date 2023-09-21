@@ -14,6 +14,7 @@ import 'package:speak_up/presentation/pages/lessons/lessons_view.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/onboarding/onboarding_view.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_view.dart';
+import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_view.dart';
 import 'package:speak_up/presentation/pages/phonetic/phonetic_view.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_view.dart';
@@ -196,6 +197,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const PronunciationView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.patternLearning:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const PatternLearningView(),
             settings: settings,
           );
         }

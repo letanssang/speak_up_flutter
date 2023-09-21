@@ -36,7 +36,6 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
       autoPlay: true,
       startSeconds: 3,
       params: const YoutubePlayerParams(
-        showControls: false,
         showFullscreenButton: false,
         loop: true,
       ),

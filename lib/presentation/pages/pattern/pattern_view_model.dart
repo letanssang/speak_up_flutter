@@ -1,13 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 class PatternViewModel extends StateNotifier<PatternState> {
   final GetSentenceListFromPatternUseCase _getSentenceListFromPatternUseCase;
+  final SpeakFromTextUseCase _speakFromTextUseCase;
 
   PatternViewModel(
     this._getSentenceListFromPatternUseCase,
+    this._speakFromTextUseCase,
   ) : super(const PatternState());
 
   Future<void> fetchExampleList(int patternId) async {
@@ -26,5 +29,21 @@ class PatternViewModel extends StateNotifier<PatternState> {
         loadingStatus: LoadingStatus.error,
       );
     }
+  }
+
+  void toggleTranslate() {
+    state = state.copyWith(
+      isTranslated: !state.isTranslated,
+    );
+  }
+
+  void toggleDialog() {
+    state = state.copyWith(
+      isOpenedDialog: !state.isOpenedDialog,
+    );
+  }
+
+  void speak(String text) {
+    _speakFromTextUseCase.run(text);
   }
 }
