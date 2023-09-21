@@ -141,6 +141,10 @@ class DatabaseManager {
         patternID: maps[i][PatternTable.patternID.field] as int,
         name: maps[i][PatternTable.name.field] as String,
         dialogue: maps[i][PatternTable.dialogue.field] as String,
+        description: maps[i][PatternTable.description.field] as String,
+        descriptionTranslation:
+            maps[i][PatternTable.descriptionTranslation.field] as String,
+        youtubeVideoID: maps[i][PatternTable.youtubeVideoID.field] as String?,
       );
     });
   }

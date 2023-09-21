@@ -141,7 +141,14 @@ extension PhrasalVerbTableExtension on PhrasalVerbTable {
   String get field => capitalizeFirstLetter(name);
 }
 
-enum PatternTable { patternID, name, dialogue }
+enum PatternTable {
+  patternID,
+  name,
+  dialogue,
+  description,
+  descriptionTranslation,
+  youtubeVideoID,
+}
 
 extension PatternTableExtension on PatternTable {
   String get field => capitalizeFirstLetter(name);

@@ -6,6 +6,7 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_state.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_view_model.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 final patternViewModelProvider =
     StateNotifierProvider.autoDispose<PatternViewModel, PatternState>(
@@ -47,6 +48,9 @@ class _PatternViewState extends ConsumerState<PatternView> {
         title: Text(pattern.name),
       ),
       body: Column(children: [
+        Text(pattern.youtubeVideoID ?? ''),
+        Text(pattern.description),
+        Text(pattern.descriptionTranslation),
         const Text('Examples'),
         ...state.sentenceExamples.map((e) => Text(e.text)),
         const Text('Dialogues'),
