@@ -12,4 +12,11 @@ class PhrasalVerb {
     required this.descriptionTranslation,
     required this.description,
   });
+
+  PhrasalVerb.initial()
+      : phrasalVerbID = 0,
+        name = '',
+        phrasalVerbTypeID = 0,
+        descriptionTranslation = '',
+        description = '';
 }

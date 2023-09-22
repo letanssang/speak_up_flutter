@@ -52,7 +52,7 @@ class _SavedFlashCardsViewState extends ConsumerState<SavedFlashCardsView> {
   }
 
   Widget buildLoadingSuccessfulBody(SavedFlashCardsState state) {
-    return state.flashCardList.isNotEmpty
+    return state.flashCardList.length > 1
         ? Column(
             children: [
               Flexible(

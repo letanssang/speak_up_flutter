@@ -60,10 +60,46 @@ class FirestoreRepository {
     }
   }
 
+  Future<void> updatePhrasalVerbProgress(LectureProcess input) async {
+    final snapshot = await _firestore
+        .collection('phrasal_verb_process')
+        .where('PhrasalVerbTypeID', isEqualTo: input.lectureID)
+        .where('UserID', isEqualTo: input.uid)
+        .get();
+    //check if phrasal verb process exists
+    if (snapshot.docs.isEmpty) {
+      //if not exists, create new phrasal verb process
+      await _firestore.collection('phrasal_verb_process').add({
+        'Progress': input.progress,
+        'PhrasalVerbTypeID': input.lectureID,
+        'UserID': input.uid,
+      });
+    } else {
+      //if exists, update process
+      await _firestore
+          .collection('phrasal_verb_process')
+          .doc(snapshot.docs.first.id)
+          .update({'Progress': input.progress});
+    }
+  }
+
   Future<int> getIdiomProgress(int idiomTypeID, String uid) async {
     final snapshot = await _firestore
         .collection('idiom_process')
         .where('IdiomTypeID', isEqualTo: idiomTypeID)
+        .where('UserID', isEqualTo: uid)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return 0;
+    } else {
+      return snapshot.docs.first['Progress'];
+    }
+  }
+
+  Future<int> getPhrasalVerbProgress(int phrasalVerbTypeID, String uid) async {
+    final snapshot = await _firestore
+        .collection('phrasal_verb_process')
+        .where('PhrasalVerbTypeID', isEqualTo: phrasalVerbTypeID)
         .where('UserID', isEqualTo: uid)
         .get();
     if (snapshot.docs.isEmpty) {

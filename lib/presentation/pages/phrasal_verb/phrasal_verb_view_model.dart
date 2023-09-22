@@ -22,4 +22,6 @@ class PhrasalVerbViewModel extends StateNotifier<PhrasalVerbState> {
       state = state.copyWith(loadingStatus: LoadingStatus.error);
     }
   }
+
+  Future<void> updateProgressState(int idiomTypeID) async {}
 }

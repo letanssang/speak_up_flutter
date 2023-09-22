@@ -49,7 +49,9 @@ import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_idiom_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/get_phrasal_verb_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_expression_list_by_type_use_case.dart';
@@ -62,6 +64,7 @@ import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_list_b
 import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_type_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_idiom_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_phrasal_verb_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_topic_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_topic_list_from_category_use_case.dart';
@@ -401,5 +404,17 @@ class AppModules {
     // Get Flash Card List Use Case
     injector.registerLazySingleton<GetFlashCardListUseCase>(
         () => GetFlashCardListUseCase());
+
+    // Get Sentence List From Phrasal Verb Use Case
+    injector.registerLazySingleton<GetSentenceListFromPhrasalVerbUseCase>(
+        () => GetSentenceListFromPhrasalVerbUseCase());
+
+    // Update Phrasal Verb Progress Use Case
+    injector.registerLazySingleton<UpdatePhrasalVerbProgressUseCase>(
+        () => UpdatePhrasalVerbProgressUseCase());
+
+    // Get Phrase Verb Progress Use Case
+    injector.registerLazySingleton<GetPhrasalVerbProgressUseCase>(
+        () => GetPhrasalVerbProgressUseCase());
   }
 }

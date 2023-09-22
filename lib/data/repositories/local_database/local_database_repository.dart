@@ -77,4 +77,8 @@ class LocalDatabaseRepository {
   Future<List<Sentence>> getSentenceListFromPattern(int input) {
     return _databaseManager.getSentenceListFromPattern(input);
   }
+
+  Future<List<Sentence>> getSentenceListFromPhrasalVerb(int input) {
+    return _databaseManager.getSentenceListFromPhrasalVerb(input);
+  }
 }

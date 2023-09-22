@@ -8,5 +8,6 @@ class PhrasalVerbState with _$PhrasalVerbState {
   const factory PhrasalVerbState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default([]) List<PhrasalVerb> phrasalVerbs,
+    @Default(0) int progress,
   }) = _PhrasalVerbState;
 }

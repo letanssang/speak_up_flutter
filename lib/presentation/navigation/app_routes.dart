@@ -27,6 +27,7 @@ class AppRoutes {
   static const String phonetic = '/phonetic';
   static const String reels = '/reels';
   static const String pronunciation = '/pronunciation';
+  static const String phrasalVerbLearning = '/phrasal_verb_learning';
 
   //profile
   static const String editProfile = '/edit_profile';

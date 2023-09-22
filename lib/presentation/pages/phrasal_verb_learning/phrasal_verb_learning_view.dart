@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:speak_up/domain/entities/idiom/idiom.dart';
+import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
-import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
-import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_idiom_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_phrasal_verb_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
-import 'package:speak_up/presentation/pages/idiom/idiom_view.dart';
-import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.dart';
-import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_view_model.dart';
+import 'package:speak_up/presentation/pages/phrasal_verb_learning/phrasal_verb_learning_state.dart';
+import 'package:speak_up/presentation/pages/phrasal_verb_learning/phrasal_verb_learning_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
@@ -27,38 +23,40 @@ import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_shee
 import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
-import 'package:speak_up/presentation/widgets/cards/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
-    IdiomLearningViewModel, IdiomLearningState>(
-  (ref) => IdiomLearningViewModel(
-      injector.get<GetSentenceListFromIdiomUseCase>(),
-      injector.get<PlayAudioFromUrlUseCase>(),
-      injector.get<PlaySlowAudioFromUrlUseCase>(),
-      injector.get<PlayAudioFromAssetUseCase>(),
-      injector.get<PlayAudioFromFileUseCase>(),
-      injector.get<StopAudioUseCase>(),
-      injector.get<StartRecordingUseCase>(),
-      injector.get<StopRecordingUseCase>(),
-      injector.get<GetTextFromSpeechUseCase>(),
-      injector.get<SpeakFromTextUseCase>(),
-      injector.get<UpdateIdiomProgressUseCase>(),
-      injector.get<GetCurrentUserUseCase>()),
-);
+final phrasalVerbLearningViewModelProvider = StateNotifierProvider.autoDispose<
+        PhrasalVerbLearningViewModel, PhrasalVerbLearningState>(
+    (ref) => PhrasalVerbLearningViewModel(
+          injector.get<GetSentenceListFromPhrasalVerbUseCase>(),
+          injector.get<PlayAudioFromAssetUseCase>(),
+          injector.get<PlayAudioFromFileUseCase>(),
+          injector.get<StopAudioUseCase>(),
+          injector.get<StartRecordingUseCase>(),
+          injector.get<StopRecordingUseCase>(),
+          injector.get<GetTextFromSpeechUseCase>(),
+          injector.get<SpeakFromTextUseCase>(),
+          injector.get<UpdatePhrasalVerbProgressUseCase>(),
+          injector.get<GetCurrentUserUseCase>(),
+        ));
 
-class IdiomLearningView extends ConsumerStatefulWidget {
-  const IdiomLearningView({super.key});
+class PhrasalVerbLearningView extends ConsumerStatefulWidget {
+  const PhrasalVerbLearningView({super.key});
 
   @override
-  ConsumerState<IdiomLearningView> createState() => _IdiomLearningViewState();
+  ConsumerState<PhrasalVerbLearningView> createState() =>
+      _PhrasalVerbLearningViewState();
 }
 
-class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
-  Idiom idiom = Idiom.initial();
+class _PhrasalVerbLearningViewState
+    extends ConsumerState<PhrasalVerbLearningView> {
+  PhrasalVerb phrasalVerb = PhrasalVerb.initial();
   final _pageController = PageController(initialPage: 0);
   int process = 0;
   int index = 0;
+
+  get _viewModel => ref.read(phrasalVerbLearningViewModelProvider.notifier);
 
   @override
   void initState() {
@@ -69,35 +67,30 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   }
 
   Future<void> _init() async {
-    //argument: <String, dynamic> {idiom: idiom, process: process, index: index}
     final argument =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    idiom = argument['idiom'] as Idiom;
+    phrasalVerb = argument['phrasalVerb'] as PhrasalVerb;
     process = argument['progress'] as int;
     index = argument['index'] as int;
 
-    ref.read(idiomLearningViewModelProvider.notifier).speakFromText(idiom.name);
-    await ref
-        .read(idiomLearningViewModelProvider.notifier)
-        .fetchExampleSentences(idiom);
-    ref.read(idiomLearningViewModelProvider.notifier).updateTotalPage();
+    _viewModel.speakFromText(phrasalVerb.name);
+    await _viewModel.fetchExampleSentences(phrasalVerb);
+    _viewModel.updateTotalPage();
   }
 
   Future<void> onNextPageButtonTap() async {
-    final state = ref.watch(idiomLearningViewModelProvider);
-    ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
+    final state = ref.watch(phrasalVerbLearningViewModelProvider);
+    _viewModel.onStopRecording();
 
-    ref
-        .read(idiomLearningViewModelProvider.notifier)
-        .updateCurrentPage(_pageController.page!.toInt() + 1);
+    _viewModel.updateCurrentPage(_pageController.page!.toInt() + 1);
+    // print (_pageController.page!.toInt()); and print (state.totalPage); to see the difference
+    debugPrint(
+        'page: ${_pageController.page!.toInt()}  total: ${state.totalPage}');
     if (_pageController.page!.toInt() == state.totalPage - 1) {
       if (index == process) {
-        ref
-            .read(idiomLearningViewModelProvider.notifier)
-            .updateIdiomProgress(process, idiom.idiomTypeID);
-        await ref
-            .read(idiomViewModelProvider.notifier)
-            .updateProgressState(process);
+        _viewModel.updatePhrasalVerbProgress(
+            process, phrasalVerb.phrasalVerbTypeID);
+        await _viewModel.updateProgressState(process);
       }
       Future.delayed(const Duration(milliseconds: 500), () {
         showCompleteBottomSheet(context);
@@ -105,33 +98,28 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     } else {
       _pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-      ref.read(idiomLearningViewModelProvider.notifier).playAudio(
-          state.exampleSentences[_pageController.page!.toInt()].audioEndpoint);
+      _viewModel.speakFromText(state.exampleSentences[index].text);
     }
   }
 
   Future<void> onPlayRecordButtonTap() async {
-    await ref.read(idiomLearningViewModelProvider.notifier).playRecord();
+    await _viewModel.playRecord();
   }
 
   Future<void> onRecordButtonTap() async {
-    final state = ref.watch(idiomLearningViewModelProvider);
-    ref.read(idiomLearningViewModelProvider.notifier).stopAudio();
+    final state = ref.watch(phrasalVerbLearningViewModelProvider);
+    _viewModel.stopAudio();
     if (state.recordButtonState == ButtonState.normal) {
-      await ref
-          .read(idiomLearningViewModelProvider.notifier)
-          .onStartRecording();
+      await _viewModel.onStartRecording();
     } else {
-      await ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
-      await ref
-          .read(idiomLearningViewModelProvider.notifier)
-          .getTextFromSpeech();
+      await _viewModel.onStopRecording();
+      await _viewModel.getTextFromSpeech();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(idiomLearningViewModelProvider);
+    final state = ref.watch(phrasalVerbLearningViewModelProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -159,10 +147,9 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          buildDefinitionIdiom(state, context),
           if (state.loadingStatus == LoadingStatus.success)
             ...state.exampleSentences.map(
-              (sentence) => buildExampleIdiom(
+              (sentence) => buildExample(
                   sentence,
                   state.exampleSentences.indexOf(sentence) + 1,
                   state.recordButtonState,
@@ -173,7 +160,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     );
   }
 
-  Widget buildExampleIdiom(Sentence sentence, int sentenceIndex,
+  Widget buildExample(Sentence sentence, int sentenceIndex,
       ButtonState buttonState, Function()? onRecordButtonTap) {
     return Column(
       children: [
@@ -194,18 +181,8 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
                 size: 32,
                 color: Colors.grey[800],
               ),
-              onPressed: () => ref
-                  .read(idiomLearningViewModelProvider.notifier)
-                  .playAudio(sentence.audioEndpoint),
+              onPressed: () => _viewModel.speakFromText(sentence.text),
             ),
-            CustomIconButton(
-                icon: AppIcons.snail(
-                  size: 32,
-                  color: Colors.grey[800],
-                ),
-                onPressed: () => ref
-                    .read(idiomLearningViewModelProvider.notifier)
-                    .playSlowAudio(sentence.audioEndpoint)),
             Flexible(child: Container()),
           ],
         ),
@@ -234,37 +211,6 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           height: 64,
         ),
       ],
-    );
-  }
-
-  Center buildDefinitionIdiom(IdiomLearningState state, BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 32,
-          ),
-          FlashCardItem(
-            frontText: idiom.name,
-            backText: idiom.description,
-            backTranslation: idiom.descriptionTranslation,
-            tapFrontDescription:
-                AppLocalizations.of(context)!.tapToSeeTheMeaning,
-            tapBackDescription: AppLocalizations.of(context)!.tapToReturn,
-            onPressedFrontCard: () => ref
-                .read(idiomLearningViewModelProvider.notifier)
-                .speakFromText(idiom.name),
-            onPressedBackCard: () => ref
-                .read(idiomLearningViewModelProvider.notifier)
-                .speakFromText(idiom.description),
-          ),
-          Flexible(child: Container()),
-          buildBottomMenu(state.recordButtonState),
-          const SizedBox(
-            height: 64,
-          ),
-        ],
-      ),
     );
   }
 

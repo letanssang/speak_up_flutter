@@ -16,7 +16,7 @@ import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
+import 'package:speak_up/presentation/widgets/percent_indicator/app_circular_percent_indicator.dart';
 
 final idiomViewModelProvider =
     StateNotifierProvider.autoDispose<IdiomViewModel, IdiomState>(
@@ -78,13 +78,15 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
                     toolbarHeight: ScreenUtil().setHeight(50),
                     leading: const SizedBox(),
                     pinned: true,
-                    flexibleSpace: AppLinearPercentIndicator(
-                      percent: state.progress / state.idioms.length,
-                      trailing: Text(
-                        '${percentCalculate(state.progress, state.idioms.length).toStringAsFixed(0)}%',
+                    flexibleSpace: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        state.progress == state.idioms.length
+                            ? AppLocalizations.of(context)!.completed
+                            : '${state.idioms.length} ${AppLocalizations.of(context)!.daysCompleted}',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: ScreenUtil().setSp(18),
-                          color: Theme.of(context).primaryColor,
+                          fontSize: ScreenUtil().setSp(16),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -121,83 +123,84 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
   }
 
   Widget buildCardItem(IdiomState state, int idiomIndex) {
-    return InkWell(
-      onTap: () {
-        if (idiomIndex <= state.progress) {
-          ref
-              .read(appNavigatorProvider)
-              .navigateTo(AppRoutes.idiomLearning, arguments: <String, dynamic>{
-            'idiom': state.idioms[idiomIndex],
-            'progress': state.progress,
-            'index': idiomIndex,
-          }).then((_) {
-            ref
-                .read(idiomViewModelProvider.notifier)
-                .updateProgressState(idiomType.idiomTypeID);
-          });
-        }
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 32,
-        ),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: state.progress == idiomIndex
-              ? Border.all(
-                  color: Colors.grey,
-                  width: 2,
-                )
-              : null,
-          color: state.progress > idiomIndex
-              ? const Color(0XFF6B3D90)
-              : state.progress == idiomIndex
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: ScreenUtil().setWidth(16),
-                ),
-                Expanded(
-                  child: Text(
-                    '${AppLocalizations.of(context)!.day} ${idiomIndex + 1}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(14),
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 32,
+      ),
+      child: InkWell(
+        onTap: () {
+          if (idiomIndex <= state.progress) {
+            ref.read(appNavigatorProvider).navigateTo(AppRoutes.idiomLearning,
+                arguments: <String, dynamic>{
+                  'idiom': state.idioms[idiomIndex],
+                  'progress': state.progress,
+                  'index': idiomIndex,
+                }).then((_) {
+              ref
+                  .read(idiomViewModelProvider.notifier)
+                  .updateProgressState(idiomType.idiomTypeID);
+            });
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            border: state.progress == idiomIndex
+                ? Border.all(
+                    color: Colors.grey,
+                    width: 2,
+                  )
+                : null,
+            color: state.progress > idiomIndex
+                ? const Color(0XFF6B3D90)
+                : state.progress == idiomIndex
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: ScreenUtil().setWidth(16),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${AppLocalizations.of(context)!.day} ${idiomIndex + 1}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(14),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                if (idiomIndex != state.progress)
-                  Icon(
-                    idiomIndex > state.progress
-                        ? Icons.lock_outline
-                        : Icons.check_circle_outline,
+                  if (idiomIndex != state.progress)
+                    Icon(
+                      idiomIndex > state.progress
+                          ? Icons.lock_outline
+                          : Icons.check_circle_outline,
+                      color: Colors.white,
+                      size: ScreenUtil().setWidth(16),
+                    ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  state.idioms[idiomIndex].name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(18),
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    size: ScreenUtil().setWidth(16),
                   ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                state.idioms[idiomIndex].name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(18),
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -223,6 +226,7 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
   }
 
   Padding buildHeader(IdiomState state, Language language) {
+    final percent = percentCalculate(state.progress, state.idioms.length);
     return Padding(
       padding: const EdgeInsets.only(
         top: 16,
@@ -245,32 +249,14 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(32),
-                  child: Image.asset(
-                    'assets/images/temp_topic.png',
-                    fit: BoxFit.cover,
-                    width: ScreenUtil().setWidth(64),
-                    height: ScreenUtil().setWidth(64),
-                  ),
-                ),
-              )
+              AppCircularPercentIndicator(
+                title: '${percent.toStringAsFixed(0)}%',
+                percent: percent / 100,
+              ),
             ],
           ),
           const SizedBox(
             height: 16,
-          ),
-          Text(
-            state.progress == state.idioms.length
-                ? AppLocalizations.of(context)!.completed
-                : '${state.idioms.length} ${AppLocalizations.of(context)!.daysCompleted}',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: ScreenUtil().setSp(16),
-              fontWeight: FontWeight.bold,
-            ),
           ),
         ],
       ),

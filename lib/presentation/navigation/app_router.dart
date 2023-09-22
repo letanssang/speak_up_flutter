@@ -17,6 +17,7 @@ import 'package:speak_up/presentation/pages/pattern/pattern_view.dart';
 import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_view.dart';
 import 'package:speak_up/presentation/pages/phonetic/phonetic_view.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
+import 'package:speak_up/presentation/pages/phrasal_verb_learning/phrasal_verb_learning_view.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_view.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_view.dart';
 import 'package:speak_up/presentation/pages/reels/reels_view.dart';
@@ -204,6 +205,14 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const PatternLearningView(),
+            settings: settings,
+          );
+        }
+
+      case AppRoutes.phrasalVerbLearning:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const PhrasalVerbLearningView(),
             settings: settings,
           );
         }
