@@ -60,6 +60,8 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
   int process = 0;
   int index = 0;
 
+  IdiomLearningViewModel get _viewModel =>
+      ref.read(idiomLearningViewModelProvider.notifier);
   @override
   void initState() {
     super.initState();
@@ -76,25 +78,21 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     process = argument['progress'] as int;
     index = argument['index'] as int;
 
-    ref.read(idiomLearningViewModelProvider.notifier).speakFromText(idiom.name);
-    await ref
-        .read(idiomLearningViewModelProvider.notifier)
-        .fetchExampleSentences(idiom);
-    ref.read(idiomLearningViewModelProvider.notifier).updateTotalPage();
+    _viewModel.speakFromText(idiom.name);
+    await _viewModel.fetchExampleSentences(idiom);
+    _viewModel.updateTotalPage();
   }
 
   Future<void> onNextPageButtonTap() async {
-    final state = ref.watch(idiomLearningViewModelProvider);
-    ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
+    if (_viewModel.isAnimating || _viewModel.isLastPage) return;
+    _viewModel.updateAnimatingState(true);
+    _viewModel.onStopRecording();
 
-    ref
-        .read(idiomLearningViewModelProvider.notifier)
-        .updateCurrentPage(_pageController.page!.toInt() + 1);
-    if (_pageController.page!.toInt() == state.totalPage - 1) {
+    _viewModel.updateCurrentPage(
+        ref.read(idiomLearningViewModelProvider).currentPage + 1);
+    if (_viewModel.isLastPage) {
       if (index == process) {
-        ref
-            .read(idiomLearningViewModelProvider.notifier)
-            .updateIdiomProgress(process, idiom.idiomTypeID);
+        _viewModel.updateIdiomProgress(process, idiom.idiomTypeID);
         await ref
             .read(idiomViewModelProvider.notifier)
             .updateProgressState(process);
@@ -105,24 +103,29 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
     } else {
       _pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-      ref.read(idiomLearningViewModelProvider.notifier).playAudio(
-          state.exampleSentences[_pageController.page!.toInt()].audioEndpoint);
+      _viewModel.playAudio(ref
+          .read(idiomLearningViewModelProvider)
+          .exampleSentences[_pageController.page!.toInt()]
+          .audioEndpoint);
     }
+    ref
+        .read(idiomLearningViewModelProvider.notifier)
+        .updateAnimatingState(false);
   }
 
   Future<void> onPlayRecordButtonTap() async {
-    await ref.read(idiomLearningViewModelProvider.notifier).playRecord();
+    await _viewModel.playRecord();
   }
 
   Future<void> onRecordButtonTap() async {
     final state = ref.watch(idiomLearningViewModelProvider);
-    ref.read(idiomLearningViewModelProvider.notifier).stopAudio();
+    _viewModel.stopAudio();
     if (state.recordButtonState == ButtonState.normal) {
       await ref
           .read(idiomLearningViewModelProvider.notifier)
           .onStartRecording();
     } else {
-      await ref.read(idiomLearningViewModelProvider.notifier).onStopRecording();
+      await _viewModel.onStopRecording();
       await ref
           .read(idiomLearningViewModelProvider.notifier)
           .getTextFromSpeech();

@@ -75,20 +75,18 @@ class _PhrasalVerbLearningViewState
     process = argument['progress'] as int;
     index = argument['index'] as int;
 
-    _viewModel.speakFromText(phrasalVerb.name);
     await _viewModel.fetchExampleSentences(phrasalVerb);
     _viewModel.updateTotalPage();
   }
 
   Future<void> onNextPageButtonTap() async {
-    final state = ref.watch(phrasalVerbLearningViewModelProvider);
+    if (_viewModel.isAnimating || _viewModel.isLastPage) return;
+    _viewModel.updateAnimatingState(true);
     _viewModel.onStopRecording();
 
-    _viewModel.updateCurrentPage(_pageController.page!.toInt() + 1);
-    // print (_pageController.page!.toInt()); and print (state.totalPage); to see the difference
-    debugPrint(
-        'page: ${_pageController.page!.toInt()}  total: ${state.totalPage}');
-    if (_pageController.page!.toInt() == state.totalPage - 1) {
+    _viewModel.updateCurrentPage(
+        ref.read(phrasalVerbLearningViewModelProvider).currentPage + 1);
+    if (_viewModel.isLastPage) {
       if (index == process) {
         _viewModel.updatePhrasalVerbProgress(
             process, phrasalVerb.phrasalVerbTypeID);
@@ -102,8 +100,12 @@ class _PhrasalVerbLearningViewState
     } else {
       _pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-      _viewModel.speakFromText(state.exampleSentences[index].text);
+      _viewModel.speakFromText(ref
+          .read(phrasalVerbLearningViewModelProvider)
+          .exampleSentences[index]
+          .text);
     }
+    _viewModel.updateAnimatingState(false);
   }
 
   Future<void> onPlayRecordButtonTap() async {

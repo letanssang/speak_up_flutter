@@ -13,6 +13,7 @@ class PhrasalVerbLearningState with _$PhrasalVerbLearningState {
     @Default([]) List<Sentence> exampleSentences,
     @Default(ButtonState.normal) ButtonState recordButtonState,
     @Default(ButtonState.normal) ButtonState nextButtonState,
+    @Default(false) isAnimating,
     String? recordPath,
   }) = _PhrasalVerbLearningState;
 }

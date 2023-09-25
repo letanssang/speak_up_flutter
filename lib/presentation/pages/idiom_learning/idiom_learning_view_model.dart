@@ -35,6 +35,9 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   final UpdateIdiomProgressUseCase _updateIdiomProgressUseCase;
   final GetCurrentUserUseCase _getCurrentUserUseCase;
 
+  bool get isAnimating => state.isAnimating;
+  bool get isLastPage => state.currentPage >= state.totalPage;
+
   IdiomLearningViewModel(
     this._getSentenceListFromIdiomUseCase,
     this._playAudioFromUrlUseCase,
@@ -141,5 +144,9 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
       uid: uid,
     );
     await _updateIdiomProgressUseCase.run(lectureProcess);
+  }
+
+  void updateAnimatingState(bool isAnimating) {
+    state = state.copyWith(isAnimating: isAnimating);
   }
 }

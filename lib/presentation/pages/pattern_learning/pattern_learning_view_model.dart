@@ -1,57 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:speak_up/domain/entities/lecture_process/lecture_process.dart';
-import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
+import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
-import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_phrasal_verb_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
-import 'package:speak_up/presentation/pages/phrasal_verb_learning/phrasal_verb_learning_state.dart';
+import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_state.dart';
 import 'package:speak_up/presentation/resources/app_audios.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
-class PhrasalVerbLearningViewModel
-    extends StateNotifier<PhrasalVerbLearningState> {
-  PhrasalVerbLearningViewModel(
-    this._getSentenceListFromPhrasalVerbUseCase,
-    this._playAudioFromAssetUseCase,
-    this._playAudioFromFileUseCase,
+class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
+  PatternLearningViewModel(
+    this._getSentenceListFromPatternUseCase,
     this._stopAudioUseCase,
     this._startRecordingUseCase,
     this._stopRecordingUseCase,
+    this._playAudioFromAssetUseCase,
+    this._playAudioFromFileUseCase,
     this._getTextFromSpeechUseCase,
     this._speakingFromTextUseCase,
-    this._updatePhrasalVerbProgressUseCase,
-    this._getCurrentUserUseCase,
-  ) : super(const PhrasalVerbLearningState());
-  final GetSentenceListFromPhrasalVerbUseCase
-      _getSentenceListFromPhrasalVerbUseCase;
-  final PlayAudioFromAssetUseCase _playAudioFromAssetUseCase;
-  final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
+  ) : super(const PatternLearningState());
+
+  final GetSentenceListFromPatternUseCase _getSentenceListFromPatternUseCase;
   final StopAudioUseCase _stopAudioUseCase;
   final StartRecordingUseCase _startRecordingUseCase;
   final StopRecordingUseCase _stopRecordingUseCase;
+  final PlayAudioFromAssetUseCase _playAudioFromAssetUseCase;
+  final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
   final GetTextFromSpeechUseCase _getTextFromSpeechUseCase;
   final SpeakFromTextUseCase _speakingFromTextUseCase;
-  final UpdatePhrasalVerbProgressUseCase _updatePhrasalVerbProgressUseCase;
-  final GetCurrentUserUseCase _getCurrentUserUseCase;
 
   bool get isAnimating => state.isAnimating;
   bool get isLastPage => state.currentPage >= state.totalPage;
 
-  Future<void> fetchExampleSentences(PhrasalVerb phrasalVerb) async {
+  Future<void> fetchExampleSentences(SentencePattern pattern) async {
     state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
-      List<Sentence> sentences = await _getSentenceListFromPhrasalVerbUseCase
-          .run(phrasalVerb.phrasalVerbID);
+      List<Sentence> sentences =
+          await _getSentenceListFromPatternUseCase.run(pattern.patternID);
       state = state.copyWith(
         loadingStatus: LoadingStatus.success,
         exampleSentences: sentences,
@@ -70,7 +62,7 @@ class PhrasalVerbLearningViewModel
   }
 
   void updateTotalPage() {
-    state = state.copyWith(totalPage: state.exampleSentences.length);
+    state = state.copyWith(totalPage: state.exampleSentences.length + 1);
   }
 
   Future<void> onStartRecording() async {
@@ -116,17 +108,6 @@ class PhrasalVerbLearningViewModel
 
   Future<void> speakFromText(String text) async {
     await _speakingFromTextUseCase.run(text);
-  }
-
-  Future<void> updatePhrasalVerbProgress(
-      int process, int phrasalVerbTypeID) async {
-    final uid = _getCurrentUserUseCase.run().uid;
-    LectureProcess lectureProcess = LectureProcess(
-      lectureID: phrasalVerbTypeID,
-      progress: process + 1,
-      uid: uid,
-    );
-    await _updatePhrasalVerbProgressUseCase.run(lectureProcess);
   }
 
   void updateAnimatingState(bool isAnimating) {
