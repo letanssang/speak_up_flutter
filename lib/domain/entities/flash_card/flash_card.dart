@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
+import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
 part 'flash_card.g.dart';
 
 @JsonSerializable()
@@ -29,6 +30,15 @@ class FlashCard {
       frontText: idiom.name,
       backText: idiom.description,
       backTranslation: idiom.descriptionTranslation,
+      userID: userID,
+    );
+  }
+  factory FlashCard.fromPhrasalVerb(PhrasalVerb phrasalVerb, String userID) {
+    return FlashCard(
+      flashcardID: phrasalVerb.phrasalVerbID,
+      frontText: phrasalVerb.name,
+      backText: phrasalVerb.description,
+      backTranslation: phrasalVerb.descriptionTranslation,
       userID: userID,
     );
   }

@@ -14,6 +14,7 @@ import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb_learning/phrasal_verb_learning_state.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb_learning/phrasal_verb_learning_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
@@ -56,7 +57,8 @@ class _PhrasalVerbLearningViewState
   int process = 0;
   int index = 0;
 
-  get _viewModel => ref.read(phrasalVerbLearningViewModelProvider.notifier);
+  PhrasalVerbLearningViewModel get _viewModel =>
+      ref.read(phrasalVerbLearningViewModelProvider.notifier);
 
   @override
   void initState() {
@@ -90,7 +92,9 @@ class _PhrasalVerbLearningViewState
       if (index == process) {
         _viewModel.updatePhrasalVerbProgress(
             process, phrasalVerb.phrasalVerbTypeID);
-        await _viewModel.updateProgressState(process);
+        ref
+            .read(phrasalVerbViewModelProvider.notifier)
+            .updateProgressState(process);
       }
       Future.delayed(const Duration(milliseconds: 500), () {
         showCompleteBottomSheet(context);

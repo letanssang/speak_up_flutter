@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -41,9 +39,7 @@ class HomeView extends ConsumerStatefulWidget {
 }
 
 class _HomeViewState extends ConsumerState<HomeView> {
-  final int _randomIndex1 = Random().nextInt(2);
-  final int _randomIndex2 = Random().nextInt(2) + 2;
-
+  HomeViewModel get _viewModel => ref.read(homeViewModelProvider.notifier);
   @override
   void initState() {
     super.initState();
@@ -53,9 +49,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   Future<void> _init() async {
-    await ref.read(homeViewModelProvider.notifier).getCategoryList();
-    await ref.read(homeViewModelProvider.notifier).getLessonList();
-    await ref.read(homeViewModelProvider.notifier).getYoutubeVideoLists();
+    await _viewModel.getCategoryList();
+    await _viewModel.getLessonList();
+    await _viewModel.getYoutubeVideoLists();
   }
 
   String getBestThumbnailUrl(YoutubeVideoThumbnails? thumbnails) {
@@ -130,13 +126,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 : ScreenUtil().screenHeight * 0.33,
           ),
           child: state.lessonsLoadingStatus == LoadingStatus.success
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    buildExploreItem(state.lessons[_randomIndex1]),
-                    buildExploreItem(state.lessons[_randomIndex2]),
-                  ],
+              ? ListView.builder(
+                  itemCount: state.lessons.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) =>
+                      buildExploreItem(state.lessons[index]),
                 )
               : Container(
                   height: ScreenUtil().scaleHeight * 0.33,
@@ -149,59 +143,62 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget buildExploreItem(Lesson lesson) {
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
-    return InkWell(
-      onTap: () {
-        ref
-            .read(appNavigatorProvider)
-            .navigateTo(AppRoutes.lesson, arguments: lesson);
-      },
-      child: SizedBox(
-        width: ScreenUtil().screenWidth * 0.45,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          color: isDarkTheme ? Colors.grey[800] : Colors.white,
-          surfaceTintColor: Colors.white,
-          elevation: 3,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: AspectRatio(
-                    aspectRatio: 1.2,
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child:
-                            Image.network(lesson.imageURL, fit: BoxFit.cover)),
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 32),
-                  child: Center(
-                    child: Text(
-                      language == Language.english
-                          ? lesson.name
-                          : lesson.translation,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: isDarkTheme ? Colors.white : Colors.black,
-                          fontSize: ScreenUtil().setSp(14)),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () {
+          ref
+              .read(appNavigatorProvider)
+              .navigateTo(AppRoutes.lesson, arguments: lesson);
+        },
+        child: SizedBox(
+          width: ScreenUtil().screenWidth * 0.45,
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            color: isDarkTheme ? Colors.grey[800] : Colors.white,
+            surfaceTintColor: Colors.white,
+            elevation: 3,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: AspectRatio(
+                      aspectRatio: 1.2,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(lesson.imageURL,
+                              fit: BoxFit.cover)),
                     ),
                   ),
                 ),
-              ),
-            ],
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 16, 8, 32),
+                    child: Center(
+                      child: Text(
+                        language == Language.english
+                            ? lesson.name
+                            : lesson.translation,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isDarkTheme ? Colors.white : Colors.black,
+                            fontSize: ScreenUtil().setSp(14)),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
