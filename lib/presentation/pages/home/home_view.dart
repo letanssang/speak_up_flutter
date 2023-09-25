@@ -180,7 +180,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 ),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 16, 8, 32),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                     child: Center(
                       child: Text(
                         language == Language.english

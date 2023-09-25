@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/domain/entities/lecture_process/lecture_process.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
@@ -25,6 +28,8 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
     this._playAudioFromFileUseCase,
     this._getTextFromSpeechUseCase,
     this._speakingFromTextUseCase,
+    this._updatePatternProgressUseCase,
+    this._getCurrentUserUseCase,
   ) : super(const PatternLearningState());
 
   final GetSentenceListFromPatternUseCase _getSentenceListFromPatternUseCase;
@@ -35,6 +40,8 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
   final GetTextFromSpeechUseCase _getTextFromSpeechUseCase;
   final SpeakFromTextUseCase _speakingFromTextUseCase;
+  final UpdatePatternProgressUseCase _updatePatternProgressUseCase;
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
 
   bool get isAnimating => state.isAnimating;
   bool get isLastPage => state.currentPage >= state.totalPage;
@@ -62,7 +69,7 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
   }
 
   void updateTotalPage() {
-    state = state.copyWith(totalPage: state.exampleSentences.length + 1);
+    state = state.copyWith(totalPage: state.exampleSentences.length);
   }
 
   Future<void> onStartRecording() async {
@@ -112,5 +119,12 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
 
   void updateAnimatingState(bool isAnimating) {
     state = state.copyWith(isAnimating: isAnimating);
+  }
+
+  Future<void> updatePatternProgress(int patternId) async {
+    final uid = _getCurrentUserUseCase.run().uid;
+    final lectureProcess =
+        LectureProcess(lectureID: patternId, progress: 0, uid: uid);
+    await _updatePatternProgressUseCase.run(lectureProcess);
   }
 }

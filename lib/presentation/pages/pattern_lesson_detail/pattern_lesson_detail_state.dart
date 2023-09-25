@@ -9,5 +9,7 @@ class PatternLessonDetailState with _$PatternLessonDetailState {
   const factory PatternLessonDetailState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default([]) List<SentencePattern> sentencePatterns,
+    @Default([]) List<bool> isDoneList,
+    @Default(LoadingStatus.initial) LoadingStatus progressLoadingStatus,
   }) = _PatternLessonDetailState;
 }

@@ -6,6 +6,8 @@ import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
@@ -14,6 +16,7 @@ import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_cas
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_state.dart';
 import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_view_model.dart';
+import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson_detail_view.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
@@ -35,6 +38,8 @@ final patternLearningViewModelProvider = StateNotifierProvider.autoDispose<
     injector.get<PlayAudioFromFileUseCase>(),
     injector.get<GetTextFromSpeechUseCase>(),
     injector.get<SpeakFromTextUseCase>(),
+    injector.get<UpdatePatternProgressUseCase>(),
+    injector.get<GetCurrentUserUseCase>(),
   ),
 );
 
@@ -70,6 +75,10 @@ class _PatternLearningViewState extends ConsumerState<PatternLearningView> {
     _viewModel.updateCurrentPage(
         ref.read(patternLearningViewModelProvider).currentPage + 1);
     if (_viewModel.isLastPage) {
+      await _viewModel.updatePatternProgress(pattern.patternID);
+      await ref
+          .read(patternLessonDetailViewModelProvider.notifier)
+          .fetchPatternDoneList();
       Future.delayed(const Duration(milliseconds: 500), () {
         showCompleteBottomSheet(context);
       });

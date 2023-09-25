@@ -162,6 +162,7 @@ class _PatternViewState extends ConsumerState<PatternView> {
                 ref.read(appNavigatorProvider).navigateTo(
                       AppRoutes.patternLearning,
                       arguments: pattern,
+                      shouldReplace: true,
                     );
               },
               text: 'Practice now',

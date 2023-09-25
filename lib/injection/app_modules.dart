@@ -49,8 +49,10 @@ import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_idiom_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/get_pattern_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_phrasal_verb_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
@@ -416,5 +418,13 @@ class AppModules {
     // Get Phrase Verb Progress Use Case
     injector.registerLazySingleton<GetPhrasalVerbProgressUseCase>(
         () => GetPhrasalVerbProgressUseCase());
+
+    // Update Pattern Progress Use Case
+    injector.registerLazySingleton<UpdatePatternProgressUseCase>(
+        () => UpdatePatternProgressUseCase());
+
+    // Get Pattern Done List Use Case
+    injector.registerLazySingleton<GetPatternDoneListUseCase>(
+        () => GetPatternDoneListUseCase());
   }
 }

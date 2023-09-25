@@ -35,7 +35,8 @@ class PhrasalVerbView extends ConsumerStatefulWidget {
 
 class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
   PhrasalVerbType phrasalVerbType = PhrasalVerbType.initial();
-  get _viewModel => ref.read(phrasalVerbViewModelProvider.notifier);
+  PhrasalVerbViewModel get _viewModel =>
+      ref.read(phrasalVerbViewModelProvider.notifier);
   @override
   void initState() {
     super.initState();
@@ -48,6 +49,7 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
     phrasalVerbType =
         ModalRoute.of(context)!.settings.arguments as PhrasalVerbType;
     await _viewModel.fetchPhrasalVerbList(phrasalVerbType.phrasalVerbTypeID);
+    await _viewModel.updateProgressState(phrasalVerbType.phrasalVerbTypeID);
   }
 
   @override

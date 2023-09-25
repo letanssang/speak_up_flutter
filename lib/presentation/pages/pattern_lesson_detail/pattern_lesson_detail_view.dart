@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/get_pattern_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
@@ -17,6 +18,7 @@ final patternLessonDetailViewModelProvider = StateNotifierProvider.autoDispose<
     PatternLessonDetailViewModel, PatternLessonDetailState>((ref) {
   return PatternLessonDetailViewModel(
     injector.get<GetSentencePatternListUseCase>(),
+    injector.get<GetPatternDoneListUseCase>(),
   );
 });
 
@@ -30,6 +32,8 @@ class PatternLessonDetailView extends ConsumerStatefulWidget {
 
 class _PatternLessonDetailViewState
     extends ConsumerState<PatternLessonDetailView> {
+  PatternLessonDetailViewModel get _viewModel =>
+      ref.read(patternLessonDetailViewModelProvider.notifier);
   @override
   initState() {
     super.initState();
@@ -39,9 +43,8 @@ class _PatternLessonDetailViewState
   }
 
   Future<void> _init() async {
-    await ref
-        .read(patternLessonDetailViewModelProvider.notifier)
-        .fetchSentencePatternList();
+    await _viewModel.fetchSentencePatternList();
+    await _viewModel.fetchPatternDoneList();
   }
 
   @override
@@ -83,7 +86,11 @@ class _PatternLessonDetailViewState
                     ),
                   ),
                   trailing: Icon(
-                    Icons.play_circle_outline_outlined,
+                    state.progressLoadingStatus == LoadingStatus.success
+                        ? state.isDoneList[index]
+                            ? Icons.check_outlined
+                            : Icons.play_circle_outline_outlined
+                        : Icons.play_circle_outline_outlined,
                     size: ScreenUtil().setSp(32),
                     color: isDarkTheme
                         ? Colors.white

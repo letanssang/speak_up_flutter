@@ -83,6 +83,36 @@ class FirestoreRepository {
     }
   }
 
+  Future<void> updatePatternProgress(LectureProcess input) async {
+    final snapshot = await _firestore
+        .collection('pattern_process')
+        .where('PatternID', isEqualTo: input.lectureID)
+        .where('UserID', isEqualTo: input.uid)
+        .get();
+    //check if pattern process exists
+    if (snapshot.docs.isEmpty) {
+      //if not exists, create new pattern process
+      await _firestore.collection('pattern_process').add({
+        'PatternID': input.lectureID,
+        'UserID': input.uid,
+      });
+    }
+  }
+
+  Future<List<int>> getPatternDoneList(String uid) async {
+    final snapshot = await _firestore
+        .collection('pattern_process')
+        .where('UserID', isEqualTo: uid)
+        .get();
+    List<int> patternDoneList = [];
+    for (var docSnapshot in snapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      int patternID = data['PatternID'];
+      patternDoneList.add(patternID);
+    }
+    return patternDoneList;
+  }
+
   Future<int> getIdiomProgress(int idiomTypeID, String uid) async {
     final snapshot = await _firestore
         .collection('idiom_process')
