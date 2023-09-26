@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
@@ -17,17 +18,19 @@ import 'presentation/navigation/app_router.dart';
 final appRootNavigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await AppModules.inject();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
   await injector.allReady();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
     const ProviderScope(
       child: MyApp(),
     ),
   );
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends ConsumerWidget {

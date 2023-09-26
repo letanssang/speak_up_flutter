@@ -44,61 +44,75 @@ class _LessonViewState extends ConsumerState<LessonView>
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
     return Scaffold(
-      appBar: AppBar(
-        leading: const AppBackButton(),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  lesson.imageURL,
-                  width: ScreenUtil().screenWidth * 0.9,
-                  height: ScreenUtil().screenWidth * 0.5,
-                  fit: BoxFit.cover,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                height: ScreenUtil().screenWidth * 9 / 16,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  image: DecorationImage(
+                    image: AssetImage(lesson.imageURL),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.white),
+                        child: const AppBackButton(
+                          padding: EdgeInsets.zero,
+                          size: 20,
+                        )),
+                    Flexible(child: Container()),
+                    Container(
+                      width: ScreenUtil().screenWidth,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(16),
+                          bottomRight: Radius.circular(16),
+                        ),
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                      child: Text(
+                          language == Language.english
+                              ? lesson.name
+                              : lesson.translation,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(22),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          )),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16, left: 16),
-            child: Text(lesson.name,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(24),
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8, left: 16, bottom: 16),
-            child: Text(lesson.translation,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(16),
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                )),
-          ),
-          AppTabBar(
-            tabController: _tabController,
-            titleTab1: AppLocalizations.of(context)!.about,
-            titleTab2: AppLocalizations.of(context)!.lesson,
-          ),
-          Flexible(
-            fit: FlexFit.loose,
-            child: TabBarView(
-              controller: _tabController,
-              children: <Widget>[
-                buildAboutLesson(language),
-                buildDetailLesson(isDarkTheme, lesson.lessonID),
-              ],
             ),
-          ),
-        ],
+            AppTabBar(
+              tabController: _tabController,
+              titleTab1: AppLocalizations.of(context)!.about,
+              titleTab2: AppLocalizations.of(context)!.lesson,
+            ),
+            Flexible(
+              fit: FlexFit.loose,
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  buildAboutLesson(language),
+                  buildDetailLesson(isDarkTheme, lesson.lessonID),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

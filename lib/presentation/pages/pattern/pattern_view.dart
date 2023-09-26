@@ -32,7 +32,8 @@ class _PatternViewState extends ConsumerState<PatternView> {
   YoutubePlayerController? _youtubePlayerController;
   SentencePattern pattern = SentencePattern.initial();
 
-  get _viewModel => ref.read(patternViewModelProvider.notifier);
+  PatternViewModel get _viewModel =>
+      ref.read(patternViewModelProvider.notifier);
 
   @override
   void initState() {
@@ -74,7 +75,7 @@ class _PatternViewState extends ConsumerState<PatternView> {
         title: Text(pattern.name),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(children: [
           _youtubePlayerController == null
               ? Container(
@@ -84,50 +85,14 @@ class _PatternViewState extends ConsumerState<PatternView> {
                 )
               : YoutubePlayer(controller: _youtubePlayerController!),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              Flexible(child: Container()),
-              CustomIconButton(
-                height: 40,
-                width: 40,
-                icon: Icon(
-                  Icons.volume_up_outlined,
-                  color: Colors.grey[800],
-                ),
-                onPressed: () {
-                  _viewModel.speak(pattern.name);
-                },
-              ),
-              CustomIconButton(
-                  height: 40,
-                  width: 40,
-                  icon: Icon(
-                    Icons.translate_outlined,
-                    color: Colors.grey[800],
-                  ),
-                  onPressed: _viewModel.toggleTranslate),
-              Flexible(child: Container()),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              state.isTranslated
-                  ? pattern.descriptionTranslation
-                  : pattern.description,
-              textAlign: TextAlign.justify,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: ExpansionPanelList(
+              animationDuration: const Duration(milliseconds: 300),
               expansionCallback: (int index, bool isExpanded) {
                 _viewModel.toggleDialog();
               },
+              expandedHeaderPadding: EdgeInsets.zero,
               children: [
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) {
@@ -155,6 +120,47 @@ class _PatternViewState extends ConsumerState<PatternView> {
               ],
             ),
           ),
+          const SizedBox(height: 8),
+          if (!state.isOpenedDialog)
+            Row(
+              children: [
+                Flexible(child: Container()),
+                CustomIconButton(
+                  height: 40,
+                  width: 40,
+                  icon: Icon(
+                    Icons.volume_up_outlined,
+                    color: Colors.grey[800],
+                  ),
+                  onPressed: () {
+                    _viewModel.speak(pattern.name);
+                  },
+                ),
+                CustomIconButton(
+                    height: 40,
+                    width: 40,
+                    icon: Icon(
+                      Icons.translate_outlined,
+                      color: Colors.grey[800],
+                    ),
+                    onPressed: _viewModel.toggleTranslate),
+                Flexible(child: Container()),
+              ],
+            ),
+          if (!state.isOpenedDialog)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                state.isTranslated
+                    ? pattern.descriptionTranslation
+                    : pattern.description,
+                textAlign: TextAlign.justify,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           Flexible(child: Container()),
           SafeArea(
             child: CustomButton(

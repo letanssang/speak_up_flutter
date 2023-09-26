@@ -55,7 +55,7 @@ class _LessonsViewState extends ConsumerState<LessonsView> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.asset(
-                          'assets/images/temp_topic.png',
+                          lessons[index].imageURL,
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,

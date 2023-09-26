@@ -11,6 +11,7 @@ import 'package:speak_up/presentation/pages/ipa/ipa_view_model.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 import 'ipa_state.dart';
@@ -82,9 +83,7 @@ class _IpaViewState extends ConsumerState<IpaView>
               ],
             )
           : state.loadingStatus == LoadingStatus.error
-              ? const Center(
-                  child: Text('Error'),
-                )
+              ? const AppErrorView()
               : const AppLoadingIndicator(),
     );
   }
@@ -166,7 +165,7 @@ class _IpaViewState extends ConsumerState<IpaView>
                   top: 4,
                   right: 4,
                   child: Icon(
-                    Icons.check_circle_outline_rounded,
+                    Icons.check_circle,
                     size: 16,
                     color: Theme.of(context).primaryColor,
                   )),

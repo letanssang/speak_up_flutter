@@ -173,8 +173,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       aspectRatio: 1.2,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.network(lesson.imageURL,
-                              fit: BoxFit.cover)),
+                          child:
+                              Image.asset(lesson.imageURL, fit: BoxFit.cover)),
                     ),
                   ),
                 ),
@@ -191,7 +191,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             color: isDarkTheme ? Colors.white : Colors.black,
                             fontSize: ScreenUtil().setSp(14)),
                       ),
