@@ -97,6 +97,7 @@ flutter_launcher_icons:
   image_path: "assets/app_logos/launcher.png"
   min_sdk_android: 16 # android min sdk min:16, default 21
 
+#dart run flutter_native_splash:remove
 #dart run flutter_native_splash:create
 flutter_native_splash:
   color: "#50248F"
