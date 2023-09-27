@@ -5,6 +5,9 @@ const String dailyConversationURL =
     'https://basicenglishspeaking.com/wp-content/uploads/audio/QA/';
 const String idiomAudioURL =
     'https://basicenglishspeaking.com/wp-content/uploads/2019/05/';
+
+const String expressionAudioURL =
+    'https://basicenglishspeaking.com/wp-content/uploads/2016/audio/ce/e/';
 const String audioExtension = '.mp3';
 
 //Youtube API

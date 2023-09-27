@@ -25,7 +25,6 @@ class HomeViewModel extends StateNotifier<HomeState> {
     state = state.copyWith(lessonsLoadingStatus: LoadingStatus.loading);
     try {
       final lessons = await _getLessonListUseCase.run();
-      lessons.shuffle();
       if (!mounted) return;
       state = state.copyWith(
         lessonsLoadingStatus: LoadingStatus.success,

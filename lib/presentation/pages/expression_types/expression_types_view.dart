@@ -61,7 +61,7 @@ class _ExpressionTypesViewState extends ConsumerState<ExpressionTypesView> {
                 child: ListTile(
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                      AppRoutes.expression,
+                      AppRoutes.expressionType,
                       arguments: state.expressionTypes[index],
                     );
                   },

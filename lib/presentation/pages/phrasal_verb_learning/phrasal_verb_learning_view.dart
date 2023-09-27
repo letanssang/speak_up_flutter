@@ -24,6 +24,7 @@ import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_shee
 import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
+import 'package:speak_up/presentation/widgets/cards/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -102,7 +103,8 @@ class _PhrasalVerbLearningViewState
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       _viewModel.speakFromText(ref
           .read(phrasalVerbLearningViewModelProvider)
-          .exampleSentences[index]
+          .exampleSentences[
+              ref.read(phrasalVerbLearningViewModelProvider).currentPage - 1]
           .text);
     }
     _viewModel.updateAnimatingState(false);
@@ -153,6 +155,7 @@ class _PhrasalVerbLearningViewState
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: [
+          buildDefinition(state),
           if (state.loadingStatus == LoadingStatus.success)
             ...state.exampleSentences.map(
               (sentence) => buildExample(
@@ -161,6 +164,35 @@ class _PhrasalVerbLearningViewState
                   state.recordButtonState,
                   onRecordButtonTap),
             ),
+        ],
+      ),
+    );
+  }
+
+  Center buildDefinition(PhrasalVerbLearningState state) {
+    return Center(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 32,
+          ),
+          FlashCardItem(
+            frontText: phrasalVerb.name,
+            backText: phrasalVerb.description,
+            backTranslation: phrasalVerb.descriptionTranslation,
+            tapFrontDescription:
+                AppLocalizations.of(context)!.tapToSeeTheMeaning,
+            tapBackDescription: AppLocalizations.of(context)!.tapToReturn,
+            onPressedFrontCard: () =>
+                _viewModel.speakFromText(phrasalVerb.name),
+            onPressedBackCard: () =>
+                _viewModel.speakFromText(phrasalVerb.description),
+          ),
+          Flexible(child: Container()),
+          buildBottomMenu(state.recordButtonState),
+          const SizedBox(
+            height: 64,
+          ),
         ],
       ),
     );

@@ -346,4 +346,23 @@ class DatabaseManager {
       );
     });
   }
+
+  Future<List<Sentence>> getSentenceListFromExpression(int input) async {
+    final db = await database;
+    final maps = await db!.query(
+      'sentence',
+      where: 'parentType = ? AND parentID = ?',
+      whereArgs: [SentenceParentType.expression.typeNumber, input],
+    );
+    return List.generate(maps.length, (i) {
+      return Sentence(
+        sentenceID: maps[i][SentenceTable.sentenceID.field] as int,
+        text: maps[i][SentenceTable.text.field] as String,
+        audioEndpoint: maps[i][SentenceTable.audioEndpoint.field] as String,
+        translation: maps[i][SentenceTable.translation.field] as String,
+        parentType: maps[i][SentenceTable.parentType.field] as int,
+        parentID: maps[i][SentenceTable.parentID.field] as int,
+      );
+    });
+  }
 }

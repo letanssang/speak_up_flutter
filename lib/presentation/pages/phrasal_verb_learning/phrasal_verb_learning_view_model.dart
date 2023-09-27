@@ -70,7 +70,7 @@ class PhrasalVerbLearningViewModel
   }
 
   void updateTotalPage() {
-    state = state.copyWith(totalPage: state.exampleSentences.length);
+    state = state.copyWith(totalPage: state.exampleSentences.length + 1);
   }
 
   Future<void> onStartRecording() async {

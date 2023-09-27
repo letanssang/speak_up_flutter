@@ -10,4 +10,13 @@ class Expression {
     required this.expressionTypeID,
     required this.translation,
   });
+
+  factory Expression.initial() {
+    return Expression(
+      expressionID: 0,
+      name: '',
+      expressionTypeID: 0,
+      translation: '',
+    );
+  }
 }

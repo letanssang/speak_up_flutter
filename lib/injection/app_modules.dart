@@ -64,6 +64,7 @@ import 'package:speak_up/domain/use_cases/local_database/get_lesson_list_use_cas
 import 'package:speak_up/domain/use_cases/local_database/get_phonetic_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_type_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_expression_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_idiom_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_phrasal_verb_use_case.dart';
@@ -410,6 +411,10 @@ class AppModules {
     // Get Sentence List From Phrasal Verb Use Case
     injector.registerLazySingleton<GetSentenceListFromPhrasalVerbUseCase>(
         () => GetSentenceListFromPhrasalVerbUseCase());
+
+    // Get Sentece List From Expression Use Case
+    injector.registerLazySingleton<GetSentenceListFromExpressionUseCase>(
+        () => GetSentenceListFromExpressionUseCase());
 
     // Update Phrasal Verb Progress Use Case
     injector.registerLazySingleton<UpdatePhrasalVerbProgressUseCase>(
