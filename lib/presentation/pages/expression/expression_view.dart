@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/expression/expression.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_expression_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/expression/expression_state.dart';
 import 'package:speak_up/presentation/pages/expression/expression_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
@@ -119,7 +121,11 @@ class _ExpressionViewState extends ConsumerState<ExpressionView> {
         CustomButton(
             marginVertical: 16,
             text: AppLocalizations.of(context)!.practiceNow,
-            onTap: null),
+            onTap: () {
+              ref.read(appNavigatorProvider).navigateTo(
+                  AppRoutes.expressionLearning,
+                  arguments: state.sentences);
+            }),
       ],
     );
   }

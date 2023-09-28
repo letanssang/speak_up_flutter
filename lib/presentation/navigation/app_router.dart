@@ -6,6 +6,7 @@ import 'package:speak_up/presentation/pages/category/category_view.dart';
 import 'package:speak_up/presentation/pages/change_password/change_password_view.dart';
 import 'package:speak_up/presentation/pages/edit_profile/edit_profile_view.dart';
 import 'package:speak_up/presentation/pages/expression/expression_view.dart';
+import 'package:speak_up/presentation/pages/expression_learning/expression_learning_view.dart';
 import 'package:speak_up/presentation/pages/expression_type/expression_type_view.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_view.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view.dart';
@@ -222,6 +223,14 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const ExpressionView(),
+            settings: settings,
+          );
+        }
+
+      case AppRoutes.expressionLearning:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const ExpressionLearningView(),
             settings: settings,
           );
         }
