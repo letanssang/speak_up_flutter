@@ -5,12 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
-import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
-import 'package:speak_up/domain/use_cases/audio_player/pause_audio_use_case.dart';
-import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_topic_use_case.dart';
-import 'package:speak_up/injection/app_modules.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';
 import 'package:speak_up/presentation/pages/topic/topic_view_model.dart';
@@ -18,16 +14,15 @@ import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
+import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/divider/app_divider.dart';
+import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final topicViewModelProvider =
     StateNotifierProvider.autoDispose<TopicViewModel, TopicState>(
   (ref) => TopicViewModel(
     injector.get<GetSentenceListFromTopicUseCase>(),
-    injector.get<PlayAudioFromUrlUseCase>(),
-    injector.get<PauseAudioUseCase>(),
-    injector.get<AudioPlayer>(instanceName: audioPlayerInstanceName),
   ),
 );
 
@@ -40,7 +35,9 @@ class TopicView extends ConsumerStatefulWidget {
 
 class _TopicViewState extends ConsumerState<TopicView> {
   Topic topic = Topic.initial();
+  final ScrollController _scrollController = ScrollController();
 
+  TopicViewModel get _viewModel => ref.read(topicViewModelProvider.notifier);
   @override
   void initState() {
     super.initState();
@@ -51,9 +48,27 @@ class _TopicViewState extends ConsumerState<TopicView> {
 
   Future<void> _init() async {
     topic = ModalRoute.of(context)!.settings.arguments as Topic;
-    await ref
-        .read(topicViewModelProvider.notifier)
-        .fetchSentenceList(topic.topicID);
+    _viewModel.init();
+    await _viewModel.fetchSentenceList(topic.topicID);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollToCurrentMessage(GlobalKey key) {
+    final RenderBox? renderBox =
+        key.currentContext?.findRenderObject() as RenderBox?;
+    final distance = renderBox?.size.height ?? 0;
+    // scroll down distance pixels
+    // calculate duration based on distance
+    _scrollController.animateTo(
+      _scrollController.offset + distance,
+      duration: Duration(milliseconds: (distance * 1.5).toInt()),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -61,6 +76,16 @@ class _TopicViewState extends ConsumerState<TopicView> {
     final state = ref.watch(topicViewModelProvider);
     final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
+    ref.listen(topicViewModelProvider.select((value) => value.playerState),
+        (previous, next) {
+      if (next == PlayerState.completed && state.isPlayingPlaylist) {
+        if (state.currentPlayingIndex < state.sentences.length - 1) {
+          _viewModel.updateCurrentPlayingIndex(state.currentPlayingIndex + 1);
+          scrollToCurrentMessage(state.keys[state.currentPlayingIndex]);
+          _viewModel.playCurrentSentence();
+        }
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
@@ -70,8 +95,8 @@ class _TopicViewState extends ConsumerState<TopicView> {
       body: state.loadingStatus == LoadingStatus.success
           ? buildBodySuccess(state, isDarkTheme)
           : state.loadingStatus == LoadingStatus.error
-              ? buildBodyError()
-              : buildBodyInProgress(),
+              ? const AppErrorView()
+              : const AppLoadingIndicator(),
     );
   }
 
@@ -81,6 +106,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
         Flexible(
           flex: 6,
           child: CustomScrollView(
+            controller: _scrollController,
             slivers: [
               SliverToBoxAdapter(
                 child: Padding(
@@ -98,28 +124,9 @@ class _TopicViewState extends ConsumerState<TopicView> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final sentence = state.sentences[index];
                     return index % 2 == 0
-                        ? buildQuestionerMessage(isDarkTheme, sentence,
-                            state.isExpandedTranslations[index], () {
-                            ref
-                                .read(topicViewModelProvider.notifier)
-                                .onTapSpeaker(sentence.audioEndpoint);
-                          }, () {
-                            ref
-                                .read(topicViewModelProvider.notifier)
-                                .onTapExpandedTranslation(index);
-                          })
-                        : buildRespondentMessage(context, isDarkTheme, sentence,
-                            state.isExpandedTranslations[index], () {
-                            ref
-                                .read(topicViewModelProvider.notifier)
-                                .onTapSpeaker(sentence.audioEndpoint);
-                          }, () {
-                            ref
-                                .read(topicViewModelProvider.notifier)
-                                .onTapExpandedTranslation(index);
-                          });
+                        ? buildQuestionerMessage(isDarkTheme, state, index)
+                        : buildRespondentMessage(isDarkTheme, state, index);
                   },
                   childCount: state.sentences.length,
                 ),
@@ -139,7 +146,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                 backgroundColor: Theme.of(context).primaryColor,
                 radius: 32,
                 child: IconButton(
-                    onPressed: () {},
+                    onPressed: _viewModel.onTapPlayButton,
                     icon: Icon(
                       state.isPlayingPlaylist ? Icons.pause : Icons.play_arrow,
                       color: Colors.white,
@@ -169,217 +176,164 @@ class _TopicViewState extends ConsumerState<TopicView> {
     );
   }
 
-  Widget buildQuestionerMessage(
-      bool isDarkTheme,
-      Sentence sentence,
-      bool isExpandedTranslation,
-      Function()? onTapSpeaker,
-      Function()? onTapTranslation) {
+  Widget buildQuestionerMessage(bool isDarkTheme, TopicState state, int index) {
+    final isExpandedTranslation = state.isExpandedTranslations[index];
     return Align(
       alignment: Alignment.centerLeft,
-      child: Stack(
+      child: Row(
         children: [
-          Container(
-            margin: const EdgeInsets.only(
-              top: 16,
-              bottom: 16,
-              left: 48,
-              right: 64,
-            ),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isDarkTheme ? Colors.grey[200] : Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkTheme
-                      ? Colors.black.withOpacity(0.25)
-                      : Colors.grey.withOpacity(0.25),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.zero,
-                  topRight: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
-                  bottomLeft: Radius.circular(16)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  sentence.text,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: ScreenUtil().setSp(16),
-                  ),
-                  textAlign: TextAlign.justify,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: InkWell(
-                        onTap: onTapSpeaker,
-                        child: Icon(
-                          Icons.volume_up,
-                          size: 24,
-                          color: isExpandedTranslation
-                              ? Colors.grey[800]
-                              : Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: InkWell(
-                        onTap: onTapTranslation,
-                        child: Icon(
-                          Icons.translate,
-                          size: 24,
-                          color: isExpandedTranslation
-                              ? Colors.grey[800]
-                              : Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                if (isExpandedTranslation)
-                  Text(
-                    sentence.translation,
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(14),
-                      color: Colors.grey[800],
-                    ),
-                    textAlign: TextAlign.justify,
-                  ),
-              ],
-            ),
+          Stack(
+            children: [
+              _buildMessage(index, state, isDarkTheme, true),
+              Positioned(
+                  left: -5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                        AppImages.questioner(width: ScreenUtil().setWidth(40)),
+                  ))
+            ],
           ),
-          Positioned(
-              left: -5,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AppImages.questioner(width: ScreenUtil().setWidth(40)),
-              ))
+          const SizedBox(
+            width: 8,
+          ),
+          _buildMessageIcon(index, isExpandedTranslation),
         ],
       ),
     );
   }
 
   Widget buildRespondentMessage(
-      BuildContext context,
-      bool isDarkTheme,
-      Sentence sentence,
-      bool isExpandedTranslation,
-      Function()? onTapSpeaker,
-      Function()? onTapTranslation) {
+    bool isDarkTheme,
+    TopicState state,
+    int index,
+  ) {
+    final isExpandedTranslation = state.isExpandedTranslations[index];
     return Align(
       alignment: Alignment.centerRight,
-      child: Stack(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            margin: const EdgeInsets.only(
-              top: 16,
-              bottom: 16,
-              left: 64,
-              right: 48,
-            ),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkTheme
-                      ? Colors.black.withOpacity(0.25)
-                      : Colors.grey.withOpacity(0.25),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: const Offset(0, 3),
+          _buildMessageIcon(index, isExpandedTranslation),
+          const SizedBox(width: 8),
+          Stack(
+            children: [
+              _buildMessage(index, state, isDarkTheme, false),
+              Positioned(
+                right: -5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppImages.respondent(width: ScreenUtil().setWidth(40)),
                 ),
-              ],
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.zero,
-                  bottomRight: Radius.circular(16),
-                  bottomLeft: Radius.circular(16)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  sentence.text,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ScreenUtil().setSp(16),
-                  ),
-                  textAlign: TextAlign.justify,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: InkWell(
-                        onTap: onTapSpeaker,
-                        child: Icon(
-                          Icons.volume_up,
-                          size: 24,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: InkWell(
-                        onTap: onTapTranslation,
-                        child: Icon(
-                          Icons.translate,
-                          size: 24,
-                          color: isExpandedTranslation
-                              ? Colors.grey[400]
-                              : Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                if (isExpandedTranslation)
-                  Text(
-                    sentence.translation,
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(14),
-                      color: Colors.grey[350],
-                    ),
-                    textAlign: TextAlign.justify,
-                  ),
-              ],
-            ),
+              )
+            ],
           ),
-          Positioned(
-            right: -5,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AppImages.respondent(width: ScreenUtil().setWidth(40)),
-            ),
-          )
         ],
       ),
     );
   }
 
-  Widget buildBodyInProgress() {
-    return const Center(
-      child: AppLoadingIndicator(),
+  Widget _buildMessage(
+      int index, TopicState state, bool isDarkTheme, bool isQuestioner) {
+    final sentence = state.sentences[index];
+    final isExpandedTranslation = state.isExpandedTranslations[index];
+    final isPlaying = state.currentPlayingIndex == index;
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 16,
+        bottom: 16,
+        left: isQuestioner ? 48 : 0,
+        right: isQuestioner ? 0 : 48,
+      ),
+      child: InkWell(
+        onTap: () {
+          _viewModel.onTapMessage(index);
+        },
+        child: Container(
+          key: state.keys[index],
+          width: ScreenUtil().screenWidth * 0.5,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            border: isPlaying
+                ? Border.all(
+                    color: Theme.of(context).primaryColor,
+                    width: 1,
+                  )
+                : null,
+            color: isDarkTheme ? Colors.grey[200] : Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: isDarkTheme
+                    ? Colors.black.withOpacity(0.25)
+                    : Colors.grey.withOpacity(0.25),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: const Offset(0, 3),
+              ),
+            ],
+            borderRadius: BorderRadius.only(
+                topLeft: isQuestioner ? Radius.zero : const Radius.circular(16),
+                topRight:
+                    isQuestioner ? const Radius.circular(16) : Radius.zero,
+                bottomRight: const Radius.circular(16),
+                bottomLeft: const Radius.circular(16)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                sentence.text,
+                style: TextStyle(
+                  color:
+                      isPlaying ? Theme.of(context).primaryColor : Colors.black,
+                  fontSize: ScreenUtil().setSp(16),
+                  fontWeight: isPlaying ? FontWeight.bold : FontWeight.normal,
+                ),
+                textAlign: TextAlign.justify,
+              ),
+              if (isExpandedTranslation)
+                Text(
+                  sentence.translation,
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(14),
+                    color: Colors.grey[800],
+                  ),
+                  textAlign: TextAlign.justify,
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
-  Widget buildBodyError() {
-    return const Center(
-      child: Text('Something went wrong!'),
+  Widget _buildMessageIcon(int index, bool isExpandedTranslation) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomIconButton(
+          height: 40,
+          width: 40,
+          onPressed: () {
+            _viewModel.onTapExpandedTranslation(index);
+          },
+          icon: Icon(
+            Icons.translate,
+            size: ScreenUtil().setSp(20),
+            color: isExpandedTranslation ? Colors.grey[800] : Colors.grey,
+          ),
+        ),
+        CustomIconButton(
+          height: 40,
+          width: 40,
+          onPressed: () {},
+          icon: Icon(
+            Icons.mic,
+            size: ScreenUtil().setSp(20),
+            color: Colors.grey,
+          ),
+        ),
+      ],
     );
   }
 }

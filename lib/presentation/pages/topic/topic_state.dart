@@ -1,3 +1,5 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
@@ -12,5 +14,7 @@ class TopicState with _$TopicState {
     @Default([]) List<bool> isExpandedTranslations,
     @Default(0) int currentPlayingIndex,
     @Default(false) bool isPlayingPlaylist,
+    @Default(PlayerState.stopped) PlayerState playerState,
+    @Default([]) List<GlobalKey> keys,
   }) = _TopicState;
 }
