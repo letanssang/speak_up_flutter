@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_common_word_list_by_type.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/common_word_type/common_word_type_state.dart';
 import 'package:speak_up/presentation/pages/common_word_type/common_word_type_view_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:speak_up/presentation/utilities/constant/alphabet_list.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
@@ -17,19 +20,23 @@ final commonWordTypeViewModelProvider = StateNotifierProvider.autoDispose<
     CommonWordTypeViewModel, CommonWordTypeState>(
   (ref) => CommonWordTypeViewModel(
     injector.get<GetCommonWordListByTypeUseCase>(),
+    injector.get<SpeakFromTextUseCase>(),
   ),
 );
 
 class CommonWordTypeView extends ConsumerStatefulWidget {
   const CommonWordTypeView({super.key});
+
   @override
   ConsumerState<CommonWordTypeView> createState() => _CommonWordTypeViewState();
 }
 
 class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
   int type = 0;
+
   CommonWordTypeViewModel get _viewModel =>
       ref.read(commonWordTypeViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -78,7 +85,11 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
                       index: index,
                       title: commonWord.commonWord,
                       subtitle: commonWord.translation,
-                      trailing: _buildTrailingListTile(commonWord.partOfSpeech),
+                      leading: _buildLeadingListTile(commonWord.commonWord),
+                      trailing: _buildTrailingListTile(
+                        commonWord.partOfSpeech,
+                        commonWord.level,
+                      ),
                     );
                   },
                 )
@@ -87,10 +98,17 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
                   itemBuilder: (context, index) {
                     final commonWord = state.commonWordList[index];
                     return AppListTile(
+                      onTap: () {
+                        ref.read(appNavigatorProvider).navigateTo(
+                            AppRoutes.word,
+                            arguments: commonWord.commonWord);
+                      },
                       index: index,
                       title: commonWord.commonWord,
                       subtitle: commonWord.translation,
-                      trailing: _buildTrailingListTile(commonWord.partOfSpeech),
+                      leading: _buildLeadingListTile(commonWord.commonWord),
+                      trailing: _buildTrailingListTile(
+                          commonWord.partOfSpeech, commonWord.level),
                     );
                   },
                 ),
@@ -99,11 +117,37 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
     );
   }
 
-  Widget _buildTrailingListTile(String partOfSpeech) {
-    return Text(partOfSpeech,
-        style: TextStyle(
-          fontSize: ScreenUtil().setSp(14),
-          fontWeight: FontWeight.bold,
-        ));
+  Widget _buildLeadingListTile(String index) {
+    return CircleAvatar(
+        child: IconButton(
+      onPressed: () {
+        _viewModel.speak(index);
+      },
+      icon: Icon(
+        Icons.volume_up_outlined,
+        color: Theme.of(context).primaryColor,
+      ),
+    ));
+  }
+
+  Widget _buildTrailingListTile(String partOfSpeech, String level) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(partOfSpeech,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(14),
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            )),
+        const SizedBox(height: 4),
+        Text(
+          level,
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(12),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -9,12 +9,14 @@ class AppListTile extends ConsumerWidget {
   final int index;
   final String title;
   final String? subtitle;
+  final Widget? leading;
   final Widget? trailing;
   const AppListTile(
       {required this.index,
       this.title = '',
       this.subtitle,
       this.onTap,
+      this.leading,
       this.trailing,
       super.key});
 
@@ -29,14 +31,15 @@ class AppListTile extends ConsumerWidget {
         surfaceTintColor: Colors.white,
         child: ListTile(
           onTap: onTap,
-          leading: CircleAvatar(
-              child: Text(
-            formatIndexToString(index),
-            style: TextStyle(
-              fontSize: ScreenUtil().setSp(16),
-              fontWeight: FontWeight.bold,
-            ),
-          )),
+          leading: leading ??
+              CircleAvatar(
+                  child: Text(
+                formatIndexToString(index),
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
           title: Text(
             title,
             style: TextStyle(
