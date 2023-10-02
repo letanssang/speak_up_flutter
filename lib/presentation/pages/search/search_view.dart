@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +14,7 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
+import 'package:speak_up/presentation/widgets/search_bars/app_search_bar.dart';
 
 final searchViewModelProvider =
     StateNotifierProvider.autoDispose<SearchViewModel, SearchState>(
@@ -32,18 +31,7 @@ class SearchView extends ConsumerStatefulWidget {
 }
 
 class _SearchViewState extends ConsumerState<SearchView> {
-  final textEditingController = TextEditingController();
-  final focusNode = FocusNode();
-  Timer? _debounce;
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    textEditingController.dispose();
-    focusNode.dispose();
-    super.dispose();
-  }
-
+  SearchViewModel get _viewModel => ref.read(searchViewModelProvider.notifier);
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(searchViewModelProvider);
@@ -60,110 +48,72 @@ class _SearchViewState extends ConsumerState<SearchView> {
       ),
       body: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.grey[200],
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.search,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: textEditingController,
-                    focusNode: focusNode,
-                    onTapOutside: (event) {
-                      focusNode.unfocus();
-                    },
-                    onChanged: (value) {
-                      if (_debounce?.isActive ?? false) _debounce!.cancel();
-                      ref.read(searchViewModelProvider.notifier).onLoading();
-                      _debounce =
-                          Timer(const Duration(milliseconds: 500), () async {
-                        await ref
-                            .read(searchViewModelProvider.notifier)
-                            .fetchSuggestionList(value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.search,
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                if (textEditingController.text.isNotEmpty)
-                  IconButton(
-                      onPressed: () {
-                        textEditingController.clear();
-                        ref.read(searchViewModelProvider.notifier).onInitial();
-                      },
-                      icon: const Icon(
-                        Icons.cancel,
-                      )),
-              ],
-            ),
+          AppSearchBar(
+            onInitial: _viewModel.onInitial,
+            onLoading: _viewModel.onLoading,
+            onSearch: _viewModel.fetchSuggestionList,
           ),
           state.loadingStatus == LoadingStatus.success
-              ? Flexible(
-                  child: ListView.builder(
-                      itemCount: state.suggestionList.length,
-                      padding: const EdgeInsets.all(8),
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          onTap: () {
-                            ref.read(appNavigatorProvider).navigateTo(
-                                AppRoutes.word,
-                                arguments: state.suggestionList[index]);
-                          },
-                          leading: const Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                          ),
-                          trailing: const Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.grey,
-                            size: 16,
-                          ),
-                          title: Text(
-                            state.suggestionList[index],
-                            style: TextStyle(
-                              fontSize: ScreenUtil().setSp(18),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        );
-                      }))
+              ? _buildLoadingSuccessBody(state)
               : state.loadingStatus == LoadingStatus.initial
-                  ? Expanded(
-                      child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AppImages.searchSomething(
-                            width: ScreenUtil().screenWidth * 0.5,
-                            height: ScreenUtil().screenWidth * 0.5,
-                          ),
-                          const SizedBox(height: 32),
-                          Text(AppLocalizations.of(context)!.searchForAWord,
-                              style: TextStyle(
-                                fontSize: ScreenUtil().setSp(16),
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ],
-                      ),
-                    ))
+                  ? _buildInitialBody(context)
                   : state.loadingStatus == LoadingStatus.loading
                       ? const Expanded(child: AppLoadingIndicator())
                       : const Expanded(child: AppErrorView()),
         ],
       ),
     );
+  }
+
+  Expanded _buildInitialBody(BuildContext context) {
+    return Expanded(
+        child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AppImages.searchSomething(
+            width: ScreenUtil().screenWidth * 0.5,
+            height: ScreenUtil().screenWidth * 0.5,
+          ),
+          const SizedBox(height: 32),
+          Text(AppLocalizations.of(context)!.searchForAWord,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16),
+                fontWeight: FontWeight.bold,
+              )),
+        ],
+      ),
+    ));
+  }
+
+  Flexible _buildLoadingSuccessBody(SearchState state) {
+    return Flexible(
+        child: ListView.builder(
+            itemCount: state.suggestionList.length,
+            padding: const EdgeInsets.all(8),
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {
+                  ref.read(appNavigatorProvider).navigateTo(AppRoutes.word,
+                      arguments: state.suggestionList[index]);
+                },
+                leading: const Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.grey,
+                  size: 16,
+                ),
+                title: Text(
+                  state.suggestionList[index],
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(18),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            }));
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speak_up/data/local/database_services/database_key.dart';
 import 'package:speak_up/domain/entities/category/category.dart';
+import 'package:speak_up/domain/entities/common_word/common_word.dart';
 import 'package:speak_up/domain/entities/expression/expression.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
@@ -362,6 +363,25 @@ class DatabaseManager {
         translation: maps[i][SentenceTable.translation.field] as String,
         parentType: maps[i][SentenceTable.parentType.field] as int,
         parentID: maps[i][SentenceTable.parentID.field] as int,
+      );
+    });
+  }
+
+  Future<List<CommonWord>> getCommonWordListByType(int input) async {
+    final db = await database;
+    final maps = await db!.query(
+      'commonWord',
+      where: 'type = ?',
+      whereArgs: [input],
+    );
+    return List.generate(maps.length, (i) {
+      return CommonWord(
+        commonWordID: maps[i][CommonWordTable.commonWordID.field] as int,
+        commonWord: maps[i][CommonWordTable.commonWord.field] as String,
+        translation: maps[i][CommonWordTable.translation.field] as String,
+        partOfSpeech: maps[i][CommonWordTable.partOfSpeech.field] as String,
+        level: maps[i][CommonWordTable.level.field] as String,
+        type: maps[i][CommonWordTable.type.field] as int,
       );
     });
   }

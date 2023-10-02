@@ -78,7 +78,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         child: Column(
           children: [
             buildAppBar(),
-            buildCurrentCourses(),
+            buildBanner(),
             buildCategories(state),
             buildExplore(state),
             buildReels(state)
@@ -243,48 +243,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
             icon: Icon(Icons.notifications_outlined,
                 color: Theme.of(context).iconTheme.color),
           )
-        ],
-      ),
-    );
-  }
-
-  Widget buildCurrentCourses() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-            child: Text(AppLocalizations.of(context)!.continueLearning,
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(18),
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
-          SizedBox(
-            height: ScreenUtil().screenHeight * 0.2,
-            child: ListView.builder(
-                itemCount: 3,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: ScreenUtil().screenHeight * 0.16,
-                    width: ScreenUtil().screenWidth * 0.6,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(16),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/temp_topic.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                }),
-          ),
         ],
       ),
     );
@@ -485,6 +443,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 height: ScreenUtil().screenHeight * 0.3,
               ),
       ],
+    );
+  }
+
+  Widget buildBanner() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: AppImages.appBanner(),
+      ),
     );
   }
 }

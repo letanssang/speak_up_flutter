@@ -56,6 +56,7 @@ import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_prog
 import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_common_word_list_by_type.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_expression_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_expression_type_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_idiom_list_by_type_use_case.dart';
@@ -431,5 +432,9 @@ class AppModules {
     // Get Pattern Done List Use Case
     injector.registerLazySingleton<GetPatternDoneListUseCase>(
         () => GetPatternDoneListUseCase());
+
+    // Get Common Word List By Type Use Case
+    injector.registerLazySingleton<GetCommonWordListByTypeUseCase>(
+        () => GetCommonWordListByTypeUseCase());
   }
 }

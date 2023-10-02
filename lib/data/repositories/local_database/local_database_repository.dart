@@ -1,5 +1,6 @@
 import 'package:speak_up/data/local/database_services/database_manager.dart';
 import 'package:speak_up/domain/entities/category/category.dart';
+import 'package:speak_up/domain/entities/common_word/common_word.dart';
 import 'package:speak_up/domain/entities/expression/expression.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
 import 'package:speak_up/domain/entities/idiom/idiom.dart';
@@ -84,5 +85,9 @@ class LocalDatabaseRepository {
 
   Future<List<Sentence>> getSentenceListFromExpression(int input) {
     return _databaseManager.getSentenceListFromExpression(input);
+  }
+
+  Future<List<CommonWord>> getCommonWordListByType(int input) {
+    return _databaseManager.getCommonWordListByType(input);
   }
 }

@@ -166,3 +166,16 @@ enum SentenceTable {
 extension SentenceTableExtension on SentenceTable {
   String get field => capitalizeFirstLetter(name);
 }
+
+enum CommonWordTable {
+  commonWordID,
+  commonWord,
+  translation,
+  partOfSpeech,
+  level,
+  type
+}
+
+extension CommonWordExtension on CommonWordTable {
+  String get field => capitalizeFirstLetter(name);
+}

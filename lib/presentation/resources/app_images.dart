@@ -300,4 +300,13 @@ class AppImages {
       fit: boxFit,
     );
   }
+
+  static Widget appBanner({double? width, double? height, BoxFit? boxFit}) {
+    return Image.asset(
+      '$_imagesPath/banner.png',
+      width: width,
+      height: height,
+      fit: boxFit,
+    );
+  }
 }

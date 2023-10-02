@@ -4,6 +4,7 @@ import 'package:speak_up/presentation/pages/about/about_view.dart';
 import 'package:speak_up/presentation/pages/categories/categories_view.dart';
 import 'package:speak_up/presentation/pages/category/category_view.dart';
 import 'package:speak_up/presentation/pages/change_password/change_password_view.dart';
+import 'package:speak_up/presentation/pages/common_word_type/common_word_type_view.dart';
 import 'package:speak_up/presentation/pages/edit_profile/edit_profile_view.dart';
 import 'package:speak_up/presentation/pages/expression/expression_view.dart';
 import 'package:speak_up/presentation/pages/expression_learning/expression_learning_view.dart';
@@ -231,6 +232,14 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const ExpressionLearningView(),
+            settings: settings,
+          );
+        }
+
+      case AppRoutes.commonWordType:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const CommonWordTypeView(),
             settings: settings,
           );
         }
