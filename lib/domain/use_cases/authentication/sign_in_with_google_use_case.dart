@@ -3,7 +3,7 @@ import 'package:speak_up/data/repositories/authentication/authentication_reposit
 import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
-class SignInWithGoogleUseCase extends FutureOutputUseCase<UserCredential> {
+class SignInWithGoogleUseCase implements FutureOutputUseCase<UserCredential> {
   SignInWithGoogleUseCase();
 
   @override

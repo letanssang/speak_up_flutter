@@ -15,6 +15,7 @@ import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
 import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
 import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
+import 'package:speak_up/domain/entities/tense/tense.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/entities/word/word.dart';
 import 'package:sqflite/sqflite.dart';
@@ -382,6 +383,19 @@ class DatabaseManager {
         partOfSpeech: maps[i][CommonWordTable.partOfSpeech.field] as String,
         level: maps[i][CommonWordTable.level.field] as String,
         type: maps[i][CommonWordTable.type.field] as int,
+      );
+    });
+  }
+
+  Future<List<Tense>> getTenseList() async {
+    final db = await database;
+    final maps = await db!.query('tense');
+    return List.generate(maps.length, (i) {
+      return Tense(
+        tenseID: maps[i][TenseTable.tenseID.field] as int,
+        tense: maps[i][TenseTable.tense.field] as String,
+        translation: maps[i][TenseTable.translation.field] as String,
+        signalWords: maps[i][TenseTable.signalWords.field] as String,
       );
     });
   }

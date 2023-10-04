@@ -2,7 +2,7 @@ import 'package:speak_up/data/repositories/authentication/authentication_reposit
 import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
-class SignOutUseCase extends OutputUseCase<void> {
+class SignOutUseCase implements OutputUseCase<void> {
   SignOutUseCase();
 
   @override

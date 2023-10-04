@@ -2,7 +2,8 @@ import 'package:speak_up/data/repositories/authentication/authentication_reposit
 import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
-class ReAuthenticateWithCredentialUseCase extends FutureUseCase<String, void> {
+class ReAuthenticateWithCredentialUseCase
+    implements FutureUseCase<String, void> {
   @override
   Future<void> run(String input) {
     return injector

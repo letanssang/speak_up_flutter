@@ -4,7 +4,7 @@ import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class GetSentenceListFromTopicUseCase
-    extends FutureUseCase<int, List<Sentence>> {
+    implements FutureUseCase<int, List<Sentence>> {
   @override
   Future<List<Sentence>> run(int input) async {
     return injector

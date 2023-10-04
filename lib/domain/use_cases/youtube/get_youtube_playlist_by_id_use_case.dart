@@ -4,7 +4,7 @@ import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class GetYoutubePlaylistByIdUseCase
-    extends FutureUseCase<String, List<YoutubeVideo>> {
+    implements FutureUseCase<String, List<YoutubeVideo>> {
   @override
   Future<List<YoutubeVideo>> run(String input) async {
     final youtubePlaylistResponse =

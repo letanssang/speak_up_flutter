@@ -3,13 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
-import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
-import 'package:speak_up/presentation/pages/common_words_types/common_word_types.dart';
-import 'package:speak_up/presentation/pages/expression_types/expression_types_view.dart';
-import 'package:speak_up/presentation/pages/idiom_types/idiom_types_view.dart';
-import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson_detail_view.dart';
-import 'package:speak_up/presentation/pages/phrasal_verb_types/phrasal_verb_types_view.dart';
+import 'package:speak_up/presentation/utilities/constant/lesson_widget_list.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/tab_bars/app_tab_bar.dart';
@@ -42,7 +37,6 @@ class _LessonViewState extends ConsumerState<LessonView>
   @override
   Widget build(BuildContext context) {
     lesson = ModalRoute.of(context)!.settings.arguments as Lesson;
-    final isDarkTheme = ref.watch(themeProvider);
     final language = ref.watch(appLanguageProvider);
     return Scaffold(
       body: SafeArea(
@@ -108,7 +102,7 @@ class _LessonViewState extends ConsumerState<LessonView>
                 controller: _tabController,
                 children: <Widget>[
                   buildAboutLesson(language),
-                  buildDetailLesson(isDarkTheme, lesson.lessonID),
+                  lessonWidgetList[lesson.lessonID],
                 ],
               ),
             ),
@@ -132,22 +126,5 @@ class _LessonViewState extends ConsumerState<LessonView>
         ),
       ),
     );
-  }
-
-  Widget buildDetailLesson(bool isDarkTheme, int lessonID) {
-    switch (lessonID) {
-      case 1:
-        return const PatternLessonDetailView();
-      case 2:
-        return const ExpressionTypesView();
-      case 3:
-        return const PhrasalVerbTypesView();
-      case 4:
-        return const IdiomTypesView();
-      case 5:
-        return const CommonWordTypes();
-      default:
-        return Container();
-    }
   }
 }

@@ -3,7 +3,8 @@ import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
-class GetTopicListByCategoryIDUseCase extends FutureUseCase<int, List<Topic>> {
+class GetTopicListByCategoryIDUseCase
+    implements FutureUseCase<int, List<Topic>> {
   @override
   Future<List<Topic>> run(int input) async {
     return injector

@@ -4,7 +4,7 @@ import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class GetExpressionListByTypeUseCase
-    extends FutureUseCase<int, List<Expression>> {
+    implements FutureUseCase<int, List<Expression>> {
   @override
   Future<List<Expression>> run(int input) {
     return injector

@@ -4,7 +4,7 @@ import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class SignInWithEmailAndPasswordUseCase
-    extends FutureUseCase<SignInWithEmailParams, UserCredential> {
+    implements FutureUseCase<SignInWithEmailParams, UserCredential> {
   SignInWithEmailAndPasswordUseCase();
 
   @override

@@ -4,7 +4,7 @@ import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class GetSentencePatternListUseCase
-    extends FutureOutputUseCase<List<SentencePattern>> {
+    implements FutureOutputUseCase<List<SentencePattern>> {
   @override
   Future<List<SentencePattern>> run() {
     return injector.get<LocalDatabaseRepository>().getSentencePatternList();

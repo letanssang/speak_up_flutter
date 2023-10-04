@@ -3,7 +3,7 @@ import 'package:speak_up/data/repositories/firestore/firestore_repository.dart';
 import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
-class UpdateEmailUseCase extends FutureUseCase<String, void> {
+class UpdateEmailUseCase implements FutureUseCase<String, void> {
   @override
   Future<void> run(String input) async {
     final authRepository = injector.get<AuthenticationRepository>();

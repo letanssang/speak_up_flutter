@@ -11,6 +11,7 @@ import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
 import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
 import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
+import 'package:speak_up/domain/entities/tense/tense.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/entities/word/word.dart';
 
@@ -89,5 +90,9 @@ class LocalDatabaseRepository {
 
   Future<List<CommonWord>> getCommonWordListByType(int input) {
     return _databaseManager.getCommonWordListByType(input);
+  }
+
+  Future<List<Tense>> getTenseList() {
+    return _databaseManager.getTenseList();
   }
 }

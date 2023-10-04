@@ -4,7 +4,7 @@ import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class GetExpressionTypeListUseCase
-    extends FutureOutputUseCase<List<ExpressionType>> {
+    implements FutureOutputUseCase<List<ExpressionType>> {
   @override
   Future<List<ExpressionType>> run() async {
     return injector.get<LocalDatabaseRepository>().getExpressionTypeList();

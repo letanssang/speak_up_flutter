@@ -3,7 +3,7 @@ import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
-class GetLessonListUseCase extends FutureOutputUseCase<List<Lesson>> {
+class GetLessonListUseCase implements FutureOutputUseCase<List<Lesson>> {
   @override
   Future<List<Lesson>> run() async {
     return injector.get<LocalDatabaseRepository>().getLessonList();

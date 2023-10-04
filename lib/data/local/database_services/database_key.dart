@@ -179,3 +179,14 @@ enum CommonWordTable {
 extension CommonWordExtension on CommonWordTable {
   String get field => capitalizeFirstLetter(name);
 }
+
+enum TenseTable {
+  tenseID,
+  tense,
+  translation,
+  signalWords,
+}
+
+extension TenseTableExtension on TenseTable {
+  String get field => capitalizeFirstLetter(name);
+}

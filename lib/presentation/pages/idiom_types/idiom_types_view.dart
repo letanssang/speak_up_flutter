@@ -35,6 +35,8 @@ class IdiomTypesView extends ConsumerStatefulWidget {
 }
 
 class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
+  IdiomTypesViewModel get _viewModel =>
+      ref.read(idiomTypesViewModelProvider.notifier);
   @override
   void initState() {
     super.initState();
@@ -44,7 +46,7 @@ class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
   }
 
   Future<void> _init() async {
-    await ref.read(idiomTypesViewModelProvider.notifier).fetchIdiomTypeList();
+    await _viewModel.fetchIdiomTypeList();
   }
 
   void showOptionButtonSheet(int index) {
@@ -59,28 +61,24 @@ class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
                     .navigateTo(AppRoutes.idiom, arguments: idiomType);
               },
               onTapQuiz: () async {
-                final quizzes = await ref
-                    .read(idiomTypesViewModelProvider.notifier)
-                    .getQuizzesByIdiomTypeID(
-                      ref
-                          .read(idiomTypesViewModelProvider)
-                          .idiomTypes[index]
-                          .idiomTypeID,
-                    );
+                final quizzes = await _viewModel.getQuizzesByIdiomTypeID(
+                  ref
+                      .read(idiomTypesViewModelProvider)
+                      .idiomTypes[index]
+                      .idiomTypeID,
+                );
                 ref.read(appNavigatorProvider).navigateTo(
                       AppRoutes.quiz,
                       arguments: quizzes,
                     );
               },
               onTapFlashcard: () async {
-                final flashCards = await ref
-                    .read(idiomTypesViewModelProvider.notifier)
-                    .getFlashCardByIdiomTypeID(
-                      ref
-                          .read(idiomTypesViewModelProvider)
-                          .idiomTypes[index]
-                          .idiomTypeID,
-                    );
+                final flashCards = await _viewModel.getFlashCardByIdiomTypeID(
+                  ref
+                      .read(idiomTypesViewModelProvider)
+                      .idiomTypes[index]
+                      .idiomTypeID,
+                );
                 ref
                     .read(appNavigatorProvider)
                     .navigateTo(AppRoutes.flashCards, arguments: flashCards);

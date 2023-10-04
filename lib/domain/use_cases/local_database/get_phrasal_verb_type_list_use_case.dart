@@ -4,7 +4,7 @@ import 'package:speak_up/domain/use_cases/use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 
 class GetPhrasalVerbTypeListUseCase
-    extends FutureOutputUseCase<List<PhrasalVerbType>> {
+    implements FutureOutputUseCase<List<PhrasalVerbType>> {
   @override
   Future<List<PhrasalVerbType>> run() {
     return injector.get<LocalDatabaseRepository>().getPhrasalVerbTypeList();

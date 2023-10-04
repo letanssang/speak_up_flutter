@@ -71,6 +71,7 @@ import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_phrasal_verb_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_topic_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_pattern_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_tense_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
@@ -436,5 +437,9 @@ class AppModules {
     // Get Common Word List By Type Use Case
     injector.registerLazySingleton<GetCommonWordListByTypeUseCase>(
         () => GetCommonWordListByTypeUseCase());
+
+    // Get Tense List Use Case
+    injector.registerLazySingleton<GetTenseListUseCase>(
+        () => GetTenseListUseCase());
   }
 }
