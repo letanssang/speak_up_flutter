@@ -16,6 +16,8 @@ import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
 import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/tense/tense.dart';
+import 'package:speak_up/domain/entities/tense_form/tense_form.dart';
+import 'package:speak_up/domain/entities/tense_usage/tense_usage.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/entities/word/word.dart';
 import 'package:sqflite/sqflite.dart';
@@ -396,6 +398,50 @@ class DatabaseManager {
         tense: maps[i][TenseTable.tense.field] as String,
         translation: maps[i][TenseTable.translation.field] as String,
         signalWords: maps[i][TenseTable.signalWords.field] as String,
+      );
+    });
+  }
+
+  Future<List<TenseForm>> getTenseFormListFromTense(int input) async {
+    final db = await database;
+    final maps = await db!.query(
+      'tenseForm',
+      where: 'tenseID = ?',
+      whereArgs: [input],
+    );
+    return List.generate(maps.length, (i) {
+      return TenseForm(
+        tenseFormID: maps[i][TenseFormTable.tenseFormID.field] as int,
+        tenseID: maps[i][TenseFormTable.tenseID.field] as int,
+        title: maps[i][TenseFormTable.title.field] as String,
+        positive: maps[i][TenseFormTable.positive.field] as String,
+        positiveExample:
+            maps[i][TenseFormTable.positiveExample.field] as String,
+        negative: maps[i][TenseFormTable.negative.field] as String,
+        negativeExample:
+            maps[i][TenseFormTable.negativeExample.field] as String,
+        question: maps[i][TenseFormTable.question.field] as String,
+        questionExample:
+            maps[i][TenseFormTable.questionExample.field] as String,
+      );
+    });
+  }
+
+  Future<List<TenseUsage>> getTenseUsageListFromTense(int input) async {
+    final db = await database;
+    final maps = await db!.query(
+      'tenseUsage',
+      where: 'tenseID = ?',
+      whereArgs: [input],
+    );
+    return List.generate(maps.length, (i) {
+      return TenseUsage(
+        tenseUsageID: maps[i][TenseUsageTable.tenseUsageID.field] as int,
+        tenseID: maps[i][TenseUsageTable.tenseID.field] as int,
+        description: maps[i][TenseUsageTable.description.field] as String,
+        descriptionTranslation:
+            maps[i][TenseUsageTable.descriptionTranslation.field] as String,
+        example: maps[i][TenseUsageTable.example.field] as String,
       );
     });
   }

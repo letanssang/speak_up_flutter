@@ -71,7 +71,9 @@ import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_phrasal_verb_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_topic_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_pattern_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_tense_form_list_from_tense_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_tense_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_tense_usage_list_from_tense_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
@@ -441,5 +443,13 @@ class AppModules {
     // Get Tense List Use Case
     injector.registerLazySingleton<GetTenseListUseCase>(
         () => GetTenseListUseCase());
+
+    // Get Tense Form List From Tense Use Case
+    injector.registerLazySingleton<GetTenseFormListFromTenseUseCase>(
+        () => GetTenseFormListFromTenseUseCase());
+
+    // Get Tense Usage List From Tense Use Case
+    injector.registerLazySingleton<GetTenseUsageListFromTenseUseCase>(
+        () => GetTenseUsageListFromTenseUseCase());
   }
 }

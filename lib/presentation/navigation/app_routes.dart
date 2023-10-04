@@ -31,6 +31,7 @@ class AppRoutes {
   static const String expression = '/expression';
   static const String expressionLearning = '/expression_learning';
   static const String commonWordType = '/common_word_type';
+  static const String tense = '/tense';
 
   //profile
   static const String editProfile = '/edit_profile';

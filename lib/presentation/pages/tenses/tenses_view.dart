@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_tense_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/tenses/tenses_state.dart';
 import 'package:speak_up/presentation/pages/tenses/tenses_view_model.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
@@ -10,7 +12,7 @@ import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final tensesViewModelProvider =
-    StateNotifierProvider<TensesViewModel, TensesState>(
+    StateNotifierProvider.autoDispose<TensesViewModel, TensesState>(
   (ref) => TensesViewModel(
     injector.get<GetTenseListUseCase>(),
   ),
@@ -25,6 +27,7 @@ class TensesView extends ConsumerStatefulWidget {
 
 class _TensesViewState extends ConsumerState<TensesView> {
   TensesViewModel get _viewModel => ref.watch(tensesViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +57,11 @@ class _TensesViewState extends ConsumerState<TensesView> {
       itemBuilder: (context, index) {
         final tense = state.tenses[index];
         return AppListTile(
+          onTap: () {
+            ref
+                .read(appNavigatorProvider)
+                .navigateTo(AppRoutes.tense, arguments: tense);
+          },
           index: index,
           title: tense.tense,
         );

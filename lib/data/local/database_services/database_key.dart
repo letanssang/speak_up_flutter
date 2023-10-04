@@ -190,3 +190,31 @@ enum TenseTable {
 extension TenseTableExtension on TenseTable {
   String get field => capitalizeFirstLetter(name);
 }
+
+enum TenseFormTable {
+  tenseFormID,
+  tenseID,
+  title,
+  positive,
+  positiveExample,
+  negative,
+  negativeExample,
+  question,
+  questionExample,
+}
+
+extension TenseFormTableExtension on TenseFormTable {
+  String get field => capitalizeFirstLetter(name);
+}
+
+enum TenseUsageTable {
+  tenseUsageID,
+  tenseID,
+  description,
+  descriptionTranslation,
+  example,
+}
+
+extension TenseUsageTableExtension on TenseUsageTable {
+  String get field => capitalizeFirstLetter(name);
+}

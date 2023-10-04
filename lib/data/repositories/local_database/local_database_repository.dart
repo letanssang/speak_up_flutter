@@ -12,6 +12,8 @@ import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
 import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
 import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/tense/tense.dart';
+import 'package:speak_up/domain/entities/tense_form/tense_form.dart';
+import 'package:speak_up/domain/entities/tense_usage/tense_usage.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/entities/word/word.dart';
 
@@ -94,5 +96,13 @@ class LocalDatabaseRepository {
 
   Future<List<Tense>> getTenseList() {
     return _databaseManager.getTenseList();
+  }
+
+  Future<List<TenseForm>> getTenseFormListFromTense(int input) {
+    return _databaseManager.getTenseFormListFromTense(input);
+  }
+
+  Future<List<TenseUsage>> getTenseUsageListFromTense(int input) {
+    return _databaseManager.getTenseUsageListFromTense(input);
   }
 }
