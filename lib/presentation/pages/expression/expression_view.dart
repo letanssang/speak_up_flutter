@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
@@ -16,6 +15,7 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
+import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -66,11 +66,9 @@ class _ExpressionViewState extends ConsumerState<ExpressionView> {
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? _buildLoadingSuccessBody(state, isDarkTheme)
-          : state.loadingStatus == LoadingStatus.loading
-              ? const AppLoadingIndicator()
-              : state.loadingStatus == LoadingStatus.error
-                  ? const AppErrorView()
-                  : Container(),
+          : state.loadingStatus == LoadingStatus.error
+              ? const AppErrorView()
+              : const AppLoadingIndicator(),
     );
   }
 
@@ -81,38 +79,19 @@ class _ExpressionViewState extends ConsumerState<ExpressionView> {
           child: ListView.builder(
             itemCount: state.sentences.length,
             itemBuilder: (context, index) {
-              return Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-                child: Card(
-                  elevation: 3,
-                  color: isDarkTheme ? Colors.grey[850] : Colors.white,
-                  surfaceTintColor: Colors.white,
-                  child: ListTile(
-                    title: Text(
-                      state.sentences[index].text,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      state.sentences[index].translation,
-                      style: TextStyle(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.volume_up_outlined,
-                        color: Colors.grey[800],
-                      ),
-                      onPressed: () {
-                        _viewModel
-                            .playAudio(state.sentences[index].audioEndpoint);
-                      },
-                    ),
+              return AppListTile(
+                index: index,
+                title: state.sentences[index].text,
+                subtitle: state.sentences[index].translation,
+                leading: const SizedBox(),
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.volume_up_outlined,
+                    color: isDarkTheme ? Colors.white : Colors.black,
                   ),
+                  onPressed: () {
+                    _viewModel.playAudio(state.sentences[index].audioEndpoint);
+                  },
                 ),
               );
             },

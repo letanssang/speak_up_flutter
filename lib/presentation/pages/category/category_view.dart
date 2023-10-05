@@ -33,10 +33,10 @@ class CategoryView extends ConsumerStatefulWidget {
   ConsumerState<CategoryView> createState() => _CategoryViewState();
 }
 
-class _CategoryViewState extends ConsumerState<CategoryView>
-    with TickerProviderStateMixin {
+class _CategoryViewState extends ConsumerState<CategoryView> {
   Category category = Category.initial();
-
+  CategoryViewModel get _viewModel =>
+      ref.read(categoryViewModelProvider.notifier);
   @override
   void initState() {
     super.initState();
@@ -47,9 +47,7 @@ class _CategoryViewState extends ConsumerState<CategoryView>
 
   Future<void> _init() async {
     category = ModalRoute.of(context)!.settings.arguments as Category;
-    await ref
-        .read(categoryViewModelProvider.notifier)
-        .fetchTopicList(category.categoryID);
+    await _viewModel.fetchTopicList(category.categoryID);
   }
 
   @override
@@ -64,8 +62,8 @@ class _CategoryViewState extends ConsumerState<CategoryView>
       body: state.loadingStatus == LoadingStatus.success
           ? buildBodySuccess(state.topics, isDarkTheme, language)
           : state.loadingStatus == LoadingStatus.error
-              ? buildBodyError()
-              : buildBodyInProgress(),
+              ? const AppErrorView()
+              : const AppLoadingIndicator(),
     );
   }
 
@@ -74,28 +72,7 @@ class _CategoryViewState extends ConsumerState<CategoryView>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: categoryImageList[category.categoryID - 1],
-            ),
-            Column(
-              children: [
-                Text(category.name,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    )),
-                Text(category.translation,
-                    style: const TextStyle(
-                      fontSize: 18,
-                    )),
-              ],
-            )
-          ],
-        ),
+        _buildCategoryHeader(),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text('Topic:',
@@ -105,67 +82,87 @@ class _CategoryViewState extends ConsumerState<CategoryView>
                 color: isDarkTheme ? Colors.white : Colors.black,
               )),
         ),
-        Flexible(
-          child: ListView.builder(
-            itemCount: topics.length,
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Card(
-                  elevation: 3,
-                  color: isDarkTheme ? Colors.grey[850] : Colors.white,
-                  surfaceTintColor: Colors.white,
-                  child: ListTile(
-                    onTap: () {
-                      ref.read(appNavigatorProvider).navigateTo(AppRoutes.topic,
-                          arguments: topics[index]);
-                    },
-                    leading: CircleAvatar(
-                        child: Text(
-                      formatIndexToString(index),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-                    title: Text(
-                      topics[index].topicName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      topics[index].translation,
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.play_circle_outline_outlined,
-                      size: 32,
-                      color: isDarkTheme
-                          ? Colors.white
-                          : Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
+        _buildTopicListView(topics, isDarkTheme),
       ],
     );
   }
 
-  Widget buildBodyInProgress() {
-    return const Center(
-      child: AppLoadingIndicator(),
+  Flexible _buildTopicListView(List<Topic> topics, bool isDarkTheme) {
+    return Flexible(
+      child: ListView.builder(
+        itemCount: topics.length,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Card(
+              elevation: 3,
+              color: isDarkTheme ? Colors.grey[850] : Colors.white,
+              surfaceTintColor: Colors.white,
+              child: ListTile(
+                onTap: () {
+                  ref
+                      .read(appNavigatorProvider)
+                      .navigateTo(AppRoutes.topic, arguments: topics[index]);
+                },
+                leading: CircleAvatar(
+                    child: Text(
+                  formatIndexToString(index),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
+                title: Text(
+                  topics[index].topicName,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  topics[index].translation,
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.play_circle_outline_outlined,
+                  size: 32,
+                  color: isDarkTheme
+                      ? Colors.white
+                      : Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget buildBodyError() {
-    return const AppErrorView();
+  Row _buildCategoryHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: categoryImageList[category.categoryID - 1],
+        ),
+        Column(
+          children: [
+            Text(category.name,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                )),
+            Text(category.translation,
+                style: const TextStyle(
+                  fontSize: 18,
+                )),
+          ],
+        )
+      ],
+    );
   }
 }

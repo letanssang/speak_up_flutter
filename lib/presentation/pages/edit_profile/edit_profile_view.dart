@@ -49,6 +49,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     _emailTextEditingController.text = user!.email ?? '';
   }
 
+  EditProfileViewModel get _viewModel =>
+      ref.read(editProfileViewModelProvider.notifier);
+
   @override
   void dispose() {
     _userNameTextEditingController.dispose();
@@ -93,7 +96,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           ),
         );
       }
-      ref.read(editProfileViewModelProvider.notifier).resetError();
+      _viewModel.resetError();
     });
   }
 
@@ -149,11 +152,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                     buttonState: state.loadingStatus.buttonState,
                     onTap: () {
                       if (!_formKey.currentState!.validate()) return;
-                      ref
-                          .read(editProfileViewModelProvider.notifier)
-                          .onSubmitted(
-                              name: _userNameTextEditingController.text,
-                              email: _emailTextEditingController.text);
+                      _viewModel.onSubmitted(
+                          name: _userNameTextEditingController.text,
+                          email: _emailTextEditingController.text);
                     },
                   ),
                 ],

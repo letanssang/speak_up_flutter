@@ -22,24 +22,22 @@ class CategoriesView extends ConsumerWidget {
         leading: const AppBackButton(),
         title: Text(AppLocalizations.of(context)!.categories),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-          ),
-          itemCount: categoryImageList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return buildCategoryCard(index, ref, categories[index]);
-          },
+      body: GridView.builder(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
         ),
+        itemCount: categoryImageList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _buildCategoryCard(index, ref, categories[index]);
+        },
       ),
     );
   }
 
-  Widget buildCategoryCard(int index, WidgetRef ref, Category category) {
+  Widget _buildCategoryCard(int index, WidgetRef ref, Category category) {
     final language = ref.watch(appLanguageProvider);
     final darkTheme = ref.watch(themeProvider);
     return Card(

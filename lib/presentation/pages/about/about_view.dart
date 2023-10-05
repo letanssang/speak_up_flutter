@@ -13,52 +13,54 @@ class AboutView extends StatelessWidget {
         leading: const AppBackButton(),
         title: const Text('About'),
       ),
-      body: SizedBox(
-        width: ScreenUtil().screenWidth,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Text(
-                'Speak Up',
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: ScreenUtil().screenWidth,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Text(
+                  'Speak Up',
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(24),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              AppImages.developer(
+                width: ScreenUtil().screenWidth * 0.6,
+                boxFit: BoxFit.fitWidth,
+              ),
+              const SizedBox(
+                height: 32,
+              ),
+              Text(
+                'Made by motchugacon',
                 style: TextStyle(
-                  fontSize: ScreenUtil().setSp(24),
+                  fontSize: ScreenUtil().setSp(18),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            AppImages.developer(
-              width: ScreenUtil().screenWidth * 0.6,
-              boxFit: BoxFit.fitWidth,
-            ),
-            const SizedBox(
-              height: 32,
-            ),
-            Text(
-              'Made with ❤️ by chugacon',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(18),
-                fontWeight: FontWeight.bold,
+              const SizedBox(
+                height: 32,
               ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              'Contact me for any problem:',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(16),
-              ),
-            ),
-            Text('letan.ssang@gmail.com',
+              Text(
+                'Contact me for any problem:',
                 style: TextStyle(
                   fontSize: ScreenUtil().setSp(16),
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                )),
-          ],
+                ),
+              ),
+              Text('letan.ssang@gmail.com',
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(16),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  )),
+            ],
+          ),
         ),
       ),
     );

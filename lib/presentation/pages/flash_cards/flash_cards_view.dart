@@ -33,6 +33,8 @@ class FlashCardsView extends ConsumerStatefulWidget {
 class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
   List<FlashCard> flashCards = [];
 
+  FlashCardsViewModel get _viewModel =>
+      ref.read(flashCardsViewModelProvider.notifier);
   @override
   void initState() {
     super.initState();
@@ -44,9 +46,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
   Future<void> _init() async {
     flashCards = ModalRoute.of(context)!.settings.arguments as List<FlashCard>;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ref
-          .read(flashCardsViewModelProvider.notifier)
-          .init(flashCards[0].frontText);
+      _viewModel.init(flashCards[0].frontText);
     });
     setState(() {});
   }

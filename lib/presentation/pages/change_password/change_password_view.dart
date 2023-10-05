@@ -37,6 +37,9 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
   final _currentPasswordTextEditingController = TextEditingController();
   final _newPasswordTextEditingController = TextEditingController();
 
+  ChangePasswordViewModel get _viewModel =>
+      ref.read(changePasswordViewModelProvider.notifier);
+
   @override
   void dispose() {
     _currentPasswordTextEditingController.dispose();
@@ -81,7 +84,7 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
           ),
         );
       }
-      ref.read(changePasswordViewModelProvider.notifier).resetError();
+      _viewModel.resetError();
     });
   }
 
@@ -108,11 +111,7 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
                 validatorType: ValidatorType.password,
                 context: context,
                 obscureText: !state.isPasswordVisible,
-                onSuffixIconTap: () {
-                  ref
-                      .read(changePasswordViewModelProvider.notifier)
-                      .onPasswordVisibilityPressed();
-                },
+                onSuffixIconTap: _viewModel.onPasswordVisibilityPressed,
                 suffixIcon: Icon(state.isPasswordVisible
                     ? Icons.visibility
                     : Icons.visibility_off),
@@ -125,11 +124,7 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
                 validatorType: ValidatorType.password,
                 context: context,
                 obscureText: !state.isPasswordVisible,
-                onSuffixIconTap: () {
-                  ref
-                      .read(changePasswordViewModelProvider.notifier)
-                      .onPasswordVisibilityPressed();
-                },
+                onSuffixIconTap: _viewModel.onPasswordVisibilityPressed,
                 suffixIcon: Icon(state.isPasswordVisible
                     ? Icons.visibility
                     : Icons.visibility_off),
@@ -140,12 +135,10 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
                   buttonState: state.loadingStatus.buttonState,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      ref
-                          .read(changePasswordViewModelProvider.notifier)
-                          .onSubmitted(
-                            _currentPasswordTextEditingController.text,
-                            _newPasswordTextEditingController.text,
-                          );
+                      _viewModel.onSubmitted(
+                        _currentPasswordTextEditingController.text,
+                        _newPasswordTextEditingController.text,
+                      );
                     }
                   }),
             ],

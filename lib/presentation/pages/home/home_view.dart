@@ -55,19 +55,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   String getBestThumbnailUrl(YoutubeVideoThumbnails? thumbnails) {
-    if (thumbnails?.maxresThumbnail?.url != null) {
-      return thumbnails!.maxresThumbnail!.url!;
-    } else if (thumbnails?.standardThumbnail?.url != null) {
-      return thumbnails!.standardThumbnail!.url!;
-    } else if (thumbnails?.highThumbnail?.url != null) {
-      return thumbnails!.highThumbnail!.url!;
-    } else if (thumbnails?.mediumThumbnail?.url != null) {
-      return thumbnails!.mediumThumbnail!.url!;
-    } else if (thumbnails?.defaultThumbnail?.url != null) {
-      return thumbnails!.defaultThumbnail!.url!;
-    } else {
-      return '';
-    }
+    return thumbnails?.maxresThumbnail?.url ??
+        thumbnails?.standardThumbnail?.url ??
+        thumbnails?.highThumbnail?.url ??
+        thumbnails?.mediumThumbnail?.url ??
+        thumbnails?.defaultThumbnail?.url ??
+        '';
   }
 
   @override
