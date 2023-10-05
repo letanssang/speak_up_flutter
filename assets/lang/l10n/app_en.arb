@@ -95,5 +95,11 @@
 "completed": "Completed",
 "practiceNow": "Practice Now",
 "wordStartWith": "Word start with",
+"positive": "Positive",
+"negative": "Negative",
+"question": "Question",
+"form": "Form",
+"usages": "Usages",
+"signalWords": "Signal Words",
 "getStarted": "Get Started"
 }

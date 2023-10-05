@@ -10,7 +10,7 @@ import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_idiom_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -19,10 +19,11 @@ import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.
 import 'package:speak_up/presentation/resources/app_audios.dart';
 import 'package:speak_up/presentation/utilities/constant/string.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
-  final GetSentenceListFromIdiomUseCase _getSentenceListFromIdiomUseCase;
+  final GetSentenceListByParentIDUseCase _getSentenceListByParentID;
   final PlayAudioFromUrlUseCase _playAudioFromUrlUseCase;
   final PlaySlowAudioFromUrlUseCase _playSlowAudioFromUrlUseCase;
   final PlayAudioFromAssetUseCase _playAudioFromAssetUseCase;
@@ -39,7 +40,7 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   bool get isLastPage => state.currentPage >= state.totalPage;
 
   IdiomLearningViewModel(
-    this._getSentenceListFromIdiomUseCase,
+    this._getSentenceListByParentID,
     this._playAudioFromUrlUseCase,
     this._playSlowAudioFromUrlUseCase,
     this._playAudioFromAssetUseCase,
@@ -57,7 +58,7 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
       List<Sentence> sentences =
-          await _getSentenceListFromIdiomUseCase.run(idiom.idiomID);
+          await _getSentenceListByParentID.run(idiom.idiomID, LessonEnum.idiom);
       state = state.copyWith(
         loadingStatus: LoadingStatus.success,
         exampleSentences: sentences,

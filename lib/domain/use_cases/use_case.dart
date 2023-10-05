@@ -21,3 +21,7 @@ abstract class FutureUseCase<Input, Output> {
 abstract class FutureOutputUseCase<Output> {
   Future<Output> run();
 }
+
+abstract class FutureUseCaseTwoInput<Input1, Input2, Output> {
+  Future<Output> run(Input1 input1, Input2 input2);
+}

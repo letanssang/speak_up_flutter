@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_tense_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/tenses/tenses_state.dart';
 import 'package:speak_up/presentation/pages/tenses/tenses_view_model.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
@@ -52,6 +54,7 @@ class _TensesViewState extends ConsumerState<TensesView> {
   }
 
   Widget _buildLoadingSuccessBody(TensesState state) {
+    final language = ref.watch(appLanguageProvider);
     return ListView.builder(
       itemCount: state.tenses.length,
       itemBuilder: (context, index) {
@@ -63,7 +66,7 @@ class _TensesViewState extends ConsumerState<TensesView> {
                 .navigateTo(AppRoutes.tense, arguments: tense);
           },
           index: index,
-          title: tense.tense,
+          title: language == Language.english ? tense.tense : tense.translation,
         );
       },
     );

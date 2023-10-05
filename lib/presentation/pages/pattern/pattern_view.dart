@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
@@ -17,7 +17,7 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 final patternViewModelProvider =
     StateNotifierProvider.autoDispose<PatternViewModel, PatternState>(
         (ref) => PatternViewModel(
-              injector.get<GetSentenceListFromPatternUseCase>(),
+              injector.get<GetSentenceListByParentIDUseCase>(),
               injector.get<SpeakFromTextUseCase>(),
             ));
 
@@ -174,6 +174,7 @@ class _PatternViewState extends ConsumerState<PatternView> {
               text: 'Practice now',
             ),
           ),
+          const SizedBox(height: 16),
         ]),
       ),
     );

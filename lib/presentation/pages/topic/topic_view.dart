@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_topic_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';
 import 'package:speak_up/presentation/pages/topic/topic_view_model.dart';
@@ -22,7 +22,7 @@ import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indi
 final topicViewModelProvider =
     StateNotifierProvider.autoDispose<TopicViewModel, TopicState>(
   (ref) => TopicViewModel(
-    injector.get<GetSentenceListFromTopicUseCase>(),
+    injector.get<GetSentenceListByParentIDUseCase>(),
   ),
 );
 

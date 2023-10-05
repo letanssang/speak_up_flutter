@@ -13,6 +13,7 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final tenseViewModelProvider =
     StateNotifierProvider.autoDispose<TenseViewModel, TenseState>(
@@ -73,11 +74,11 @@ class _TenseViewState extends ConsumerState<TenseView> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            _buildHeaderText('Form'),
+            _buildHeaderText(AppLocalizations.of(context)!.form),
             _buildFormTable(state),
-            _buildHeaderText('Usages'),
+            _buildHeaderText(AppLocalizations.of(context)!.usages),
             _buildUsages(state.tenseUsages),
-            _buildHeaderText('Signal Words'),
+            _buildHeaderText(AppLocalizations.of(context)!.signalWords),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child:
@@ -101,6 +102,7 @@ class _TenseViewState extends ConsumerState<TenseView> {
   }
 
   Widget _buildUsageItem(TenseUsage e) {
+    final language = ref.watch(appLanguageProvider);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -116,7 +118,9 @@ class _TenseViewState extends ConsumerState<TenseView> {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  e.description,
+                  language == Language.english
+                      ? e.description
+                      : e.descriptionTranslation,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -170,18 +174,18 @@ class _TenseViewState extends ConsumerState<TenseView> {
             ],
           ),
           TableRow(children: [
-            _buildFistCell('Positive', context),
+            _buildFistCell(AppLocalizations.of(context)!.positive, context),
             ...state.tenseForms
                 .map((e) => _buildTableCell(e.positive, e.positiveExample)),
           ]),
           TableRow(children: [
-            _buildFistCell('Negative', context),
+            _buildFistCell(AppLocalizations.of(context)!.negative, context),
             ...state.tenseForms.map(
               (e) => _buildTableCell(e.negative, e.negativeExample),
             ),
           ]),
           TableRow(children: [
-            _buildFistCell('Question', context),
+            _buildFistCell(AppLocalizations.of(context)!.question, context),
             ...state.tenseForms.map(
               (e) => _buildTableCell(e.question, e.questionExample),
             ),

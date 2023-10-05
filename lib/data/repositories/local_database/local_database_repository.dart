@@ -16,6 +16,7 @@ import 'package:speak_up/domain/entities/tense_form/tense_form.dart';
 import 'package:speak_up/domain/entities/tense_usage/tense_usage.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/entities/word/word.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 
 class LocalDatabaseRepository {
   final DatabaseManager _databaseManager;
@@ -70,24 +71,11 @@ class LocalDatabaseRepository {
     return _databaseManager.getIdiomListByType(input);
   }
 
-  Future<List<Sentence>> getSentenceListFromIdiom(int input) {
-    return _databaseManager.getSentenceListFromIdiom(input);
-  }
-
-  Future<List<Sentence>> getSentenceListFromTopic(int input) {
-    return _databaseManager.getSentenceListFromTopic(input);
-  }
-
-  Future<List<Sentence>> getSentenceListFromPattern(int input) {
-    return _databaseManager.getSentenceListFromPattern(input);
-  }
-
-  Future<List<Sentence>> getSentenceListFromPhrasalVerb(int input) {
-    return _databaseManager.getSentenceListFromPhrasalVerb(input);
-  }
-
-  Future<List<Sentence>> getSentenceListFromExpression(int input) {
-    return _databaseManager.getSentenceListFromExpression(input);
+  Future<List<Sentence>> getSentenceListByParentID(
+    int input,
+    LessonEnum lessonEnum,
+  ) {
+    return _databaseManager.getSentenceListByParentID(input, lessonEnum);
   }
 
   Future<List<CommonWord>> getCommonWordListByType(int input) {

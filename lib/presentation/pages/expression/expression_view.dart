@@ -6,7 +6,7 @@ import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/expression/expression.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_expression_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/expression/expression_state.dart';
@@ -22,7 +22,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 final expressionViewModelProvider =
     StateNotifierProvider.autoDispose<ExpressionViewModel, ExpressionState>(
   (ref) => ExpressionViewModel(
-    injector.get<GetSentenceListFromExpressionUseCase>(),
+    injector.get<GetSentenceListByParentIDUseCase>(),
     injector.get<PlayAudioFromUrlUseCase>(),
   ),
 );

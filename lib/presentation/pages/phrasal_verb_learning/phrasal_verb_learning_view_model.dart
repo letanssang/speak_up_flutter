@@ -8,7 +8,7 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_phrasal_verb_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -16,12 +16,13 @@ import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_cas
 import 'package:speak_up/presentation/pages/phrasal_verb_learning/phrasal_verb_learning_state.dart';
 import 'package:speak_up/presentation/resources/app_audios.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 class PhrasalVerbLearningViewModel
     extends StateNotifier<PhrasalVerbLearningState> {
   PhrasalVerbLearningViewModel(
-    this._getSentenceListFromPhrasalVerbUseCase,
+    this._getSentenceListByParentIDUseCase,
     this._playAudioFromAssetUseCase,
     this._playAudioFromFileUseCase,
     this._stopAudioUseCase,
@@ -32,8 +33,7 @@ class PhrasalVerbLearningViewModel
     this._updatePhrasalVerbProgressUseCase,
     this._getCurrentUserUseCase,
   ) : super(const PhrasalVerbLearningState());
-  final GetSentenceListFromPhrasalVerbUseCase
-      _getSentenceListFromPhrasalVerbUseCase;
+  final GetSentenceListByParentIDUseCase _getSentenceListByParentIDUseCase;
   final PlayAudioFromAssetUseCase _playAudioFromAssetUseCase;
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
   final StopAudioUseCase _stopAudioUseCase;
@@ -50,8 +50,8 @@ class PhrasalVerbLearningViewModel
   Future<void> fetchExampleSentences(PhrasalVerb phrasalVerb) async {
     state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
-      List<Sentence> sentences = await _getSentenceListFromPhrasalVerbUseCase
-          .run(phrasalVerb.phrasalVerbID);
+      List<Sentence> sentences = await _getSentenceListByParentIDUseCase.run(
+          phrasalVerb.phrasalVerbID, LessonEnum.phrasalVerb);
       state = state.copyWith(
         loadingStatus: LoadingStatus.success,
         exampleSentences: sentences,

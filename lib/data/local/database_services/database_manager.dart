@@ -20,6 +20,7 @@ import 'package:speak_up/domain/entities/tense_form/tense_form.dart';
 import 'package:speak_up/domain/entities/tense_usage/tense_usage.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/entities/word/word.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseManager {
@@ -52,13 +53,13 @@ class DatabaseManager {
     final maps = await db!.query('lesson');
     return List.generate(maps.length, (i) {
       return Lesson(
-        lessonID: maps[i][LessonTable.lessonID.field] as int,
-        name: maps[i][LessonTable.name.field] as String,
-        translation: maps[i][LessonTable.translation.field] as String,
-        description: maps[i][LessonTable.description.field] as String,
+        lessonID: maps[i][LessonTable.LessonID.name] as int,
+        name: maps[i][LessonTable.Name.name] as String,
+        translation: maps[i][LessonTable.Translation.name] as String,
+        description: maps[i][LessonTable.Description.name] as String,
         descriptionTranslation:
-            maps[i][LessonTable.descriptionTranslation.field] as String,
-        imageURL: maps[i][LessonTable.imageURL.field] as String,
+            maps[i][LessonTable.DescriptionTranslation.name] as String,
+        imageURL: maps[i][LessonTable.ImageURL.name] as String,
       );
     });
   }
@@ -68,10 +69,10 @@ class DatabaseManager {
     final maps = await db!.query('category');
     return List.generate(maps.length, (i) {
       return Category(
-        categoryID: maps[i][CategoryTable.categoryID.field] as int,
-        name: maps[i][CategoryTable.name.field] as String,
-        translation: maps[i][CategoryTable.translation.field] as String,
-        imageUrl: maps[i][CategoryTable.imageURL.field] as String,
+        categoryID: maps[i][CategoryTable.CategoryID.name] as int,
+        name: maps[i][CategoryTable.Name.name] as String,
+        translation: maps[i][CategoryTable.Translation.name] as String,
+        imageUrl: maps[i][CategoryTable.ImageURL.name] as String,
       );
     });
   }
@@ -81,9 +82,9 @@ class DatabaseManager {
     final maps = await db!.query('idiomType');
     return List.generate(maps.length, (i) {
       return IdiomType(
-        idiomTypeID: maps[i][IdiomTypeTable.idiomTypeID.field] as int,
-        name: maps[i][IdiomTypeTable.name.field] as String,
-        translation: maps[i][IdiomTypeTable.translation.field] as String,
+        idiomTypeID: maps[i][IdiomTypeTable.IdiomTypeID.name] as int,
+        name: maps[i][IdiomTypeTable.Name.name] as String,
+        translation: maps[i][IdiomTypeTable.Translation.name] as String,
       );
     });
   }
@@ -94,12 +95,12 @@ class DatabaseManager {
     return List.generate(maps.length, (i) {
       return ExpressionType(
         expressionTypeID:
-            maps[i][ExpressionTypeTable.expressionTypeID.field] as int,
-        name: maps[i][ExpressionTypeTable.name.field] as String,
-        translation: maps[i][ExpressionTypeTable.translation.field] as String,
-        description: maps[i][ExpressionTypeTable.description.field] as String,
+            maps[i][ExpressionTypeTable.ExpressionTypeID.name] as int,
+        name: maps[i][ExpressionTypeTable.Name.name] as String,
+        translation: maps[i][ExpressionTypeTable.Translation.name] as String,
+        description: maps[i][ExpressionTypeTable.Description.name] as String,
         descriptionTranslation:
-            maps[i][ExpressionTypeTable.descriptionTranslation.field] as String,
+            maps[i][ExpressionTypeTable.DescriptionTranslation.name] as String,
       );
     });
   }
@@ -113,10 +114,10 @@ class DatabaseManager {
     );
     return List.generate(maps.length, (i) {
       return Topic(
-        topicID: maps[i][TopicTable.topicID.field] as int,
-        topicName: maps[i][TopicTable.topicName.field] as String,
-        translation: maps[i][TopicTable.translation.field] as String,
-        categoryID: maps[i][TopicTable.categoryID.field] as int,
+        topicID: maps[i][TopicTable.TopicID.name] as int,
+        topicName: maps[i][TopicTable.TopicName.name] as String,
+        translation: maps[i][TopicTable.Translation.name] as String,
+        categoryID: maps[i][TopicTable.CategoryID.name] as int,
       );
     });
   }
@@ -125,13 +126,13 @@ class DatabaseManager {
     final db = await database;
     final maps = await db!.query('phonetic');
     return List.generate(maps.length, (i) {
-      final exampleString = maps[i][PhoneticTable.example.field] as String;
+      final exampleString = maps[i][PhoneticTable.Example.name] as String;
       return Phonetic(
-        phoneticID: maps[i][PhoneticTable.phoneticID.field] as int,
-        phonetic: maps[i][PhoneticTable.phonetic.field] as String,
-        phoneticType: maps[i][PhoneticTable.phoneticType.field] as int,
-        youtubeVideoId: maps[i][PhoneticTable.youtubeVideoID.field] as String,
-        description: maps[i][PhoneticTable.description.field] as String,
+        phoneticID: maps[i][PhoneticTable.PhoneticID.name] as int,
+        phonetic: maps[i][PhoneticTable.Phonetic.name] as String,
+        phoneticType: maps[i][PhoneticTable.PhoneticType.name] as int,
+        youtubeVideoId: maps[i][PhoneticTable.YoutubeVideoID.name] as String,
+        description: maps[i][PhoneticTable.Description.name] as String,
         example: convertStringToPhoneticExamplesMap(exampleString),
       );
     });
@@ -142,13 +143,13 @@ class DatabaseManager {
     final maps = await db!.query('pattern');
     return List.generate(maps.length, (i) {
       return SentencePattern(
-        patternID: maps[i][PatternTable.patternID.field] as int,
-        name: maps[i][PatternTable.name.field] as String,
-        dialogue: maps[i][PatternTable.dialogue.field] as String,
-        description: maps[i][PatternTable.description.field] as String,
+        patternID: maps[i][PatternTable.PatternID.name] as int,
+        name: maps[i][PatternTable.Name.name] as String,
+        dialogue: maps[i][PatternTable.Dialogue.name] as String,
+        description: maps[i][PatternTable.Description.name] as String,
         descriptionTranslation:
-            maps[i][PatternTable.descriptionTranslation.field] as String,
-        youtubeVideoID: maps[i][PatternTable.youtubeVideoID.field] as String?,
+            maps[i][PatternTable.DescriptionTranslation.name] as String,
+        youtubeVideoID: maps[i][PatternTable.YoutubeVideoID.name] as String?,
       );
     });
   }
@@ -162,15 +163,15 @@ class DatabaseManager {
     );
     return List.generate(maps.length, (i) {
       final phoneticComponentString =
-          maps[i][WordTable.phoneticComponents.field] as String;
+          maps[i][WordTable.PhoneticComponents.name] as String;
       return Word(
-        wordID: maps[i][WordTable.wordID.field] as int,
-        word: maps[i][WordTable.word.field] as String,
-        pronunciation: maps[i][WordTable.pronunciation.field] as String,
+        wordID: maps[i][WordTable.WordID.name] as int,
+        word: maps[i][WordTable.Word.name] as String,
+        pronunciation: maps[i][WordTable.Pronunciation.name] as String,
         phoneticComponents:
             convertStringToPhoneticComponentsMap(phoneticComponentString),
-        translation: maps[i][WordTable.translation.field] as String,
-        phoneticID: maps[i][WordTable.phoneticID.field] as int,
+        translation: maps[i][WordTable.Translation.name] as String,
+        phoneticID: maps[i][WordTable.PhoneticID.name] as int,
       );
     });
   }
@@ -181,9 +182,9 @@ class DatabaseManager {
     return List.generate(maps.length, (i) {
       return PhrasalVerbType(
         phrasalVerbTypeID:
-            maps[i][PhrasalVerbTypeTable.phrasalVerbTypeID.field] as int,
-        name: maps[i][PhrasalVerbTypeTable.name.field] as String,
-        translation: maps[i][PhrasalVerbTypeTable.translation.field] as String,
+            maps[i][PhrasalVerbTypeTable.PhrasalVerbTypeID.name] as int,
+        name: maps[i][PhrasalVerbTypeTable.Name.name] as String,
+        translation: maps[i][PhrasalVerbTypeTable.Translation.name] as String,
       );
     });
   }
@@ -226,13 +227,13 @@ class DatabaseManager {
     );
     return List.generate(maps.length, (i) {
       return PhrasalVerb(
-        phrasalVerbID: maps[i][PhrasalVerbTable.phrasalVerbID.field] as int,
-        name: maps[i][PhrasalVerbTable.name.field] as String,
-        description: maps[i][PhrasalVerbTable.description.field] as String,
+        phrasalVerbID: maps[i][PhrasalVerbTable.PhrasalVerbID.name] as int,
+        name: maps[i][PhrasalVerbTable.Name.name] as String,
+        description: maps[i][PhrasalVerbTable.Description.name] as String,
         descriptionTranslation:
-            maps[i][PhrasalVerbTable.descriptionTranslation.field] as String,
+            maps[i][PhrasalVerbTable.DescriptionTranslation.name] as String,
         phrasalVerbTypeID:
-            maps[i][PhrasalVerbTable.phrasalVerbTypeID.field] as int,
+            maps[i][PhrasalVerbTable.PhrasalVerbTypeID.name] as int,
       );
     });
   }
@@ -246,11 +247,10 @@ class DatabaseManager {
     );
     return List.generate(maps.length, (i) {
       return Expression(
-        expressionID: maps[i][ExpressionTable.expressionID.field] as int,
-        name: maps[i][ExpressionTable.name.field] as String,
-        translation: maps[i][ExpressionTable.translation.field] as String,
-        expressionTypeID:
-            maps[i][ExpressionTable.expressionTypeID.field] as int,
+        expressionID: maps[i][ExpressionTable.ExpressionID.name] as int,
+        name: maps[i][ExpressionTable.Name.name] as String,
+        translation: maps[i][ExpressionTable.Translation.name] as String,
+        expressionTypeID: maps[i][ExpressionTable.ExpressionTypeID.name] as int,
       );
     });
   }
@@ -264,108 +264,33 @@ class DatabaseManager {
     );
     return List.generate(maps.length, (i) {
       return Idiom(
-        idiomID: maps[i][IdiomTable.idiomID.field] as int,
-        name: maps[i][IdiomTable.name.field] as String,
-        idiomTypeID: maps[i][IdiomTable.idiomTypeID.field] as int,
-        description: maps[i][IdiomTable.description.field] as String,
+        idiomID: maps[i][IdiomTable.IdiomID.name] as int,
+        name: maps[i][IdiomTable.Name.name] as String,
+        idiomTypeID: maps[i][IdiomTable.IdiomTypeID.name] as int,
+        description: maps[i][IdiomTable.Description.name] as String,
         descriptionTranslation:
-            maps[i][IdiomTable.descriptionTranslation.field] as String,
-        audioEndpoint: maps[i][IdiomTable.audioEndpoint.field] as String,
+            maps[i][IdiomTable.DescriptionTranslation.name] as String,
+        audioEndpoint: maps[i][IdiomTable.AudioEndpoint.name] as String,
       );
     });
   }
 
-  Future<List<Sentence>> getSentenceListFromIdiom(int input) async {
+  Future<List<Sentence>> getSentenceListByParentID(
+      int parentID, LessonEnum lessonEnum) async {
     final db = await database;
     final maps = await db!.query(
       'sentence',
       where: 'parentType = ? AND parentID = ?',
-      whereArgs: [SentenceParentType.idiom.typeNumber, input],
+      whereArgs: [lessonEnum.index + 1, parentID],
     );
     return List.generate(maps.length, (i) {
       return Sentence(
-        sentenceID: maps[i][SentenceTable.sentenceID.field] as int,
-        text: maps[i][SentenceTable.text.field] as String,
-        audioEndpoint: maps[i][SentenceTable.audioEndpoint.field] as String,
-        translation: maps[i][SentenceTable.translation.field] as String,
-        parentType: maps[i][SentenceTable.parentType.field] as int,
-        parentID: maps[i][SentenceTable.parentID.field] as int,
-      );
-    });
-  }
-
-  Future<List<Sentence>> getSentenceListFromTopic(int input) async {
-    final db = await database;
-    final maps = await db!.query(
-      'sentence',
-      where: 'parentType = ? AND parentID = ?',
-      whereArgs: [SentenceParentType.topic.typeNumber, input],
-    );
-    return List.generate(maps.length, (i) {
-      return Sentence(
-        sentenceID: maps[i][SentenceTable.sentenceID.field] as int,
-        text: maps[i][SentenceTable.text.field] as String,
-        audioEndpoint: maps[i][SentenceTable.audioEndpoint.field] as String,
-        translation: maps[i][SentenceTable.translation.field] as String,
-        parentType: maps[i][SentenceTable.parentType.field] as int,
-        parentID: maps[i][SentenceTable.parentID.field] as int,
-      );
-    });
-  }
-
-  Future<List<Sentence>> getSentenceListFromPattern(int input) async {
-    final db = await database;
-    final maps = await db!.query(
-      'sentence',
-      where: 'parentType = ? AND parentID = ?',
-      whereArgs: [SentenceParentType.pattern.typeNumber, input],
-    );
-    return List.generate(maps.length, (i) {
-      return Sentence(
-        sentenceID: maps[i][SentenceTable.sentenceID.field] as int,
-        text: maps[i][SentenceTable.text.field] as String,
-        audioEndpoint: maps[i][SentenceTable.audioEndpoint.field] as String,
-        translation: maps[i][SentenceTable.translation.field] as String,
-        parentType: maps[i][SentenceTable.parentType.field] as int,
-        parentID: maps[i][SentenceTable.parentID.field] as int,
-      );
-    });
-  }
-
-  Future<List<Sentence>> getSentenceListFromPhrasalVerb(int input) async {
-    final db = await database;
-    final maps = await db!.query(
-      'sentence',
-      where: 'parentType = ? AND parentID = ?',
-      whereArgs: [SentenceParentType.phrasalVerb.typeNumber, input],
-    );
-    return List.generate(maps.length, (i) {
-      return Sentence(
-        sentenceID: maps[i][SentenceTable.sentenceID.field] as int,
-        text: maps[i][SentenceTable.text.field] as String,
-        audioEndpoint: maps[i][SentenceTable.audioEndpoint.field] as String,
-        translation: maps[i][SentenceTable.translation.field] as String,
-        parentType: maps[i][SentenceTable.parentType.field] as int,
-        parentID: maps[i][SentenceTable.parentID.field] as int,
-      );
-    });
-  }
-
-  Future<List<Sentence>> getSentenceListFromExpression(int input) async {
-    final db = await database;
-    final maps = await db!.query(
-      'sentence',
-      where: 'parentType = ? AND parentID = ?',
-      whereArgs: [SentenceParentType.expression.typeNumber, input],
-    );
-    return List.generate(maps.length, (i) {
-      return Sentence(
-        sentenceID: maps[i][SentenceTable.sentenceID.field] as int,
-        text: maps[i][SentenceTable.text.field] as String,
-        audioEndpoint: maps[i][SentenceTable.audioEndpoint.field] as String,
-        translation: maps[i][SentenceTable.translation.field] as String,
-        parentType: maps[i][SentenceTable.parentType.field] as int,
-        parentID: maps[i][SentenceTable.parentID.field] as int,
+        sentenceID: maps[i][SentenceTable.SentenceID.name] as int,
+        text: maps[i][SentenceTable.Text.name] as String,
+        audioEndpoint: maps[i][SentenceTable.AudioEndpoint.name] as String,
+        translation: maps[i][SentenceTable.Translation.name] as String,
+        parentType: maps[i][SentenceTable.ParentType.name] as int,
+        parentID: maps[i][SentenceTable.ParentID.name] as int,
       );
     });
   }
@@ -379,12 +304,12 @@ class DatabaseManager {
     );
     return List.generate(maps.length, (i) {
       return CommonWord(
-        commonWordID: maps[i][CommonWordTable.commonWordID.field] as int,
-        commonWord: maps[i][CommonWordTable.commonWord.field] as String,
-        translation: maps[i][CommonWordTable.translation.field] as String,
-        partOfSpeech: maps[i][CommonWordTable.partOfSpeech.field] as String,
-        level: maps[i][CommonWordTable.level.field] as String,
-        type: maps[i][CommonWordTable.type.field] as int,
+        commonWordID: maps[i][CommonWordTable.CommonWordID.name] as int,
+        commonWord: maps[i][CommonWordTable.CommonWord.name] as String,
+        translation: maps[i][CommonWordTable.Translation.name] as String,
+        partOfSpeech: maps[i][CommonWordTable.PartOfSpeech.name] as String,
+        level: maps[i][CommonWordTable.Level.name] as String,
+        type: maps[i][CommonWordTable.Type.name] as int,
       );
     });
   }
@@ -394,10 +319,10 @@ class DatabaseManager {
     final maps = await db!.query('tense');
     return List.generate(maps.length, (i) {
       return Tense(
-        tenseID: maps[i][TenseTable.tenseID.field] as int,
-        tense: maps[i][TenseTable.tense.field] as String,
-        translation: maps[i][TenseTable.translation.field] as String,
-        signalWords: maps[i][TenseTable.signalWords.field] as String,
+        tenseID: maps[i][TenseTable.TenseID.name] as int,
+        tense: maps[i][TenseTable.Tense.name] as String,
+        translation: maps[i][TenseTable.Translation.name] as String,
+        signalWords: maps[i][TenseTable.SignalWords.name] as String,
       );
     });
   }
@@ -411,18 +336,15 @@ class DatabaseManager {
     );
     return List.generate(maps.length, (i) {
       return TenseForm(
-        tenseFormID: maps[i][TenseFormTable.tenseFormID.field] as int,
-        tenseID: maps[i][TenseFormTable.tenseID.field] as int,
-        title: maps[i][TenseFormTable.title.field] as String,
-        positive: maps[i][TenseFormTable.positive.field] as String,
-        positiveExample:
-            maps[i][TenseFormTable.positiveExample.field] as String,
-        negative: maps[i][TenseFormTable.negative.field] as String,
-        negativeExample:
-            maps[i][TenseFormTable.negativeExample.field] as String,
-        question: maps[i][TenseFormTable.question.field] as String,
-        questionExample:
-            maps[i][TenseFormTable.questionExample.field] as String,
+        tenseFormID: maps[i][TenseFormTable.TenseFormID.name] as int,
+        tenseID: maps[i][TenseFormTable.TenseID.name] as int,
+        title: maps[i][TenseFormTable.Title.name] as String,
+        positive: maps[i][TenseFormTable.Positive.name] as String,
+        positiveExample: maps[i][TenseFormTable.PositiveExample.name] as String,
+        negative: maps[i][TenseFormTable.Negative.name] as String,
+        negativeExample: maps[i][TenseFormTable.NegativeExample.name] as String,
+        question: maps[i][TenseFormTable.Question.name] as String,
+        questionExample: maps[i][TenseFormTable.QuestionExample.name] as String,
       );
     });
   }
@@ -436,12 +358,12 @@ class DatabaseManager {
     );
     return List.generate(maps.length, (i) {
       return TenseUsage(
-        tenseUsageID: maps[i][TenseUsageTable.tenseUsageID.field] as int,
-        tenseID: maps[i][TenseUsageTable.tenseID.field] as int,
-        description: maps[i][TenseUsageTable.description.field] as String,
+        tenseUsageID: maps[i][TenseUsageTable.TenseUsageID.name] as int,
+        tenseID: maps[i][TenseUsageTable.TenseID.name] as int,
+        description: maps[i][TenseUsageTable.Description.name] as String,
         descriptionTranslation:
-            maps[i][TenseUsageTable.descriptionTranslation.field] as String,
-        example: maps[i][TenseUsageTable.example.field] as String,
+            maps[i][TenseUsageTable.Description.name] as String,
+        example: maps[i][TenseUsageTable.Example.name] as String,
       );
     });
   }

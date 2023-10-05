@@ -11,7 +11,7 @@ import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_idiom_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -33,7 +33,7 @@ import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_perce
 final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
     IdiomLearningViewModel, IdiomLearningState>(
   (ref) => IdiomLearningViewModel(
-      injector.get<GetSentenceListFromIdiomUseCase>(),
+      injector.get<GetSentenceListByParentIDUseCase>(),
       injector.get<PlayAudioFromUrlUseCase>(),
       injector.get<PlaySlowAudioFromUrlUseCase>(),
       injector.get<PlayAudioFromAssetUseCase>(),

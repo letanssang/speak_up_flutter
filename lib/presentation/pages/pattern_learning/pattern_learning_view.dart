@@ -8,7 +8,7 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -30,7 +30,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 final patternLearningViewModelProvider = StateNotifierProvider.autoDispose<
     PatternLearningViewModel, PatternLearningState>(
   (ref) => PatternLearningViewModel(
-    injector.get<GetSentenceListFromPatternUseCase>(),
+    injector.get<GetSentenceListByParentIDUseCase>(),
     injector.get<StopAudioUseCase>(),
     injector.get<StartRecordingUseCase>(),
     injector.get<StopRecordingUseCase>(),

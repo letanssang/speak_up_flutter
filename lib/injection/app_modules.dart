@@ -65,11 +65,7 @@ import 'package:speak_up/domain/use_cases/local_database/get_lesson_list_use_cas
 import 'package:speak_up/domain/use_cases/local_database/get_phonetic_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_type_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_expression_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_idiom_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_phrasal_verb_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_topic_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_pattern_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_tense_form_list_from_tense_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_tense_list_use_case.dart';
@@ -302,20 +298,13 @@ class AppModules {
     injector.registerLazySingleton<GetIdiomListByTypeUseCase>(
         () => GetIdiomListByTypeUseCase());
 
-    // Get sentence list from topic use case
-    injector.registerLazySingleton<GetSentenceListFromTopicUseCase>(
-        () => GetSentenceListFromTopicUseCase());
-
     // Get sentence pattern list use case
     injector.registerLazySingleton<GetSentencePatternListUseCase>(
         () => GetSentencePatternListUseCase());
-    // Get sentence list from pattern use case
-    injector.registerLazySingleton<GetSentenceListFromPatternUseCase>(
-        () => GetSentenceListFromPatternUseCase());
 
     // Get sentence list from idiom use case
-    injector.registerLazySingleton<GetSentenceListFromIdiomUseCase>(
-        () => GetSentenceListFromIdiomUseCase());
+    injector.registerLazySingleton<GetSentenceListByParentIDUseCase>(
+        () => GetSentenceListByParentIDUseCase());
 
     // Get idiom type list use case
     injector.registerLazySingleton<GetIdiomTypeListUseCase>(
@@ -411,14 +400,6 @@ class AppModules {
     // Get Flash Card List Use Case
     injector.registerLazySingleton<GetFlashCardListUseCase>(
         () => GetFlashCardListUseCase());
-
-    // Get Sentence List From Phrasal Verb Use Case
-    injector.registerLazySingleton<GetSentenceListFromPhrasalVerbUseCase>(
-        () => GetSentenceListFromPhrasalVerbUseCase());
-
-    // Get Sentece List From Expression Use Case
-    injector.registerLazySingleton<GetSentenceListFromExpressionUseCase>(
-        () => GetSentenceListFromExpressionUseCase());
 
     // Update Phrasal Verb Progress Use Case
     injector.registerLazySingleton<UpdatePhrasalVerbProgressUseCase>(

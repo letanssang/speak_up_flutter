@@ -1,220 +1,138 @@
-import 'package:speak_up/presentation/utilities/common/convert.dart';
-
-enum SentenceParentType {
-  topic,
-  pattern,
-  expression,
-  phrasalVerb,
-  idiom,
-}
-
-extension SentenceParentTypeExtension on SentenceParentType {
-  int get typeNumber => index + 1;
-}
-
 enum WordTable {
-  wordID,
-  word,
-  pronunciation,
-  phoneticComponents,
-  translation,
-  phoneticID,
-}
-
-extension WordTableExtension on WordTable {
-  String get field => capitalizeFirstLetter(name);
+  WordID,
+  Word,
+  Pronunciation,
+  PhoneticComponents,
+  Translation,
+  PhoneticID,
 }
 
 enum LessonTable {
-  lessonID,
-  name,
-  translation,
-  description,
-  descriptionTranslation,
-  imageURL,
-}
-
-extension LessonTableExtension on LessonTable {
-  String get field => capitalizeFirstLetter(name);
+  LessonID,
+  Name,
+  Translation,
+  Description,
+  DescriptionTranslation,
+  ImageURL,
 }
 
 enum CategoryTable {
-  categoryID,
-  name,
-  translation,
-  imageURL,
-}
-
-extension CategoryTableExtension on CategoryTable {
-  String get field => capitalizeFirstLetter(name);
+  CategoryID,
+  Name,
+  Translation,
+  ImageURL,
 }
 
 enum IdiomTypeTable {
-  idiomTypeID,
-  name,
-  translation,
-}
-
-extension IdiomTypeTableExtension on IdiomTypeTable {
-  String get field => capitalizeFirstLetter(name);
+  IdiomTypeID,
+  Name,
+  Translation,
 }
 
 enum IdiomTable {
-  idiomID,
-  name,
-  idiomTypeID,
-  description,
-  descriptionTranslation,
-  audioEndpoint,
-}
-
-extension IdiomTableExtension on IdiomTable {
-  String get field => capitalizeFirstLetter(name);
+  IdiomID,
+  Name,
+  IdiomTypeID,
+  Description,
+  DescriptionTranslation,
+  AudioEndpoint,
 }
 
 enum ExpressionTypeTable {
-  expressionTypeID,
-  name,
-  translation,
-  description,
-  descriptionTranslation,
-}
-
-extension ExpressionTypeTableExtension on ExpressionTypeTable {
-  String get field => capitalizeFirstLetter(name);
+  ExpressionTypeID,
+  Name,
+  Translation,
+  Description,
+  DescriptionTranslation,
 }
 
 enum ExpressionTable {
-  expressionID,
-  name,
-  expressionTypeID,
-  translation,
-}
-
-extension ExpressionTableExtension on ExpressionTable {
-  String get field => capitalizeFirstLetter(name);
+  ExpressionID,
+  Name,
+  ExpressionTypeID,
+  Translation,
 }
 
 enum TopicTable {
-  topicID,
-  topicName,
-  translation,
-  categoryID,
-}
-
-extension TopicTableExtension on TopicTable {
-  String get field => capitalizeFirstLetter(name);
+  TopicID,
+  TopicName,
+  Translation,
+  CategoryID,
 }
 
 enum PhoneticTable {
-  phoneticID,
-  phonetic,
-  phoneticType,
-  youtubeVideoID,
-  example,
-  description,
-}
-
-extension PhoneticTableExtension on PhoneticTable {
-  String get field => capitalizeFirstLetter(name);
+  PhoneticID,
+  Phonetic,
+  PhoneticType,
+  YoutubeVideoID,
+  Example,
+  Description,
 }
 
 enum PhrasalVerbTypeTable {
-  phrasalVerbTypeID,
-  name,
-  translation,
-}
-
-extension PhrasalVerbTypeTableExtension on PhrasalVerbTypeTable {
-  String get field => capitalizeFirstLetter(name);
+  PhrasalVerbTypeID,
+  Name,
+  Translation,
 }
 
 enum PhrasalVerbTable {
-  phrasalVerbID,
-  name,
-  phrasalVerbTypeID,
-  description,
-  descriptionTranslation,
-}
-
-extension PhrasalVerbTableExtension on PhrasalVerbTable {
-  String get field => capitalizeFirstLetter(name);
+  PhrasalVerbID,
+  Name,
+  PhrasalVerbTypeID,
+  Description,
+  DescriptionTranslation,
 }
 
 enum PatternTable {
-  patternID,
-  name,
-  dialogue,
-  description,
-  descriptionTranslation,
-  youtubeVideoID,
-}
-
-extension PatternTableExtension on PatternTable {
-  String get field => capitalizeFirstLetter(name);
+  PatternID,
+  Name,
+  Dialogue,
+  Description,
+  DescriptionTranslation,
+  YoutubeVideoID,
 }
 
 enum SentenceTable {
-  sentenceID,
-  text,
-  audioEndpoint,
-  translation,
-  parentType,
-  parentID,
-}
-
-extension SentenceTableExtension on SentenceTable {
-  String get field => capitalizeFirstLetter(name);
+  SentenceID,
+  Text,
+  AudioEndpoint,
+  Translation,
+  ParentType,
+  ParentID,
 }
 
 enum CommonWordTable {
-  commonWordID,
-  commonWord,
-  translation,
-  partOfSpeech,
-  level,
-  type
-}
-
-extension CommonWordExtension on CommonWordTable {
-  String get field => capitalizeFirstLetter(name);
+  CommonWordID,
+  CommonWord,
+  Translation,
+  PartOfSpeech,
+  Level,
+  Type
 }
 
 enum TenseTable {
-  tenseID,
-  tense,
-  translation,
-  signalWords,
-}
-
-extension TenseTableExtension on TenseTable {
-  String get field => capitalizeFirstLetter(name);
+  TenseID,
+  Tense,
+  Translation,
+  SignalWords,
 }
 
 enum TenseFormTable {
-  tenseFormID,
-  tenseID,
-  title,
-  positive,
-  positiveExample,
-  negative,
-  negativeExample,
-  question,
-  questionExample,
-}
-
-extension TenseFormTableExtension on TenseFormTable {
-  String get field => capitalizeFirstLetter(name);
+  TenseFormID,
+  TenseID,
+  Title,
+  Positive,
+  PositiveExample,
+  Negative,
+  NegativeExample,
+  Question,
+  QuestionExample,
 }
 
 enum TenseUsageTable {
-  tenseUsageID,
-  tenseID,
-  description,
-  descriptionTranslation,
-  example,
-}
-
-extension TenseUsageTableExtension on TenseUsageTable {
-  String get field => capitalizeFirstLetter(name);
+  TenseUsageID,
+  TenseID,
+  Description,
+  DescriptionTranslation,
+  Example,
 }

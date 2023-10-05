@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
-import 'package:speak_up/presentation/utilities/constant/lesson_widget_list.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/tab_bars/app_tab_bar.dart';
 

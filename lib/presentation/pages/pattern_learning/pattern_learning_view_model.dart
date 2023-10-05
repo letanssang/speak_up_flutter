@@ -8,7 +8,7 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_from_pattern_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
@@ -16,11 +16,12 @@ import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_cas
 import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_state.dart';
 import 'package:speak_up/presentation/resources/app_audios.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
   PatternLearningViewModel(
-    this._getSentenceListFromPatternUseCase,
+    this._getSentenceListbyParentIDUseCase,
     this._stopAudioUseCase,
     this._startRecordingUseCase,
     this._stopRecordingUseCase,
@@ -32,7 +33,7 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
     this._getCurrentUserUseCase,
   ) : super(const PatternLearningState());
 
-  final GetSentenceListFromPatternUseCase _getSentenceListFromPatternUseCase;
+  final GetSentenceListByParentIDUseCase _getSentenceListbyParentIDUseCase;
   final StopAudioUseCase _stopAudioUseCase;
   final StartRecordingUseCase _startRecordingUseCase;
   final StopRecordingUseCase _stopRecordingUseCase;
@@ -49,8 +50,8 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
   Future<void> fetchExampleSentences(SentencePattern pattern) async {
     state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
-      List<Sentence> sentences =
-          await _getSentenceListFromPatternUseCase.run(pattern.patternID);
+      List<Sentence> sentences = await _getSentenceListbyParentIDUseCase.run(
+          pattern.patternID, LessonEnum.pattern);
       state = state.copyWith(
         loadingStatus: LoadingStatus.success,
         exampleSentences: sentences,
