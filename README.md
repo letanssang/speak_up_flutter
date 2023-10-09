@@ -95,7 +95,7 @@ GOOGLE_SPEECH_API_KEY=...
 
 **Tan Sang Le**
 
-- LinkedIn: [Tấn Sang Lê]([https://www.linkedin.com/in/letansang/)
+- LinkedIn: [Tấn Sang Lê](https://www.linkedin.com/in/letansang/)
 - GitHub: [letanssang](https://github.com/letanssang)
 - Email: letan.ssang@gmail.com
   
