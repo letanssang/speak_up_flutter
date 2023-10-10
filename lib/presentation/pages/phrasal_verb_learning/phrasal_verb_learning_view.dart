@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/domain/entities/phrasal_verb/phrasal_verb.dart';
@@ -11,7 +12,6 @@ import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
-import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
@@ -26,7 +26,6 @@ import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
 import 'package:speak_up/presentation/widgets/cards/flash_card_item.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final phrasalVerbLearningViewModelProvider = StateNotifierProvider.autoDispose<
         PhrasalVerbLearningViewModel, PhrasalVerbLearningState>(
@@ -37,7 +36,6 @@ final phrasalVerbLearningViewModelProvider = StateNotifierProvider.autoDispose<
           injector.get<StopAudioUseCase>(),
           injector.get<StartRecordingUseCase>(),
           injector.get<StopRecordingUseCase>(),
-          injector.get<GetTextFromSpeechUseCase>(),
           injector.get<SpeakFromTextUseCase>(),
           injector.get<UpdatePhrasalVerbProgressUseCase>(),
           injector.get<GetCurrentUserUseCase>(),
@@ -121,7 +119,6 @@ class _PhrasalVerbLearningViewState
       await _viewModel.onStartRecording();
     } else {
       await _viewModel.onStopRecording();
-      await _viewModel.getTextFromSpeech();
     }
   }
 

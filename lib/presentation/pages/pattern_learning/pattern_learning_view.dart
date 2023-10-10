@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
@@ -11,7 +12,6 @@ import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_prog
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
-import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_state.dart';
@@ -25,7 +25,6 @@ import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.da
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final patternLearningViewModelProvider = StateNotifierProvider.autoDispose<
     PatternLearningViewModel, PatternLearningState>(
@@ -36,7 +35,6 @@ final patternLearningViewModelProvider = StateNotifierProvider.autoDispose<
     injector.get<StopRecordingUseCase>(),
     injector.get<PlayAudioFromAssetUseCase>(),
     injector.get<PlayAudioFromFileUseCase>(),
-    injector.get<GetTextFromSpeechUseCase>(),
     injector.get<SpeakFromTextUseCase>(),
     injector.get<UpdatePatternProgressUseCase>(),
     injector.get<GetCurrentUserUseCase>(),
@@ -59,6 +57,7 @@ class _PatternLearningViewState extends ConsumerState<PatternLearningView> {
 
   PatternLearningViewModel get _viewModel =>
       ref.read(patternLearningViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -104,7 +103,6 @@ class _PatternLearningViewState extends ConsumerState<PatternLearningView> {
       await _viewModel.onStartRecording();
     } else {
       await _viewModel.onStopRecording();
-      await _viewModel.getTextFromSpeech();
     }
   }
 

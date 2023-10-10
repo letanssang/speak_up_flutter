@@ -14,7 +14,6 @@ import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progre
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
-import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view.dart';
@@ -41,7 +40,6 @@ final idiomLearningViewModelProvider = StateNotifierProvider.autoDispose<
       injector.get<StopAudioUseCase>(),
       injector.get<StartRecordingUseCase>(),
       injector.get<StopRecordingUseCase>(),
-      injector.get<GetTextFromSpeechUseCase>(),
       injector.get<SpeakFromTextUseCase>(),
       injector.get<UpdateIdiomProgressUseCase>(),
       injector.get<GetCurrentUserUseCase>()),
@@ -62,6 +60,7 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
 
   IdiomLearningViewModel get _viewModel =>
       ref.read(idiomLearningViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -126,9 +125,6 @@ class _IdiomLearningViewState extends ConsumerState<IdiomLearningView> {
           .onStartRecording();
     } else {
       await _viewModel.onStopRecording();
-      await ref
-          .read(idiomLearningViewModelProvider.notifier)
-          .getTextFromSpeech();
     }
   }
 

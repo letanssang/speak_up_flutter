@@ -4,7 +4,6 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
-import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
@@ -28,7 +27,6 @@ final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
     injector.get<SpeakFromTextUseCase>(),
     injector.get<StartRecordingUseCase>(),
     injector.get<StopRecordingUseCase>(),
-    injector.get<GetTextFromSpeechUseCase>(),
     injector.get<PlayAudioFromFileUseCase>(),
   ),
 );
@@ -52,9 +50,6 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
           .onStartRecording();
     } else {
       await ref.read(pronunciationViewModelProvider.notifier).onStopRecording();
-      await ref
-          .read(pronunciationViewModelProvider.notifier)
-          .getTextFromSpeech();
     }
   }
 

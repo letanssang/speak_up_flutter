@@ -67,7 +67,6 @@ dependencies:
   record: ^4.4.4
 
   # Speech Recognition
-  google_speech: ^2.2.0
   flutter_tts: ^3.7.0
 
   # HTTP Requests
@@ -246,7 +245,7 @@ flutter:
     - assets/audios/ipa/
     - assets/keys/
     - assets/database/
-    
+
   fonts:
     - family: SF Pro Display
       fonts:

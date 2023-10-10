@@ -11,7 +11,6 @@ import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_prog
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
-import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_state.dart';
 import 'package:speak_up/presentation/resources/app_audios.dart';
@@ -27,7 +26,6 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
     this._stopRecordingUseCase,
     this._playAudioFromAssetUseCase,
     this._playAudioFromFileUseCase,
-    this._getTextFromSpeechUseCase,
     this._speakingFromTextUseCase,
     this._updatePatternProgressUseCase,
     this._getCurrentUserUseCase,
@@ -39,12 +37,12 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
   final StopRecordingUseCase _stopRecordingUseCase;
   final PlayAudioFromAssetUseCase _playAudioFromAssetUseCase;
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
-  final GetTextFromSpeechUseCase _getTextFromSpeechUseCase;
   final SpeakFromTextUseCase _speakingFromTextUseCase;
   final UpdatePatternProgressUseCase _updatePatternProgressUseCase;
   final GetCurrentUserUseCase _getCurrentUserUseCase;
 
   bool get isAnimating => state.isAnimating;
+
   bool get isLastPage => state.currentPage >= state.totalPage;
 
   Future<void> fetchExampleSentences(SentencePattern pattern) async {
@@ -101,16 +99,6 @@ class PatternLearningViewModel extends StateNotifier<PatternLearningState> {
   Future<void> playRecord() async {
     if (state.recordPath != null) {
       await _playAudioFromFileUseCase.run(state.recordPath!);
-    }
-  }
-
-  Future<String> getTextFromSpeech() async {
-    if (state.recordPath == null) return 'record path is null';
-    try {
-      final text = await _getTextFromSpeechUseCase.run(state.recordPath!);
-      return text;
-    } catch (e) {
-      return '';
     }
   }
 
