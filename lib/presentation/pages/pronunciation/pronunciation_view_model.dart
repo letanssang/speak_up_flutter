@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
+import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
@@ -15,6 +16,7 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
   final StartRecordingUseCase _startRecordingUseCase;
   final StopRecordingUseCase _stopRecordingUseCase;
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
+  final GetPronunciationAssessmentUseCase _getPronunciationAssessmentUseCase;
 
   PronunciationViewModel(
     this.getWordListByPhoneticIDUSeCase,
@@ -22,6 +24,7 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
     this._startRecordingUseCase,
     this._stopRecordingUseCase,
     this._playAudioFromFileUseCase,
+    this._getPronunciationAssessmentUseCase,
   ) : super(const PronunciationState());
 
   Future<void> fetchWordList(int phoneticID) async {
@@ -70,5 +73,11 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
     if (state.recordPath != null) {
       await _playAudioFromFileUseCase.run(state.recordPath!);
     }
+  }
+
+  Future<void> getPronunciationAssessment() async {
+    final test = await _getPronunciationAssessmentUseCase.run(
+        state.wordList[state.currentIndex].word, state.recordPath ?? '');
+    debugPrint(test.toString());
   }
 }

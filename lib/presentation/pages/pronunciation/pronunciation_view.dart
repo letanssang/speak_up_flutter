@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
+import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
@@ -28,6 +29,7 @@ final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
     injector.get<StartRecordingUseCase>(),
     injector.get<StopRecordingUseCase>(),
     injector.get<PlayAudioFromFileUseCase>(),
+    injector.get<GetPronunciationAssessmentUseCase>(),
   ),
 );
 
@@ -50,6 +52,9 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
           .onStartRecording();
     } else {
       await ref.read(pronunciationViewModelProvider.notifier).onStopRecording();
+      await ref
+          .read(pronunciationViewModelProvider.notifier)
+          .getPronunciationAssessment();
     }
   }
 

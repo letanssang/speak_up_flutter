@@ -11,6 +11,7 @@ import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_up/data/local/database_services/database_manager.dart';
 import 'package:speak_up/data/local/preference_services/shared_preferences_manager.dart';
+import 'package:speak_up/data/remote/azure_speech_client/azure_speech_client.dart';
 import 'package:speak_up/data/remote/dictionary_client/dictionary_client.dart';
 import 'package:speak_up/data/remote/youtube_client/youtube_client.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
@@ -20,6 +21,7 @@ import 'package:speak_up/data/repositories/dictionary/dictionary_repository.dart
 import 'package:speak_up/data/repositories/firestore/firestore_repository.dart';
 import 'package:speak_up/data/repositories/local_database/local_database_repository.dart';
 import 'package:speak_up/data/repositories/record/record_repository.dart';
+import 'package:speak_up/data/repositories/speech_to_text/speech_to_text_repository.dart';
 import 'package:speak_up/data/repositories/text_to_speech/text_to_speech_repository.dart';
 import 'package:speak_up/data/repositories/youtube_repository/youtube_repository.dart';
 import 'package:speak_up/domain/use_cases/account_settings/get_app_language_use_case.dart';
@@ -70,6 +72,7 @@ import 'package:speak_up/domain/use_cases/local_database/get_tense_list_use_case
 import 'package:speak_up/domain/use_cases/local_database/get_tense_usage_list_from_tense_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
+import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
@@ -110,18 +113,32 @@ class AppModules {
     );
     //Dio
     await dotenv.load(fileName: "assets/keys/keys.env");
-    final dio = Dio();
-    dio.options.headers['x-rapidapi-key'] = dotenv.env['WORDS_API_KEY'];
-    dio.interceptors.add(LoggingInterceptor());
+    final wordsDio = Dio();
+    wordsDio.options.headers['x-rapidapi-key'] = dotenv.env['WORDS_API_KEY'];
+    wordsDio.interceptors.add(LoggingInterceptor());
+    final youtubeDio = Dio();
+    final azureSpeechDio = Dio();
+    azureSpeechDio.options.headers['Ocp-Apim-Subscription-Key'] =
+        dotenv.env['AZURE_SPEECH_KEY'];
+    azureSpeechDio.options.headers['Content-type'] =
+        'audio/wav; codecs=audio/pcm; samplerate=16000';
+    azureSpeechDio.options.headers['Accept'] = 'application/json';
+    azureSpeechDio.options.queryParameters['language'] = 'en-US';
+    azureSpeechDio.options.queryParameters['format'] = 'detailed';
+
+    azureSpeechDio.interceptors.add(LoggingInterceptor());
 
     // Database Manager
     injector.registerLazySingleton<DatabaseManager>(() => DatabaseManager());
 
     // Dictionary client
-    injector
-        .registerLazySingleton<DictionaryClient>(() => DictionaryClient(dio));
+    injector.registerLazySingleton<DictionaryClient>(
+        () => DictionaryClient(wordsDio));
 
-    injector.registerLazySingleton<Dio>(() => dio);
+    // Azure Speech client
+    injector.registerLazySingleton<AzureSpeechClient>(
+        () => AzureSpeechClient(azureSpeechDio));
+
     // SharedPreferences client
     injector.registerSingletonAsync<SharedPreferences>(() async {
       return SharedPreferences.getInstance();
@@ -154,7 +171,8 @@ class AppModules {
     injector.registerLazySingleton<Record>(() => Record());
 
     // Youtube Client
-    injector.registerLazySingleton<YoutubeClient>(() => YoutubeClient(dio));
+    injector
+        .registerLazySingleton<YoutubeClient>(() => YoutubeClient(youtubeDio));
 
     // Dictionary repository
     injector.registerLazySingleton<DictionaryRepository>(
@@ -199,6 +217,11 @@ class AppModules {
     // Local Database Repository
     injector.registerLazySingleton<LocalDatabaseRepository>(
         () => LocalDatabaseRepository(injector.get<DatabaseManager>()));
+
+    // Pronunciation Assessment Repository
+    injector.registerLazySingleton<SpeechToTextRepository>(
+        () => SpeechToTextRepository(injector.get<AzureSpeechClient>()));
+
     // Get app theme use case
     injector
         .registerLazySingleton<GetAppThemeUseCase>(() => GetAppThemeUseCase());
@@ -408,5 +431,9 @@ class AppModules {
     // Get Tense Usage List From Tense Use Case
     injector.registerLazySingleton<GetTenseUsageListFromTenseUseCase>(
         () => GetTenseUsageListFromTenseUseCase());
+
+    // Get Pronunciation Assessment Use Case
+    injector.registerLazySingleton<GetPronunciationAssessmentUseCase>(
+        () => GetPronunciationAssessmentUseCase());
   }
 }
