@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class AppLinearPercentIndicator extends StatelessWidget {
+  final String? title;
   final double lineHeight;
   final double percent;
   final Color backgroundColor;
@@ -12,6 +13,7 @@ class AppLinearPercentIndicator extends StatelessWidget {
 
   const AppLinearPercentIndicator(
       {super.key,
+      this.title,
       this.lineHeight = 14.0,
       this.percent = 0.5,
       this.backgroundColor = Colors.grey,
@@ -21,19 +23,31 @@ class AppLinearPercentIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: LinearPercentIndicator(
-        animateFromLastPercent: true,
-        lineHeight: lineHeight,
-        percent: percent,
-        backgroundColor: Colors.grey,
-        progressColor: Theme.of(context).primaryColor,
-        trailing: trailing,
-        animation: true,
-        animationDuration: 1000,
-        barRadius: Radius.circular(ScreenUtil().setWidth(8)),
-      ),
+    return Column(
+      children: [
+        if (title != null)
+          Text(
+            title!,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        Padding(
+          padding: padding,
+          child: LinearPercentIndicator(
+            animateFromLastPercent: true,
+            lineHeight: lineHeight,
+            percent: percent,
+            backgroundColor: Colors.grey,
+            progressColor: progressColor ?? Theme.of(context).primaryColor,
+            trailing: trailing,
+            animation: true,
+            animationDuration: 1000,
+            barRadius: Radius.circular(ScreenUtil().setWidth(8)),
+          ),
+        ),
+      ],
     );
   }
 }

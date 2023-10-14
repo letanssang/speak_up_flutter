@@ -53,5 +53,18 @@ class SpeechSentence {
   factory SpeechSentence.fromJson(Map<String, dynamic> json) =>
       _$SpeechSentenceFromJson(json);
 
+  factory SpeechSentence.initial() => SpeechSentence(
+        confidence: 0,
+        lexical: '',
+        itn: '',
+        maskedItn: '',
+        display: '',
+        accuracyScore: 0,
+        fluencyScore: 0,
+        completenessScore: 0,
+        pronScore: 0,
+        words: [],
+      );
+
   Map<String, dynamic> toJson() => _$SpeechSentenceToJson(this);
 }

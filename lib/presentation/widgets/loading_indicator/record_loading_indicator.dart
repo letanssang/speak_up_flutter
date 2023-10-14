@@ -8,6 +8,7 @@ class RecordLoadingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return const LoadingIndicator(
       indicatorType: Indicator.lineScalePulseOut,
+      strokeWidth: 1.0,
       colors: [
         Colors.white,
       ],

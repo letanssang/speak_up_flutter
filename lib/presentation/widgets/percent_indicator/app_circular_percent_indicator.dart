@@ -3,17 +3,22 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class AppCircularPercentIndicator extends StatelessWidget {
   final String title;
+  final double titleSize;
   final double percent;
   final double radius;
   final Color? progressColor;
   final EdgeInsets padding;
+  final double lineWidth;
+
   const AppCircularPercentIndicator({
     super.key,
     required this.title,
+    this.titleSize = 14,
     required this.percent,
     this.radius = 40,
     this.padding = const EdgeInsets.all(8),
     this.progressColor,
+    this.lineWidth = 8.0,
   });
 
   @override
@@ -22,12 +27,13 @@ class AppCircularPercentIndicator extends StatelessWidget {
       padding: padding,
       child: CircularPercentIndicator(
         radius: radius,
-        lineWidth: 8.0,
+        lineWidth: lineWidth,
         percent: percent,
         center: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
+            fontSize: titleSize,
           ),
         ),
         progressColor: progressColor ?? Theme.of(context).primaryColor,

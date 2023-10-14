@@ -7,8 +7,8 @@ import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
-import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
+import 'package:speak_up/presentation/utilities/enums/pronunciation_assesment_status.dart';
 
 class PronunciationViewModel extends StateNotifier<PronunciationState> {
   final GetWordListByPhoneticIDUSeCase getWordListByPhoneticIDUSeCase;
@@ -44,12 +44,31 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
     state = state.copyWith(currentIndex: index);
   }
 
+  void resetStateWhenOnNextButtonTap() {
+    state = state.copyWith(
+      pronunciationAssessmentStatus: PronunciationAssessmentStatus.initial,
+      speechSentence: null,
+      recordPath: null,
+    );
+  }
+
   Future<void> speak(String text) async {
     await speakFromTextUseCase.run(text);
   }
 
+  Future<void> onRecordButtonTap() async {
+    if (state.pronunciationAssessmentStatus ==
+        PronunciationAssessmentStatus.recording) {
+      await onStopRecording();
+      await getPronunciationAssessment();
+    } else {
+      await onStartRecording();
+    }
+  }
+
   Future<void> onStartRecording() async {
-    state = state.copyWith(recordButtonState: ButtonState.loading);
+    state = state.copyWith(
+        pronunciationAssessmentStatus: PronunciationAssessmentStatus.recording);
     try {
       await _startRecordingUseCase.run();
     } catch (e) {
@@ -59,11 +78,13 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
 
   Future<void> onStopRecording() async {
     //when not recording, do nothing
-    if (state.recordButtonState == ButtonState.normal) return;
-    state = state.copyWith(recordButtonState: ButtonState.normal);
+    if (state.pronunciationAssessmentStatus !=
+        PronunciationAssessmentStatus.recording) return;
     try {
       final recordPath = await _stopRecordingUseCase.run();
-      state = state.copyWith(recordPath: recordPath);
+      state = state.copyWith(
+        recordPath: recordPath,
+      );
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -76,8 +97,31 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
   }
 
   Future<void> getPronunciationAssessment() async {
-    final test = await _getPronunciationAssessmentUseCase.run(
-        state.wordList[state.currentIndex].word, state.recordPath ?? '');
-    debugPrint(test.toString());
+    state = state.copyWith(
+        pronunciationAssessmentStatus:
+            PronunciationAssessmentStatus.inProgress);
+    try {
+      final speechSentence = await _getPronunciationAssessmentUseCase.run(
+          state.wordList[state.currentIndex].word, state.recordPath ?? '');
+      state = state.copyWith(
+        speechSentence: speechSentence,
+      );
+      if (speechSentence.pronScore >= 80) {
+        state = state.copyWith(
+            pronunciationAssessmentStatus:
+                PronunciationAssessmentStatus.wellDone);
+      } else if (speechSentence.pronScore >= 60) {
+        state = state.copyWith(
+            pronunciationAssessmentStatus:
+                PronunciationAssessmentStatus.tryAgain);
+      } else {
+        state = state.copyWith(
+            pronunciationAssessmentStatus:
+                PronunciationAssessmentStatus.failed);
+      }
+    } catch (e) {
+      state = state.copyWith(
+          pronunciationAssessmentStatus: PronunciationAssessmentStatus.failed);
+    }
   }
 }
