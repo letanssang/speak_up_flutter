@@ -99,6 +99,36 @@ class FirestoreRepository {
     }
   }
 
+  Future<void> updatePhoneticProgress(int input, String uid) async {
+    final snapshot = await _firestore
+        .collection('phonetic_process')
+        .where('UserID', isEqualTo: uid)
+        .where('PhoneticID', isEqualTo: input)
+        .get();
+    //check if phonetic process exists
+    if (snapshot.docs.isEmpty) {
+      //if not exists, create new phonetic process
+      await _firestore.collection('phonetic_process').add({
+        'PhoneticID': input,
+        'UserID': uid,
+      });
+    }
+  }
+
+  Future<List<int>> getPhoneticDoneList(String uid) async {
+    final snapshot = await _firestore
+        .collection('phonetic_process')
+        .where('UserID', isEqualTo: uid)
+        .get();
+    List<int> phoneticDoneList = [];
+    for (var docSnapshot in snapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      int phoneticID = data['PhoneticID'];
+      phoneticDoneList.add(phoneticID);
+    }
+    return phoneticDoneList;
+  }
+
   Future<List<int>> getPatternDoneList(String uid) async {
     final snapshot = await _firestore
         .collection('pattern_process')

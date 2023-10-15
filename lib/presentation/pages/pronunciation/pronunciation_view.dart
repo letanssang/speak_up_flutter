@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_phonetic_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/pages/ipa/ipa_view.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_view_model.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
@@ -31,7 +35,11 @@ final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
     injector.get<StartRecordingUseCase>(),
     injector.get<StopRecordingUseCase>(),
     injector.get<PlayAudioFromFileUseCase>(),
+    injector.get<PlayCongratsAudioUseCase>(),
+    injector.get<PlayCompleteAudioUseCase>(),
+    injector.get<UpdatePhoneticProgressUseCase>(),
     injector.get<GetPronunciationAssessmentUseCase>(),
+    ref,
   ),
 );
 
@@ -62,6 +70,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
   Future<void> _init() async {
     phoneticID = ModalRoute.of(context)!.settings.arguments as int;
     await _viewModel.fetchWordList(phoneticID);
+    _viewModel.speakCurrentWord();
   }
 
   @override
@@ -76,11 +85,15 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
     if (_pageController.page?.toInt() ==
         ref.watch(pronunciationViewModelProvider).wordList.length - 1) {
       showCompleteBottomSheet(context);
+      await _viewModel.updatePhoneticProgress(phoneticID);
+      await ref.read(ipaViewModelProvider.notifier).fetchPhoneticDoneList();
+      _viewModel.playCompleteAudio();
     } else {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
+      _viewModel.speakCurrentWord();
     }
   }
 
@@ -185,7 +198,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                             ),
                           ),
                           const SizedBox(
-                            height: 16,
+                            height: 32,
                           ),
                           if (state.speechSentence?.words != null)
                             PronunciationScoreText(
@@ -249,17 +262,22 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
         const SizedBox(
           width: 32,
         ),
-        CustomIconButton(
-            height: 64,
-            width: 64,
-            onPressed: () {
-              onNextButtonTap();
-            },
-            icon: Icon(
-              Icons.navigate_next_outlined,
-              size: 32,
-              color: Colors.grey[800],
-            )),
+        state.pronunciationAssessmentStatus.canMoveToNext()
+            ? CustomIconButton(
+                height: 64,
+                width: 64,
+                onPressed: () {
+                  onNextButtonTap();
+                },
+                icon: Icon(
+                  Icons.navigate_next_outlined,
+                  size: 32,
+                  color: Colors.grey[800],
+                ))
+            : const SizedBox(
+                width: 64,
+                height: 64,
+              ),
         Flexible(child: Container()),
       ],
     );

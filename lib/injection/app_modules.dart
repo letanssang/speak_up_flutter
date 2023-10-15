@@ -31,6 +31,8 @@ import 'package:speak_up/domain/use_cases/account_settings/switch_app_theme_use_
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
@@ -46,13 +48,15 @@ import 'package:speak_up/domain/use_cases/authentication/update_password_use_cas
 import 'package:speak_up/domain/use_cases/dictionary/get_word_detail_use_case.dart';
 import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_pattern_done_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/get_phonetic_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_phrasal_verb_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_phonetic_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
@@ -435,5 +439,21 @@ class AppModules {
     // Get Pronunciation Assessment Use Case
     injector.registerLazySingleton<GetPronunciationAssessmentUseCase>(
         () => GetPronunciationAssessmentUseCase());
+
+    // Play Congrats Audio Use Case
+    injector.registerLazySingleton<PlayCongratsAudioUseCase>(
+        () => PlayCongratsAudioUseCase());
+
+    // Play Complete Audio Use Case
+    injector.registerLazySingleton<PlayCompleteAudioUseCase>(
+        () => PlayCompleteAudioUseCase());
+
+    // Update Phonetic Progress Use Case
+    injector.registerLazySingleton<UpdatePhoneticProgressUseCase>(
+        () => UpdatePhoneticProgressUseCase());
+
+    // Get Phonetic Progress Use Case
+    injector.registerLazySingleton<GetPhoneticDoneListUseCase>(
+        () => GetPhoneticDoneListUseCase());
   }
 }

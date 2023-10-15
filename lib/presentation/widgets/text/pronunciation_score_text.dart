@@ -53,15 +53,29 @@ class _PronunciationScoreTextState extends State<PronunciationScoreText>
             text: TextSpan(
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: ScreenUtil().setSp(24),
+            fontSize: ScreenUtil().setSp(32),
           ),
           children: [
+            const TextSpan(
+              text: '/ ',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 28,
+              ),
+            ),
             ...word.phonemes.map(
               (phoneme) => TextSpan(
                 text: phoneme.phoneme,
                 style: TextStyle(
                   color: getPhonemeColor(phoneme.accuracyScore),
                 ),
+              ),
+            ),
+            const TextSpan(
+              text: ' /',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 28,
               ),
             ),
           ],

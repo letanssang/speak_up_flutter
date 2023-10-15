@@ -48,4 +48,23 @@ extension PronunciationAssessmentStatusExtension
         return 'Tap to record';
     }
   }
+
+  bool canMoveToNext() {
+    switch (this) {
+      case PronunciationAssessmentStatus.initial:
+        return false;
+      case PronunciationAssessmentStatus.recording:
+        return false;
+      case PronunciationAssessmentStatus.inProgress:
+        return false;
+      case PronunciationAssessmentStatus.wellDone:
+        return true;
+      case PronunciationAssessmentStatus.tryAgain:
+        return true;
+      case PronunciationAssessmentStatus.failed:
+        return true;
+      default:
+        return false;
+    }
+  }
 }
