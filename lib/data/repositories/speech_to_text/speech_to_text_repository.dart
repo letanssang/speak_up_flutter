@@ -1,22 +1,21 @@
-import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:google_speech/google_speech.dart';
-import 'package:speak_up/data/remote/google_speech/google_speech_helper.dart';
+import 'package:speak_up/data/remote/azure_speech_client/azure_speech_client.dart';
+import 'package:speak_up/domain/entities/speech_sentence/speech_sentence.dart';
 
 class SpeechToTextRepository {
-  final SpeechToText _speechToText;
+  final AzureSpeechClient _azureSpeechClient;
 
-  SpeechToTextRepository(this._speechToText);
+  SpeechToTextRepository(this._azureSpeechClient);
 
-  Future<String> getTextFromSpeech(String audioPath) async {
-    final audio = await _getAudioContent(audioPath);
-    final response = await _speechToText.recognize(config, audio);
-    final text =
-        response.results.map((e) => e.alternatives.first.transcript).join('\n');
-    return text;
-  }
-
-  Future<List<int>> _getAudioContent(String audioPath) async {
-    return await File(audioPath).readAsBytes();
+  Future<SpeechSentence> getPronunciationAssessment(
+    String pronunciationAssessment,
+    Uint8List body,
+  ) async {
+    final response = await _azureSpeechClient.getPronunciationAssessment(
+      pronunciationAssessment,
+      body,
+    );
+    return response.nBest.first;
   }
 }

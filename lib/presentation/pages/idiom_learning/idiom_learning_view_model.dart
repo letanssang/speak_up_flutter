@@ -13,7 +13,6 @@ import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progre
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
-import 'package:speak_up/domain/use_cases/speech_to_text/get_text_from_speech_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_state.dart';
 import 'package:speak_up/presentation/resources/app_audios.dart';
@@ -31,12 +30,12 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   final StopAudioUseCase _stopAudioUseCase;
   final StartRecordingUseCase _startRecordingUseCase;
   final StopRecordingUseCase _stopRecordingUseCase;
-  final GetTextFromSpeechUseCase _getTextFromSpeechUseCase;
   final SpeakFromTextUseCase _speakingFromTextUseCase;
   final UpdateIdiomProgressUseCase _updateIdiomProgressUseCase;
   final GetCurrentUserUseCase _getCurrentUserUseCase;
 
   bool get isAnimating => state.isAnimating;
+
   bool get isLastPage => state.currentPage >= state.totalPage;
 
   IdiomLearningViewModel(
@@ -48,7 +47,6 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
     this._stopAudioUseCase,
     this._startRecordingUseCase,
     this._stopRecordingUseCase,
-    this._getTextFromSpeechUseCase,
     this._speakingFromTextUseCase,
     this._updateIdiomProgressUseCase,
     this._getCurrentUserUseCase,
@@ -118,18 +116,6 @@ class IdiomLearningViewModel extends StateNotifier<IdiomLearningState> {
   Future<void> playRecord() async {
     if (state.recordPath != null) {
       await _playAudioFromFileUseCase.run(state.recordPath!);
-    }
-  }
-
-  Future<String> getTextFromSpeech() async {
-    if (state.recordPath == null) return 'record path is null';
-    try {
-      final text = await _getTextFromSpeechUseCase.run(state.recordPath!);
-      debugPrint('text: $text');
-      return text;
-    } catch (e) {
-      debugPrint(e.toString());
-      return '';
     }
   }
 

@@ -41,6 +41,7 @@ dependencies:
   preload_page_view: ^0.2.0
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.2
+  custom_pop_up_menu: ^1.2.4
 
 
   # Local Data Storage
@@ -67,7 +68,6 @@ dependencies:
   record: ^4.4.4
 
   # Speech Recognition
-  google_speech: ^2.2.0
   flutter_tts: ^3.7.0
 
   # HTTP Requests
@@ -246,7 +246,7 @@ flutter:
     - assets/audios/ipa/
     - assets/keys/
     - assets/database/
-    
+
   fonts:
     - family: SF Pro Display
       fonts:

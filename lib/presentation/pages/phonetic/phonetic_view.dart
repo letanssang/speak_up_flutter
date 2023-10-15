@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
+import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
@@ -85,8 +87,14 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const IconButton(
-                          onPressed: null,
+                      IconButton(
+                          onPressed: () {
+                            String audioPath =
+                                'audios/ipa/${phonetic.phoneticID}.mp3';
+                            injector
+                                .get<PlayAudioFromAssetUseCase>()
+                                .run(audioPath);
+                          },
                           icon: Icon(
                             Icons.volume_up,
                             size: 32,
