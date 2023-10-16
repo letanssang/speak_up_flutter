@@ -1,3 +1,8 @@
+int countWordInSentence(String sentence) {
+  final words = sentence.split(' ');
+  return words.length;
+}
+
 String formatIndexToString(int number) {
   number++;
   if (number < 10) {

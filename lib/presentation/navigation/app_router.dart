@@ -7,21 +7,18 @@ import 'package:speak_up/presentation/pages/change_password/change_password_view
 import 'package:speak_up/presentation/pages/common_word_type/common_word_type_view.dart';
 import 'package:speak_up/presentation/pages/edit_profile/edit_profile_view.dart';
 import 'package:speak_up/presentation/pages/expression/expression_view.dart';
-import 'package:speak_up/presentation/pages/expression_learning/expression_learning_view.dart';
 import 'package:speak_up/presentation/pages/expression_type/expression_type_view.dart';
 import 'package:speak_up/presentation/pages/flash_cards/flash_cards_view.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view.dart';
-import 'package:speak_up/presentation/pages/idiom_learning/idiom_learning_view.dart';
 import 'package:speak_up/presentation/pages/lesson/lesson_view.dart';
 import 'package:speak_up/presentation/pages/lessons/lessons_view.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/onboarding/onboarding_view.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_view.dart';
-import 'package:speak_up/presentation/pages/pattern_learning/pattern_learning_view.dart';
 import 'package:speak_up/presentation/pages/phonetic/phonetic_view.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
-import 'package:speak_up/presentation/pages/phrasal_verb_learning/phrasal_verb_learning_view.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_view.dart';
+import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_view.dart';
 import 'package:speak_up/presentation/pages/reels/reels_view.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_view.dart';
@@ -156,13 +153,7 @@ class AppRouter {
             settings: settings,
           );
         }
-      case AppRoutes.idiomLearning:
-        {
-          return MaterialPageRoute(
-            builder: (context) => const IdiomLearningView(),
-            settings: settings,
-          );
-        }
+
       case AppRoutes.flashCards:
         {
           return MaterialPageRoute(
@@ -205,34 +196,11 @@ class AppRouter {
             settings: settings,
           );
         }
-      case AppRoutes.patternLearning:
-        {
-          return MaterialPageRoute(
-            builder: (context) => const PatternLearningView(),
-            settings: settings,
-          );
-        }
-
-      case AppRoutes.phrasalVerbLearning:
-        {
-          return MaterialPageRoute(
-            builder: (context) => const PhrasalVerbLearningView(),
-            settings: settings,
-          );
-        }
 
       case AppRoutes.expression:
         {
           return MaterialPageRoute(
             builder: (context) => const ExpressionView(),
-            settings: settings,
-          );
-        }
-
-      case AppRoutes.expressionLearning:
-        {
-          return MaterialPageRoute(
-            builder: (context) => const ExpressionLearningView(),
             settings: settings,
           );
         }
@@ -249,6 +217,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const TenseView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.pronunciationPractice:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const PronunciationPracticeView(),
             settings: settings,
           );
         }

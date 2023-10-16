@@ -9,6 +9,8 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_state.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_view_model.dart';
+import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
@@ -131,6 +133,7 @@ class _PatternViewState extends ConsumerState<PatternView> {
                   icon: Icon(
                     Icons.volume_up_outlined,
                     color: Colors.grey[800],
+                    size: 20,
                   ),
                   onPressed: () {
                     _viewModel.speak(pattern.name);
@@ -142,6 +145,7 @@ class _PatternViewState extends ConsumerState<PatternView> {
                     icon: Icon(
                       Icons.translate_outlined,
                       color: Colors.grey[800],
+                      size: 20,
                     ),
                     onPressed: _viewModel.toggleTranslate),
                 Flexible(child: Container()),
@@ -166,8 +170,12 @@ class _PatternViewState extends ConsumerState<PatternView> {
             child: CustomButton(
               onTap: () {
                 ref.read(appNavigatorProvider).navigateTo(
-                      AppRoutes.patternLearning,
-                      arguments: pattern,
+                      AppRoutes.pronunciationPractice,
+                      // pass id and lessonType
+                      arguments: PronunciationPracticeViewArguments(
+                        parentID: pattern.patternID,
+                        lessonEnum: LessonEnum.pattern,
+                      ),
                       shouldReplace: true,
                     );
               },

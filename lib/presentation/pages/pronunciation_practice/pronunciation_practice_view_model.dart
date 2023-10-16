@@ -3,47 +3,48 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_phonetic_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
+import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
-import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
+import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_state.dart';
+import 'package:speak_up/presentation/utilities/common/convert.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/pronunciation_assessment_status.dart';
 
-class PronunciationViewModel extends StateNotifier<PronunciationState> {
-  final GetWordListByPhoneticIDUSeCase getWordListByPhoneticIDUSeCase;
+class PronunciationPracticeViewModel
+    extends StateNotifier<PronunciationPracticeState> {
+  final GetSentenceListByParentIDUseCase _getSentenceListByParentIDUseCase;
   final SpeakFromTextUseCase speakFromTextUseCase;
   final StartRecordingUseCase _startRecordingUseCase;
   final StopRecordingUseCase _stopRecordingUseCase;
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
   final PlayCongratsAudioUseCase _playCongratsAudioUseCase;
   final PlayCompleteAudioUseCase _playCompleteAudioUseCase;
-  final UpdatePhoneticProgressUseCase _updatePhoneticProgressUseCase;
   final GetPronunciationAssessmentUseCase _getPronunciationAssessmentUseCase;
   final StateNotifierProviderRef ref;
 
-  PronunciationViewModel(
-    this.getWordListByPhoneticIDUSeCase,
+  PronunciationPracticeViewModel(
+    this._getSentenceListByParentIDUseCase,
     this.speakFromTextUseCase,
     this._startRecordingUseCase,
     this._stopRecordingUseCase,
     this._playAudioFromFileUseCase,
     this._playCongratsAudioUseCase,
     this._playCompleteAudioUseCase,
-    this._updatePhoneticProgressUseCase,
     this._getPronunciationAssessmentUseCase,
     this.ref,
-  ) : super(const PronunciationState());
+  ) : super(const PronunciationPracticeState());
 
-  Future<void> fetchWordList(int phoneticID) async {
+  Future<void> fetchSentenceList(int parentID, LessonEnum lessonEnum) async {
     state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
-      final wordList = await getWordListByPhoneticIDUSeCase.run(phoneticID);
+      final sentences =
+          await _getSentenceListByParentIDUseCase.run(parentID, lessonEnum);
       state = state.copyWith(
-        wordList: wordList,
+        sentences: sentences,
         loadingStatus: LoadingStatus.success,
       );
     } catch (e) {
@@ -86,7 +87,11 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
     try {
       await _startRecordingUseCase.run();
       // auto stop recording after 3 seconds if user doesn't stop
-      Future.delayed(const Duration(seconds: 3), () async {
+      final seconds =
+          countWordInSentence(state.sentences[state.currentIndex].text);
+      print(seconds);
+      //TODO: change seconds number
+      Future.delayed(Duration(seconds: seconds), () async {
         if (state.pronunciationAssessmentStatus ==
             PronunciationAssessmentStatus.recording) {
           onRecordButtonTap();
@@ -112,8 +117,8 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
     }
   }
 
-  void speakCurrentWord() {
-    speak(state.wordList[state.currentIndex].word);
+  void speakCurrentSentence() {
+    speak(state.sentences[state.currentIndex].text);
   }
 
   Future<void> playRecord() async {
@@ -126,9 +131,9 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
     _playCompleteAudioUseCase.run();
   }
 
-  Future<void> updatePhoneticProgress(int phoneticID) async {
+  Future<void> updateProgress(int phoneticID, LessonEnum lessonEnum) async {
     try {
-      await _updatePhoneticProgressUseCase.run(phoneticID);
+      ///TODO: update progress
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -140,7 +145,7 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
             PronunciationAssessmentStatus.inProgress);
     try {
       final speechSentence = await _getPronunciationAssessmentUseCase.run(
-          state.wordList[state.currentIndex].word, state.recordPath ?? '');
+          state.sentences[state.currentIndex].text, state.recordPath ?? '');
       state = state.copyWith(
         speechSentence: speechSentence,
       );

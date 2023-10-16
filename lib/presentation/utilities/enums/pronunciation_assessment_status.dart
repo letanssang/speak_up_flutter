@@ -1,5 +1,15 @@
 import 'button_state.dart';
 
+PronunciationAssessmentStatus getPronunciationAssessmentStatus(double score) {
+  if (score >= 80) {
+    return PronunciationAssessmentStatus.wellDone;
+  } else if (score >= 60) {
+    return PronunciationAssessmentStatus.tryAgain;
+  } else {
+    return PronunciationAssessmentStatus.failed;
+  }
+}
+
 enum PronunciationAssessmentStatus {
   initial,
   recording,

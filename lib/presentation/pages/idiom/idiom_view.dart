@@ -11,8 +11,10 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_state.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view_model.dart';
+import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view.dart';
 import 'package:speak_up/presentation/utilities/common/percent_calculate.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
@@ -130,12 +132,13 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
       child: InkWell(
         onTap: () {
           if (idiomIndex <= state.progress) {
-            ref.read(appNavigatorProvider).navigateTo(AppRoutes.idiomLearning,
-                arguments: <String, dynamic>{
-                  'idiom': state.idioms[idiomIndex],
-                  'progress': state.progress,
-                  'index': idiomIndex,
-                }).then((_) {
+            ref
+                .read(appNavigatorProvider)
+                .navigateTo(AppRoutes.pronunciationPractice,
+                    arguments: PronunciationPracticeViewArguments(
+                        parentID: state.idioms[idiomIndex].idiomID,
+                        lessonEnum: LessonEnum.idiom))
+                .then((_) {
               ref
                   .read(idiomViewModelProvider.notifier)
                   .updateProgressState(idiomType.idiomTypeID);

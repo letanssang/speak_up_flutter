@@ -16,22 +16,19 @@ class AppRoutes {
   static const String lessons = '/lessons';
   static const String lesson = '/lesson';
   static const String pattern = '/pattern';
-  static const String patternLearning = '/pattern_learning';
   static const String expressionType = '/expressionType';
   static const String phrasalVerb = '/phrasal_verb';
   static const String idiom = '/idiom';
-  static const String idiomLearning = '/idiom_learning';
   static const String flashCards = '/flash_cards';
   static const String quiz = '/quiz';
   static const String word = '/word';
   static const String phonetic = '/phonetic';
   static const String reels = '/reels';
   static const String pronunciation = '/pronunciation';
-  static const String phrasalVerbLearning = '/phrasal_verb_learning';
   static const String expression = '/expression';
-  static const String expressionLearning = '/expression_learning';
   static const String commonWordType = '/common_word_type';
   static const String tense = '/tense';
+  static const String pronunciationPractice = '/pronunciation_practice';
 
   //profile
   static const String editProfile = '/edit_profile';

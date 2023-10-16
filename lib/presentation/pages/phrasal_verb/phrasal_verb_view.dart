@@ -10,8 +10,10 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_state.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view_model.dart';
+import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view.dart';
 import 'package:speak_up/presentation/utilities/common/percent_calculate.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
@@ -124,13 +126,14 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
       child: InkWell(
         onTap: () {
           if (phrasalVerbIndex <= state.progress) {
-            ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.phrasalVerbLearning,
-                arguments: <String, dynamic>{
-                  'phrasalVerb': state.phrasalVerbs[phrasalVerbIndex],
-                  'progress': state.progress,
-                  'index': phrasalVerbIndex,
-                }).then((_) {
+            ref
+                .read(appNavigatorProvider)
+                .navigateTo(AppRoutes.pronunciationPractice,
+                    arguments: PronunciationPracticeViewArguments(
+                        parentID:
+                            state.phrasalVerbs[phrasalVerbIndex].phrasalVerbID,
+                        lessonEnum: LessonEnum.phrasalVerb))
+                .then((_) {
               _viewModel.updateProgressState(phrasalVerbType.phrasalVerbTypeID);
             });
           }

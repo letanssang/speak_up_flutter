@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
@@ -10,14 +11,15 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/expression/expression_state.dart';
 import 'package:speak_up/presentation/pages/expression/expression_view_model.dart';
+import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final expressionViewModelProvider =
     StateNotifierProvider.autoDispose<ExpressionViewModel, ExpressionState>(
@@ -36,8 +38,10 @@ class ExpressionView extends ConsumerStatefulWidget {
 
 class _ExpressionViewState extends ConsumerState<ExpressionView> {
   Expression expression = Expression.initial();
+
   ExpressionViewModel get _viewModel =>
       ref.read(expressionViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -102,9 +106,12 @@ class _ExpressionViewState extends ConsumerState<ExpressionView> {
             text: AppLocalizations.of(context)!.practiceNow,
             onTap: () {
               ref.read(appNavigatorProvider).navigateTo(
-                  AppRoutes.expressionLearning,
-                  arguments: state.sentences);
+                  AppRoutes.pronunciationPractice,
+                  arguments: PronunciationPracticeViewArguments(
+                      parentID: expression.expressionID,
+                      lessonEnum: LessonEnum.expression));
             }),
+        const SizedBox(height: 16),
       ],
     );
   }

@@ -6,10 +6,14 @@ import 'package:speak_up/presentation/utilities/common/phoneme_color.dart';
 
 class PronunciationScoreText extends StatefulWidget {
   final List<SpeechWord> words;
+  final double fontSize;
   final String recordPath;
 
   const PronunciationScoreText(
-      {super.key, required this.words, required this.recordPath});
+      {super.key,
+      required this.words,
+      required this.recordPath,
+      this.fontSize = 16});
 
   @override
   State<PronunciationScoreText> createState() => _PronunciationScoreTextState();
@@ -33,11 +37,18 @@ class _PronunciationScoreTextState extends State<PronunciationScoreText>
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
         children: [
-          ...widget.words.map(
-            (word) => wordWidgetSpan(word),
+          RichText(
+            text: TextSpan(
+              children: [
+                ...widget.words.map(
+                  (word) => wordWidgetSpan(word),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -53,16 +64,9 @@ class _PronunciationScoreTextState extends State<PronunciationScoreText>
             text: TextSpan(
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: ScreenUtil().setSp(32),
+            fontSize: widget.fontSize,
           ),
           children: [
-            const TextSpan(
-              text: '/ ',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-              ),
-            ),
             ...word.phonemes.map(
               (phoneme) => TextSpan(
                 text: phoneme.phoneme,
@@ -72,12 +76,8 @@ class _PronunciationScoreTextState extends State<PronunciationScoreText>
               ),
             ),
             const TextSpan(
-              text: ' /',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-              ),
-            ),
+              text: ' ',
+            )
           ],
         )),
       ),
