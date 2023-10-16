@@ -99,18 +99,18 @@ class FirestoreRepository {
     }
   }
 
-  Future<void> updatePhoneticProgress(int input, String uid) async {
+  Future<void> updatePhoneticProgress(LectureProcess input) async {
     final snapshot = await _firestore
         .collection('phonetic_process')
-        .where('UserID', isEqualTo: uid)
-        .where('PhoneticID', isEqualTo: input)
+        .where('UserID', isEqualTo: input.uid)
+        .where('PhoneticID', isEqualTo: input.lectureID)
         .get();
     //check if phonetic process exists
     if (snapshot.docs.isEmpty) {
       //if not exists, create new phonetic process
       await _firestore.collection('phonetic_process').add({
-        'PhoneticID': input,
-        'UserID': uid,
+        'PhoneticID': input.lectureID,
+        'UserID': input.uid,
       });
     }
   }
@@ -127,6 +127,33 @@ class FirestoreRepository {
       phoneticDoneList.add(phoneticID);
     }
     return phoneticDoneList;
+  }
+
+  Future<void> updateExpressionProgress(LectureProcess input) async {
+    final snapshot = await _firestore
+        .collection('expression_process')
+        .where('ExpressionID', isEqualTo: input.lectureID)
+        .where('UserID', isEqualTo: input.uid)
+        .get();
+    //check if expression process exists
+    if (snapshot.docs.isEmpty) {
+      //if not exists, create new expression process
+      await _firestore.collection('expression_process').add({
+        'ExpressionID': input.lectureID,
+        'UserID': input.uid,
+      });
+    }
+  }
+
+  Future<List<int>> getExpressionDoneList() async {
+    final snapshot = await _firestore.collection('expression_process').get();
+    List<int> expressionDoneList = [];
+    for (var docSnapshot in snapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data();
+      int expressionID = data['ExpressionID'];
+      expressionDoneList.add(expressionID);
+    }
+    return expressionDoneList;
   }
 
   Future<List<int>> getPatternDoneList(String uid) async {

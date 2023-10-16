@@ -1,13 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/domain/entities/lecture_process/lecture_process.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
+import 'package:speak_up/presentation/pages/expression_type/expression_type_view.dart';
+import 'package:speak_up/presentation/pages/idiom/idiom_view.dart';
+import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson_detail_view.dart';
+import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
 import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_state.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
@@ -23,8 +33,12 @@ class PronunciationPracticeViewModel
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
   final PlayCongratsAudioUseCase _playCongratsAudioUseCase;
   final PlayCompleteAudioUseCase _playCompleteAudioUseCase;
+  final StopAudioUseCase _stopAudioUseCase;
   final GetPronunciationAssessmentUseCase _getPronunciationAssessmentUseCase;
+  final UpdateProgressUseCase _updateProgressUseCase;
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
   final StateNotifierProviderRef ref;
+  Timer? timer;
 
   PronunciationPracticeViewModel(
     this._getSentenceListByParentIDUseCase,
@@ -34,7 +48,10 @@ class PronunciationPracticeViewModel
     this._playAudioFromFileUseCase,
     this._playCongratsAudioUseCase,
     this._playCompleteAudioUseCase,
+    this._stopAudioUseCase,
     this._getPronunciationAssessmentUseCase,
+    this._updateProgressUseCase,
+    this._getCurrentUserUseCase,
     this.ref,
   ) : super(const PronunciationPracticeState());
 
@@ -57,6 +74,7 @@ class PronunciationPracticeViewModel
   }
 
   void resetStateWhenOnNextButtonTap() {
+    timer?.cancel();
     state = state.copyWith(
       pronunciationAssessmentStatus: PronunciationAssessmentStatus.initial,
       speechSentence: null,
@@ -85,13 +103,11 @@ class PronunciationPracticeViewModel
       isStoppedRecording: false,
     );
     try {
+      _stopAudioUseCase.run();
       await _startRecordingUseCase.run();
-      // auto stop recording after 3 seconds if user doesn't stop
       final seconds =
           countWordInSentence(state.sentences[state.currentIndex].text);
-      print(seconds);
-      //TODO: change seconds number
-      Future.delayed(Duration(seconds: seconds), () async {
+      timer = Timer(Duration(seconds: seconds), () {
         if (state.pronunciationAssessmentStatus ==
             PronunciationAssessmentStatus.recording) {
           onRecordButtonTap();
@@ -131,9 +147,42 @@ class PronunciationPracticeViewModel
     _playCompleteAudioUseCase.run();
   }
 
-  Future<void> updateProgress(int phoneticID, LessonEnum lessonEnum) async {
+  Future<void> updateProgress(int id, LessonEnum lessonEnum,
+      {int? progress}) async {
+    int newProgress = 0;
+    if (progress != null) {
+      newProgress = progress + 1;
+    }
+    ;
+    final process = LectureProcess(
+        lectureID: id,
+        uid: _getCurrentUserUseCase.run().uid,
+        progress: newProgress);
     try {
-      ///TODO: update progress
+      await _updateProgressUseCase.run(process, lessonEnum);
+      switch (lessonEnum) {
+        case LessonEnum.pattern:
+          await ref
+              .read(patternLessonDetailViewModelProvider.notifier)
+              .fetchPatternDoneList();
+          break;
+        case LessonEnum.expression:
+          await ref
+              .read(expressionTypeViewModelProvider.notifier)
+              .fetchExpressionDoneList();
+        // break;
+        case LessonEnum.phrasalVerb:
+          await ref
+              .read(phrasalVerbViewModelProvider.notifier)
+              .updateProgressState(id);
+          break;
+        case LessonEnum.idiom:
+          await ref
+              .read(idiomViewModelProvider.notifier)
+              .updateProgressState(id);
+        default:
+          return;
+      }
     } catch (e) {
       debugPrint(e.toString());
     }

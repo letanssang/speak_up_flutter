@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
@@ -17,7 +18,6 @@ import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_circular_percent_indicator.dart';
 
 final phrasalVerbViewModelProvider =
@@ -37,8 +37,10 @@ class PhrasalVerbView extends ConsumerStatefulWidget {
 
 class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
   PhrasalVerbType phrasalVerbType = PhrasalVerbType.initial();
+
   PhrasalVerbViewModel get _viewModel =>
       ref.read(phrasalVerbViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -126,16 +128,15 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
       child: InkWell(
         onTap: () {
           if (phrasalVerbIndex <= state.progress) {
-            ref
-                .read(appNavigatorProvider)
-                .navigateTo(AppRoutes.pronunciationPractice,
-                    arguments: PronunciationPracticeViewArguments(
-                        parentID:
-                            state.phrasalVerbs[phrasalVerbIndex].phrasalVerbID,
-                        lessonEnum: LessonEnum.phrasalVerb))
-                .then((_) {
-              _viewModel.updateProgressState(phrasalVerbType.phrasalVerbTypeID);
-            });
+            ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.pronunciationPractice,
+                arguments: PronunciationPracticeViewArguments(
+                  parentID: state.phrasalVerbs[phrasalVerbIndex].phrasalVerbID,
+                  lessonEnum: LessonEnum.phrasalVerb,
+                  progress: state.progress,
+                  grandParentID: phrasalVerbType.phrasalVerbTypeID,
+                  canUpdateProgress: phrasalVerbIndex == state.progress,
+                ));
           }
         },
         child: Container(

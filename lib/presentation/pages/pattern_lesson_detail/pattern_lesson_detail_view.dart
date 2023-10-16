@@ -85,17 +85,17 @@ class _PatternLessonDetailViewState
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  trailing: Icon(
-                    state.progressLoadingStatus == LoadingStatus.success
-                        ? state.isDoneList[index]
-                            ? Icons.check_outlined
-                            : Icons.play_circle_outline_outlined
-                        : Icons.play_circle_outline_outlined,
-                    size: ScreenUtil().setSp(32),
-                    color: isDarkTheme
-                        ? Colors.white
-                        : Theme.of(context).primaryColor,
-                  ),
+                  trailing:
+                      state.progressLoadingStatus == LoadingStatus.success &&
+                              state.isDoneList[index]
+                          ? Icon(
+                              Icons.check_outlined,
+                              size: ScreenUtil().setSp(32),
+                              color: isDarkTheme
+                                  ? Colors.white
+                                  : Theme.of(context).primaryColor,
+                            )
+                          : null,
                 ),
               ),
             );

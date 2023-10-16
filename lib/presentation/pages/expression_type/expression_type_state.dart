@@ -8,8 +8,9 @@ part 'expression_type_state.freezed.dart';
 class ExpressionTypeState with _$ExpressionTypeState {
   const factory ExpressionTypeState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
-    @Default(LoadingStatus.initial) LoadingStatus sentenceLoadingStatus,
+    @Default(LoadingStatus.initial) LoadingStatus progressLoadingStatus,
     @Default([]) List<Expression> expressions,
+    @Default([]) List<bool> isDoneList,
     @Default(false) isTranslated,
   }) = _ExpressionTypeState;
 }

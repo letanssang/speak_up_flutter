@@ -136,13 +136,12 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
                 .read(appNavigatorProvider)
                 .navigateTo(AppRoutes.pronunciationPractice,
                     arguments: PronunciationPracticeViewArguments(
-                        parentID: state.idioms[idiomIndex].idiomID,
-                        lessonEnum: LessonEnum.idiom))
-                .then((_) {
-              ref
-                  .read(idiomViewModelProvider.notifier)
-                  .updateProgressState(idiomType.idiomTypeID);
-            });
+                      parentID: state.idioms[idiomIndex].idiomID,
+                      lessonEnum: LessonEnum.idiom,
+                      progress: state.progress,
+                      grandParentID: idiomType.idiomTypeID,
+                      canUpdateProgress: idiomIndex == state.progress,
+                    ));
           }
         },
         child: Container(

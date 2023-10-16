@@ -14,6 +14,7 @@ enum LessonEnum {
   idiom,
   commonWord,
   tense,
+  phonetic,
 }
 
 extension LessonExtension on LessonEnum {
@@ -27,5 +28,6 @@ List<Widget> lessonWidgetList = [
   const PhrasalVerbTypesView(),
   const IdiomTypesView(),
   const CommonWordTypes(),
-  const TensesView()
+  const TensesView(),
+  const SizedBox(),
 ];

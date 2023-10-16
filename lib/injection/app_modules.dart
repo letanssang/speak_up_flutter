@@ -50,14 +50,12 @@ import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_u
 import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/get_expression_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_pattern_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_phonetic_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_phrasal_verb_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_idiom_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_pattern_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_phonetic_progress_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_phrasal_verb_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/save_user_data_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_common_word_list_by_type.dart';
@@ -384,10 +382,6 @@ class AppModules {
     injector.registerLazySingleton<GetYoutubePlaylistByIdUseCase>(
         () => GetYoutubePlaylistByIdUseCase());
 
-    //Update Idiom Process Use Case
-    injector.registerLazySingleton<UpdateIdiomProgressUseCase>(
-        () => UpdateIdiomProgressUseCase());
-
     // Get Idiom Progress Use Case
     injector.registerLazySingleton<GetIdiomProgressUseCase>(
         () => GetIdiomProgressUseCase());
@@ -404,17 +398,9 @@ class AppModules {
     injector.registerLazySingleton<GetFlashCardListUseCase>(
         () => GetFlashCardListUseCase());
 
-    // Update Phrasal Verb Progress Use Case
-    injector.registerLazySingleton<UpdatePhrasalVerbProgressUseCase>(
-        () => UpdatePhrasalVerbProgressUseCase());
-
     // Get Phrase Verb Progress Use Case
     injector.registerLazySingleton<GetPhrasalVerbProgressUseCase>(
         () => GetPhrasalVerbProgressUseCase());
-
-    // Update Pattern Progress Use Case
-    injector.registerLazySingleton<UpdatePatternProgressUseCase>(
-        () => UpdatePatternProgressUseCase());
 
     // Get Pattern Done List Use Case
     injector.registerLazySingleton<GetPatternDoneListUseCase>(
@@ -448,12 +434,16 @@ class AppModules {
     injector.registerLazySingleton<PlayCompleteAudioUseCase>(
         () => PlayCompleteAudioUseCase());
 
-    // Update Phonetic Progress Use Case
-    injector.registerLazySingleton<UpdatePhoneticProgressUseCase>(
-        () => UpdatePhoneticProgressUseCase());
-
     // Get Phonetic Progress Use Case
     injector.registerLazySingleton<GetPhoneticDoneListUseCase>(
         () => GetPhoneticDoneListUseCase());
+
+    // Get Expression Done List Use Case
+    injector.registerLazySingleton<GetExpressionDoneListUseCase>(
+        () => GetExpressionDoneListUseCase());
+
+    // Update Progress Use Case
+    injector.registerLazySingleton<UpdateProgressUseCase>(
+        () => UpdateProgressUseCase());
   }
 }

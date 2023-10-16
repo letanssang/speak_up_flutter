@@ -22,4 +22,8 @@ class TextToSpeechRepository {
     await _flutterTts.setSpeechRate(speechRate);
     await _flutterTts.speak(text);
   }
+
+  Future<void> stopSpeaking() async {
+    await _flutterTts.stop();
+  }
 }

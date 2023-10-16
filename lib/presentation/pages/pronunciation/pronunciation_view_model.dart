@@ -1,19 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/domain/entities/lecture_process/lecture_process.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_phonetic_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_state.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/utilities/enums/pronunciation_assessment_status.dart';
 
 class PronunciationViewModel extends StateNotifier<PronunciationState> {
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
   final GetWordListByPhoneticIDUSeCase getWordListByPhoneticIDUSeCase;
   final SpeakFromTextUseCase speakFromTextUseCase;
   final StartRecordingUseCase _startRecordingUseCase;
@@ -21,11 +28,14 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
   final PlayCongratsAudioUseCase _playCongratsAudioUseCase;
   final PlayCompleteAudioUseCase _playCompleteAudioUseCase;
-  final UpdatePhoneticProgressUseCase _updatePhoneticProgressUseCase;
+  final StopAudioUseCase _stopAudioUseCase;
+  final UpdateProgressUseCase _updateProgressUseCase;
   final GetPronunciationAssessmentUseCase _getPronunciationAssessmentUseCase;
   final StateNotifierProviderRef ref;
+  Timer? timer;
 
   PronunciationViewModel(
+    this._getCurrentUserUseCase,
     this.getWordListByPhoneticIDUSeCase,
     this.speakFromTextUseCase,
     this._startRecordingUseCase,
@@ -33,7 +43,8 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
     this._playAudioFromFileUseCase,
     this._playCongratsAudioUseCase,
     this._playCompleteAudioUseCase,
-    this._updatePhoneticProgressUseCase,
+    this._stopAudioUseCase,
+    this._updateProgressUseCase,
     this._getPronunciationAssessmentUseCase,
     this.ref,
   ) : super(const PronunciationState());
@@ -56,6 +67,7 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
   }
 
   void resetStateWhenOnNextButtonTap() {
+    timer?.cancel();
     state = state.copyWith(
       pronunciationAssessmentStatus: PronunciationAssessmentStatus.initial,
       speechSentence: null,
@@ -84,9 +96,9 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
       isStoppedRecording: false,
     );
     try {
+      _stopAudioUseCase.run();
       await _startRecordingUseCase.run();
-      // auto stop recording after 3 seconds if user doesn't stop
-      Future.delayed(const Duration(seconds: 3), () async {
+      timer = Timer(const Duration(seconds: 3), () {
         if (state.pronunciationAssessmentStatus ==
             PronunciationAssessmentStatus.recording) {
           onRecordButtonTap();
@@ -128,7 +140,11 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
 
   Future<void> updatePhoneticProgress(int phoneticID) async {
     try {
-      await _updatePhoneticProgressUseCase.run(phoneticID);
+      LectureProcess process = LectureProcess(
+        lectureID: phoneticID,
+        uid: _getCurrentUserUseCase.run().uid,
+      );
+      await _updateProgressUseCase.run(process, LessonEnum.phonetic);
     } catch (e) {
       debugPrint(e.toString());
     }

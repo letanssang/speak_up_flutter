@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
@@ -35,7 +38,10 @@ final pronunciationPracticeViewModelProvider = StateNotifierProvider
     injector.get<PlayAudioFromFileUseCase>(),
     injector.get<PlayCongratsAudioUseCase>(),
     injector.get<PlayCompleteAudioUseCase>(),
+    injector.get<StopAudioUseCase>(),
     injector.get<GetPronunciationAssessmentUseCase>(),
+    injector.get<UpdateProgressUseCase>(),
+    injector.get<GetCurrentUserUseCase>(),
     ref,
   ),
 );
@@ -43,10 +49,16 @@ final pronunciationPracticeViewModelProvider = StateNotifierProvider
 class PronunciationPracticeViewArguments {
   final int parentID;
   final LessonEnum lessonEnum;
+  final int? progress;
+  final int? grandParentID;
+  final bool canUpdateProgress;
 
   PronunciationPracticeViewArguments({
     required this.parentID,
     required this.lessonEnum,
+    this.progress,
+    this.grandParentID,
+    this.canUpdateProgress = true,
   });
 }
 
@@ -62,6 +74,9 @@ class _PronunciationPracticeViewState
     extends ConsumerState<PronunciationPracticeView> {
   int parentID = 0;
   LessonEnum lessonEnum = LessonEnum.pattern;
+  int? progress;
+  int? grandParentID;
+  bool canUpdateProgress = true;
   late PageController _pageController;
 
   PronunciationPracticeViewModel get _viewModel =>
@@ -82,6 +97,9 @@ class _PronunciationPracticeViewState
         as PronunciationPracticeViewArguments;
     parentID = args.parentID;
     lessonEnum = args.lessonEnum;
+    progress = args.progress;
+    grandParentID = args.grandParentID;
+    canUpdateProgress = args.canUpdateProgress;
     await _viewModel.fetchSentenceList(parentID, lessonEnum);
     _viewModel.speakCurrentSentence();
   }
@@ -98,10 +116,12 @@ class _PronunciationPracticeViewState
     if (_pageController.page?.toInt() ==
         ref.watch(pronunciationPracticeViewModelProvider).sentences.length -
             1) {
-      showCompleteBottomSheet(context);
-      await _viewModel.updateProgress(parentID, lessonEnum);
-      //Todo: fetch progress
       _viewModel.playCompleteAudio();
+      showCompleteBottomSheet(context);
+      final id = grandParentID ?? parentID;
+      if (canUpdateProgress) {
+        await _viewModel.updateProgress(id, lessonEnum, progress: progress);
+      }
     } else {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 500),

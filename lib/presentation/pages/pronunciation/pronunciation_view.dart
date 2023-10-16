@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
-import 'package:speak_up/domain/use_cases/firestore/progress/update_phonetic_progress_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/update_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
@@ -29,6 +31,7 @@ import 'package:speak_up/presentation/widgets/text/pronunciation_score_text.dart
 final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
     PronunciationViewModel, PronunciationState>(
   (ref) => PronunciationViewModel(
+    injector.get<GetCurrentUserUseCase>(),
     injector.get<GetWordListByPhoneticIDUSeCase>(),
     injector.get<SpeakFromTextUseCase>(),
     injector.get<StartRecordingUseCase>(),
@@ -36,7 +39,8 @@ final pronunciationViewModelProvider = StateNotifierProvider.autoDispose<
     injector.get<PlayAudioFromFileUseCase>(),
     injector.get<PlayCongratsAudioUseCase>(),
     injector.get<PlayCompleteAudioUseCase>(),
-    injector.get<UpdatePhoneticProgressUseCase>(),
+    injector.get<StopAudioUseCase>(),
+    injector.get<UpdateProgressUseCase>(),
     injector.get<GetPronunciationAssessmentUseCase>(),
     ref,
   ),

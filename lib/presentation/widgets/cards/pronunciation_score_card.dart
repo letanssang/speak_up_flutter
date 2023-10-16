@@ -20,7 +20,9 @@ class PronunciationScoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
       child: Row(
         children: [
           Expanded(

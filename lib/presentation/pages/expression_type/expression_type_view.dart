@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/expression_type/expression_type.dart';
+import 'package:speak_up/domain/use_cases/firestore/progress/get_expression_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_expression_list_by_type_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
@@ -11,6 +12,7 @@ import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/expression_type/expression_type_state.dart';
 import 'package:speak_up/presentation/pages/expression_type/expression_type_view_model.dart';
 import 'package:speak_up/presentation/utilities/common/convert.dart';
+import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 
@@ -18,6 +20,7 @@ final expressionTypeViewModelProvider = StateNotifierProvider.autoDispose<
     ExpressionTypeViewModel, ExpressionTypeState>(
   (ref) => ExpressionTypeViewModel(
     injector.get<GetExpressionListByTypeUseCase>(),
+    injector.get<GetExpressionDoneListUseCase>(),
     injector.get<SpeakFromTextUseCase>(),
   ),
 );
@@ -34,6 +37,7 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
 
   ExpressionTypeViewModel get _viewModel =>
       ref.read(expressionTypeViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -45,9 +49,8 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
   Future<void> _init() async {
     expressionType =
         ModalRoute.of(context)!.settings.arguments as ExpressionType;
-    await ref
-        .read(expressionTypeViewModelProvider.notifier)
-        .fetchExpressionList(expressionType.expressionTypeID);
+    await _viewModel.fetchExpressionList(expressionType.expressionTypeID);
+    await _viewModel.fetchExpressionDoneList();
   }
 
   @override
@@ -123,13 +126,17 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
                     )),
                     title: Text(state.expressions[index].name),
                     subtitle: Text(state.expressions[index].translation),
-                    trailing: Icon(
-                      Icons.play_circle_outline_outlined,
-                      size: ScreenUtil().setWidth(32),
-                      color: isDarkTheme
-                          ? Colors.white
-                          : Theme.of(context).primaryColor,
-                    ),
+                    trailing:
+                        state.progressLoadingStatus == LoadingStatus.success &&
+                                state.isDoneList[index]
+                            ? Icon(
+                                Icons.check_outlined,
+                                size: ScreenUtil().setWidth(32),
+                                color: isDarkTheme
+                                    ? Colors.white
+                                    : Theme.of(context).primaryColor,
+                              )
+                            : null,
                   ),
                 );
               },
