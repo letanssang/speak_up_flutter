@@ -21,7 +21,6 @@ class AppRoutes {
   static const String idiom = '/idiom';
   static const String flashCards = '/flash_cards';
   static const String quiz = '/quiz';
-  static const String word = '/word';
   static const String phonetic = '/phonetic';
   static const String reels = '/reels';
   static const String pronunciation = '/pronunciation';

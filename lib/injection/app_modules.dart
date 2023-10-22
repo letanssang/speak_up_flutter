@@ -12,12 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_up/data/local/database_services/database_manager.dart';
 import 'package:speak_up/data/local/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/data/remote/azure_speech_client/azure_speech_client.dart';
-import 'package:speak_up/data/remote/dictionary_client/dictionary_client.dart';
 import 'package:speak_up/data/remote/youtube_client/youtube_client.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
-import 'package:speak_up/data/repositories/dictionary/dictionary_repository.dart';
 import 'package:speak_up/data/repositories/firestore/firestore_repository.dart';
 import 'package:speak_up/data/repositories/local_database/local_database_repository.dart';
 import 'package:speak_up/data/repositories/record/record_repository.dart';
@@ -45,8 +43,6 @@ import 'package:speak_up/domain/use_cases/authentication/sign_out_use_case.dart'
 import 'package:speak_up/domain/use_cases/authentication/update_display_name_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_email_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/update_password_use_case.dart';
-import 'package:speak_up/domain/use_cases/dictionary/get_word_detail_use_case.dart';
-import 'package:speak_up/domain/use_cases/dictionary/get_word_list_from_search_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
@@ -116,9 +112,6 @@ class AppModules {
     );
     //Dio
     await dotenv.load(fileName: "assets/keys/keys.env");
-    final wordsDio = Dio();
-    wordsDio.options.headers['x-rapidapi-key'] = dotenv.env['WORDS_API_KEY'];
-    wordsDio.interceptors.add(LoggingInterceptor());
     final youtubeDio = Dio();
     final azureSpeechDio = Dio();
     azureSpeechDio.options.headers['Ocp-Apim-Subscription-Key'] =
@@ -133,10 +126,6 @@ class AppModules {
 
     // Database Manager
     injector.registerLazySingleton<DatabaseManager>(() => DatabaseManager());
-
-    // Dictionary client
-    injector.registerLazySingleton<DictionaryClient>(
-        () => DictionaryClient(wordsDio));
 
     // Azure Speech client
     injector.registerLazySingleton<AzureSpeechClient>(
@@ -176,10 +165,6 @@ class AppModules {
     // Youtube Client
     injector
         .registerLazySingleton<YoutubeClient>(() => YoutubeClient(youtubeDio));
-
-    // Dictionary repository
-    injector.registerLazySingleton<DictionaryRepository>(
-        () => DictionaryRepository(injector.get<DictionaryClient>()));
 
     // Account settings repository
     injector.registerLazySingleton<AccountSettingsRepository>(() =>
@@ -362,14 +347,6 @@ class AppModules {
     // Speak From Text Use Case
     injector.registerLazySingleton<SpeakFromTextUseCase>(
         () => SpeakFromTextUseCase());
-
-    // Get word list from search use case
-    injector.registerLazySingleton<GetWordListFromSearchUseCase>(
-        () => GetWordListFromSearchUseCase());
-
-    // Get detail word use case
-    injector.registerLazySingleton<GetWordDetailUseCase>(
-        () => GetWordDetailUseCase());
 
     // Get phonetic list use case
     injector.registerLazySingleton<GetPhoneticListUseCase>(

@@ -27,7 +27,6 @@ import 'package:speak_up/presentation/pages/sign_up/sign_up_view.dart';
 import 'package:speak_up/presentation/pages/splash/splash_view.dart';
 import 'package:speak_up/presentation/pages/tense/tense_view.dart';
 import 'package:speak_up/presentation/pages/topic/topic_view.dart';
-import 'package:speak_up/presentation/pages/word/word_view.dart';
 
 class AppRouter {
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -165,13 +164,6 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const QuizView(),
-            settings: settings,
-          );
-        }
-      case AppRoutes.word:
-        {
-          return MaterialPageRoute(
-            builder: (context) => const WordView(),
             settings: settings,
           );
         }

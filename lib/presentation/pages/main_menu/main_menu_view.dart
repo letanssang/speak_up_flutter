@@ -4,7 +4,6 @@ import 'package:speak_up/presentation/pages/home/home_view.dart';
 import 'package:speak_up/presentation/pages/ipa/ipa_view.dart';
 import 'package:speak_up/presentation/pages/profile/profile_view.dart';
 import 'package:speak_up/presentation/pages/saved/saved_view.dart';
-import 'package:speak_up/presentation/pages/search/search_view.dart';
 
 import 'main_menu_state.dart';
 import 'main_menu_view_model.dart';
@@ -15,7 +14,6 @@ final mainMenuViewModelProvider =
 );
 List<Widget> _pageOptions = <Widget>[
   const HomeView(),
-  const SearchView(),
   const IpaView(),
   const SavedView(),
   const ProfileView()
@@ -40,10 +38,6 @@ class MainMenuView extends ConsumerWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Search',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.record_voice_over),

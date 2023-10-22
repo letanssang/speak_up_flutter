@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_common_word_list_by_type.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
-import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/common_word_type/common_word_type_state.dart';
 import 'package:speak_up/presentation/pages/common_word_type/common_word_type_view_model.dart';
 import 'package:speak_up/presentation/utilities/constant/alphabet_list.dart';
@@ -98,11 +96,6 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
                   itemBuilder: (context, index) {
                     final commonWord = state.commonWordList[index];
                     return AppListTile(
-                      onTap: () {
-                        ref.read(appNavigatorProvider).navigateTo(
-                            AppRoutes.word,
-                            arguments: commonWord.commonWord);
-                      },
                       index: index,
                       title: commonWord.commonWord,
                       subtitle: commonWord.translation,
