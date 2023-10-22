@@ -26,4 +26,20 @@ class TextToSpeechRepository {
   Future<void> stopSpeaking() async {
     await _flutterTts.stop();
   }
+
+  Future<void> speakFromTextSlowly(String text) async {
+    double speechRate;
+    double pitch;
+    if (Platform.isIOS) {
+      speechRate = 0.25;
+      pitch = 1.2;
+    } else {
+      speechRate = 0.15;
+      pitch = 1.0;
+    }
+    await _flutterTts.setLanguage('en-US');
+    await _flutterTts.setPitch(pitch);
+    await _flutterTts.setSpeechRate(speechRate);
+    await _flutterTts.speak(text);
+  }
 }

@@ -77,6 +77,7 @@ import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonet
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_slowly_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/domain/use_cases/youtube/get_youtube_playlist_by_id_use_case.dart';
 import 'package:speak_up/firebase_options.dart';
@@ -445,5 +446,9 @@ class AppModules {
     // Update Progress Use Case
     injector.registerLazySingleton<UpdateProgressUseCase>(
         () => UpdateProgressUseCase());
+
+    // Speak From Text Slowly Use Case
+    injector.registerLazySingleton<SpeakFromTextSlowlyUseCase>(
+        () => SpeakFromTextSlowlyUseCase());
   }
 }

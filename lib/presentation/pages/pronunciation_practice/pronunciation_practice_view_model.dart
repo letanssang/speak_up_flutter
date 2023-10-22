@@ -13,6 +13,7 @@ import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_pa
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_slowly_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/presentation/pages/expression_type/expression_type_view.dart';
 import 'package:speak_up/presentation/pages/idiom/idiom_view.dart';
@@ -28,6 +29,7 @@ class PronunciationPracticeViewModel
     extends StateNotifier<PronunciationPracticeState> {
   final GetSentenceListByParentIDUseCase _getSentenceListByParentIDUseCase;
   final SpeakFromTextUseCase speakFromTextUseCase;
+  final SpeakFromTextSlowlyUseCase speakFromTextSlowlyUseCase;
   final StartRecordingUseCase _startRecordingUseCase;
   final StopRecordingUseCase _stopRecordingUseCase;
   final PlayAudioFromFileUseCase _playAudioFromFileUseCase;
@@ -43,6 +45,7 @@ class PronunciationPracticeViewModel
   PronunciationPracticeViewModel(
     this._getSentenceListByParentIDUseCase,
     this.speakFromTextUseCase,
+    this.speakFromTextSlowlyUseCase,
     this._startRecordingUseCase,
     this._stopRecordingUseCase,
     this._playAudioFromFileUseCase,
@@ -87,6 +90,10 @@ class PronunciationPracticeViewModel
     await speakFromTextUseCase.run(text);
   }
 
+  Future<void> speakSlowly(String text) async {
+    await speakFromTextSlowlyUseCase.run(text);
+  }
+
   Future<void> onRecordButtonTap() async {
     if (state.pronunciationAssessmentStatus ==
         PronunciationAssessmentStatus.recording) {
@@ -123,6 +130,7 @@ class PronunciationPracticeViewModel
     if (state.pronunciationAssessmentStatus !=
         PronunciationAssessmentStatus.recording) return;
     try {
+      timer?.cancel();
       final recordPath = await _stopRecordingUseCase.run();
       state = state.copyWith(
         recordPath: recordPath,

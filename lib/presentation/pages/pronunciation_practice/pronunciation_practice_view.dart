@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
@@ -10,10 +11,12 @@ import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_pa
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
+import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_slowly_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_state.dart';
 import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view_model.dart';
+import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
@@ -33,6 +36,7 @@ final pronunciationPracticeViewModelProvider = StateNotifierProvider
   (ref) => PronunciationPracticeViewModel(
     injector.get<GetSentenceListByParentIDUseCase>(),
     injector.get<SpeakFromTextUseCase>(),
+    injector.get<SpeakFromTextSlowlyUseCase>(),
     injector.get<StartRecordingUseCase>(),
     injector.get<StopRecordingUseCase>(),
     injector.get<PlayAudioFromFileUseCase>(),
@@ -181,6 +185,35 @@ class _PronunciationPracticeViewState
                     ],
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomIconButton(
+                      height: ScreenUtil().setHeight(40),
+                      icon: Icon(
+                        Icons.volume_up_outlined,
+                        size: ScreenUtil().setSp(20),
+                        color: Colors.grey[800],
+                      ),
+                      onPressed: () {
+                        _viewModel
+                            .speak(state.sentences[state.currentIndex].text);
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    CustomIconButton(
+                      height: ScreenUtil().setHeight(40),
+                      icon: AppIcons.snail(
+                        size: ScreenUtil().setSp(20),
+                        color: Colors.grey[800],
+                      ),
+                      onPressed: () {
+                        _viewModel.speakSlowly(
+                            state.sentences[state.currentIndex].text);
+                      },
+                    ),
+                  ],
+                ),
                 Expanded(
                   child: Padding(
                     padding:
@@ -210,7 +243,7 @@ class _PronunciationPracticeViewState
                     onNextButtonTap: onNextButtonTap,
                     pronunciationAssessmentStatus:
                         state.pronunciationAssessmentStatus),
-                const SizedBox(height: 48),
+                const SizedBox(height: 32),
               ],
             )
           : state.loadingStatus == LoadingStatus.loading
@@ -222,38 +255,27 @@ class _PronunciationPracticeViewState
   Widget _buildExampleItem(PronunciationPracticeState state, int index) {
     return Column(
       children: [
-        CustomIconButton(
-          height: 40,
-          icon: Icon(
-            Icons.volume_up_outlined,
-            size: 20,
-            color: Colors.grey[800],
-          ),
-          onPressed: () {
-            _viewModel.speak(state.sentences[index].text);
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            state.sentences[index].text,
-            textAlign: TextAlign.left,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+        const SizedBox(height: 16),
+        Text(
+          state.sentences[index].text,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(20),
+            fontWeight: FontWeight.bold,
           ),
         ),
+        const SizedBox(height: 16),
         state.speechSentence?.words != null
             ? PronunciationScoreText(
                 words: state.speechSentence?.words ?? [],
                 recordPath: state.recordPath ?? '',
-                fontSize: 20,
+                fontSize: ScreenUtil().setSp(20),
               )
             : Text(
                 state.sentences[index].translation,
-                style: const TextStyle(
-                  fontSize: 16,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(18),
                 ),
               ),
         Flexible(child: Container()),

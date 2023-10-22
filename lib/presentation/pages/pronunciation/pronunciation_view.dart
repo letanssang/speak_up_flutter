@@ -175,7 +175,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                     onNextButtonTap: onNextButtonTap,
                     pronunciationAssessmentStatus:
                         state.pronunciationAssessmentStatus),
-                const SizedBox(height: 48),
+                const SizedBox(height: 32),
               ],
             )
           : state.loadingStatus == LoadingStatus.loading

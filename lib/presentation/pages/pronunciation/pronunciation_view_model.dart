@@ -114,6 +114,7 @@ class PronunciationViewModel extends StateNotifier<PronunciationState> {
     if (state.pronunciationAssessmentStatus !=
         PronunciationAssessmentStatus.recording) return;
     try {
+      timer?.cancel();
       final recordPath = await _stopRecordingUseCase.run();
       state = state.copyWith(
         recordPath: recordPath,
