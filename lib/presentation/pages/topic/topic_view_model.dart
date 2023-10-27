@@ -62,18 +62,26 @@ class TopicViewModel extends StateNotifier<TopicState> {
 
   void onTapPlayButton() {
     if (state.isPlayingPlaylist) {
-      _audioPlayer.pause();
-      state = state.copyWith(isPlayingPlaylist: false);
+      onPaused();
     } else {
       playCurrentSentence();
       state = state.copyWith(isPlayingPlaylist: true);
     }
   }
 
+  void onPaused() {
+    _audioPlayer.pause();
+    state = state.copyWith(isPlayingPlaylist: false);
+  }
+
   void onTapMessage(int index) {
     updateCurrentPlayingIndex(index);
     playCurrentSentence();
     state = state.copyWith(isPlayingPlaylist: true);
+  }
+
+  void onTapRepeatButton() {
+    state = state.copyWith(isRepeated: !state.isRepeated);
   }
 
   @override

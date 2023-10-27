@@ -28,6 +28,7 @@ class AppRoutes {
   static const String commonWordType = '/common_word_type';
   static const String tense = '/tense';
   static const String pronunciationPractice = '/pronunciation_practice';
+  static const String pronunciationTopic = '/pronunciation_topic';
 
   //profile
   static const String editProfile = '/edit_profile';

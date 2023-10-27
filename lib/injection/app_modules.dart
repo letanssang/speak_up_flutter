@@ -31,7 +31,6 @@ import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
-import 'package:speak_up/domain/use_cases/audio_player/play_slow_audio_from_url_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/stop_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/create_user_with_email_and_password_use_case.dart';
 import 'package:speak_up/domain/use_cases/authentication/get_current_user_use_case.dart';
@@ -316,10 +315,6 @@ class AppModules {
     // Play audio from url use case
     injector.registerLazySingleton<PlayAudioFromUrlUseCase>(
         () => PlayAudioFromUrlUseCase());
-
-    // Play slow audio from url use case
-    injector.registerLazySingleton<PlaySlowAudioFromUrlUseCase>(
-        () => PlaySlowAudioFromUrlUseCase());
 
     //Play audio from asset use case
     injector.registerLazySingleton<PlayAudioFromAssetUseCase>(

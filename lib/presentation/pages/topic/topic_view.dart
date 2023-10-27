@@ -4,10 +4,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
+import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
+import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';
 import 'package:speak_up/presentation/pages/topic/topic_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
@@ -38,6 +40,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
   final ScrollController _scrollController = ScrollController();
 
   TopicViewModel get _viewModel => ref.read(topicViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +82,9 @@ class _TopicViewState extends ConsumerState<TopicView> {
     ref.listen(topicViewModelProvider.select((value) => value.playerState),
         (previous, next) {
       if (next == PlayerState.completed && state.isPlayingPlaylist) {
-        if (state.currentPlayingIndex < state.sentences.length - 1) {
+        if (state.isRepeated) {
+          _viewModel.playCurrentSentence();
+        } else if (state.currentPlayingIndex < state.sentences.length - 1) {
           _viewModel.updateCurrentPlayingIndex(state.currentPlayingIndex + 1);
           scrollToCurrentMessage(state.keys[state.currentPlayingIndex]);
           _viewModel.playCurrentSentence();
@@ -139,7 +144,11 @@ class _TopicViewState extends ConsumerState<TopicView> {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            buildCustomButton('Repeat'),
+            buildCustomButton(
+              'Repeat',
+              onTap: _viewModel.onTapRepeatButton,
+              isTurnOn: state.isRepeated,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
@@ -154,24 +163,37 @@ class _TopicViewState extends ConsumerState<TopicView> {
                     )),
               ),
             ),
-            buildCustomButton('Speak'),
+            buildCustomButton('Speak', onTap: () {
+              _viewModel.onPaused();
+              ref.read(appNavigatorProvider).navigateTo(
+                    AppRoutes.pronunciationTopic,
+                    arguments: state.sentences,
+                  );
+            }),
           ],
         ))
       ],
     );
   }
 
-  Widget buildCustomButton(String text) {
+  Widget buildCustomButton(String text,
+      {VoidCallback? onTap, bool isTurnOn = false}) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16), color: Colors.grey[200]),
+        borderRadius: BorderRadius.circular(16),
+        color: isTurnOn ? Theme.of(context).primaryColor : Colors.grey[200],
+      ),
       margin: const EdgeInsets.all(16),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-        child: Text(text,
-            style: TextStyle(
-              fontSize: ScreenUtil().setSp(16),
-            )),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+          child: Text(text,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16),
+                color: isTurnOn ? Colors.white : Colors.black,
+              )),
+        ),
       ),
     );
   }

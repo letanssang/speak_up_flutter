@@ -16,5 +16,6 @@ class TopicState with _$TopicState {
     @Default(false) bool isPlayingPlaylist,
     @Default(PlayerState.stopped) PlayerState playerState,
     @Default([]) List<GlobalKey> keys,
+    @Default(false) bool isRepeated,
   }) = _TopicState;
 }

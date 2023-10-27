@@ -19,6 +19,7 @@ import 'package:speak_up/presentation/pages/phonetic/phonetic_view.dart';
 import 'package:speak_up/presentation/pages/phrasal_verb/phrasal_verb_view.dart';
 import 'package:speak_up/presentation/pages/pronunciation/pronunciation_view.dart';
 import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view.dart';
+import 'package:speak_up/presentation/pages/pronunciation_topic/pronunciation_topic_view.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_view.dart';
 import 'package:speak_up/presentation/pages/reels/reels_view.dart';
 import 'package:speak_up/presentation/pages/sign_in/sign_in_view.dart';
@@ -216,6 +217,13 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => const PronunciationPracticeView(),
+            settings: settings,
+          );
+        }
+      case AppRoutes.pronunciationTopic:
+        {
+          return MaterialPageRoute(
+            builder: (context) => const PronunciationTopicView(),
             settings: settings,
           );
         }
