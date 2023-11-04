@@ -6,14 +6,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/entities/topic/topic.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
+import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view.dart';
 import 'package:speak_up/presentation/pages/topic/topic_state.dart';
 import 'package:speak_up/presentation/pages/topic/topic_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
+import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
@@ -178,20 +181,29 @@ class _TopicViewState extends ConsumerState<TopicView> {
 
   Widget buildCustomButton(String text,
       {VoidCallback? onTap, bool isTurnOn = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: isTurnOn ? Theme.of(context).primaryColor : Colors.grey[200],
-      ),
-      margin: const EdgeInsets.all(16),
+    final isDarkTheme = ref.watch(themeProvider);
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
       child: InkWell(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: isTurnOn
+                ? Theme.of(context).primaryColor
+                : isDarkTheme
+                    ? Colors.grey[800]
+                    : Colors.grey[200],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
           child: Text(text,
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(16),
-                color: isTurnOn ? Colors.white : Colors.black,
+                color: isTurnOn
+                    ? Colors.white
+                    : isDarkTheme
+                        ? Colors.white
+                        : Colors.black,
               )),
         ),
       ),
@@ -219,7 +231,8 @@ class _TopicViewState extends ConsumerState<TopicView> {
           const SizedBox(
             width: 8,
           ),
-          _buildMessageIcon(index, isExpandedTranslation),
+          _buildMessageIcon(
+              index, isExpandedTranslation, state.sentences[index]),
         ],
       ),
     );
@@ -236,7 +249,8 @@ class _TopicViewState extends ConsumerState<TopicView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          _buildMessageIcon(index, isExpandedTranslation),
+          _buildMessageIcon(
+              index, isExpandedTranslation, state.sentences[index]),
           const SizedBox(width: 8),
           Stack(
             children: [
@@ -282,7 +296,11 @@ class _TopicViewState extends ConsumerState<TopicView> {
                     width: 1,
                   )
                 : null,
-            color: isDarkTheme ? Colors.grey[200] : Colors.white,
+            color: isPlaying
+                ? Theme.of(context).primaryColor
+                : isDarkTheme
+                    ? Colors.grey[800]
+                    : Colors.white,
             boxShadow: [
               BoxShadow(
                 color: isDarkTheme
@@ -306,8 +324,11 @@ class _TopicViewState extends ConsumerState<TopicView> {
               Text(
                 sentence.text,
                 style: TextStyle(
-                  color:
-                      isPlaying ? Theme.of(context).primaryColor : Colors.black,
+                  color: isPlaying
+                      ? Colors.white
+                      : isDarkTheme
+                          ? Colors.white
+                          : Colors.black,
                   fontSize: ScreenUtil().setSp(16),
                   fontWeight: isPlaying ? FontWeight.bold : FontWeight.normal,
                 ),
@@ -318,7 +339,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                   sentence.translation,
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(14),
-                    color: Colors.grey[800],
+                    color: isDarkTheme ? Colors.grey[400] : Colors.grey[800],
                   ),
                   textAlign: TextAlign.justify,
                 ),
@@ -329,7 +350,8 @@ class _TopicViewState extends ConsumerState<TopicView> {
     );
   }
 
-  Widget _buildMessageIcon(int index, bool isExpandedTranslation) {
+  Widget _buildMessageIcon(
+      int index, bool isExpandedTranslation, Sentence sentence) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -342,17 +364,24 @@ class _TopicViewState extends ConsumerState<TopicView> {
           icon: Icon(
             Icons.translate,
             size: ScreenUtil().setSp(20),
-            color: isExpandedTranslation ? Colors.grey[800] : Colors.grey,
           ),
         ),
         CustomIconButton(
           height: 40,
           width: 40,
-          onPressed: () {},
+          onPressed: () {
+            ref
+                .read(appNavigatorProvider)
+                .navigateTo(AppRoutes.pronunciationPractice,
+                    arguments: PronunciationPracticeViewArguments(
+                      parentID: 0,
+                      lessonEnum: LessonEnum.topic,
+                      sentence: sentence,
+                    ));
+          },
           icon: Icon(
             Icons.mic,
             size: ScreenUtil().setSp(20),
-            color: Colors.grey,
           ),
         ),
       ],

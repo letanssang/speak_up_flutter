@@ -93,6 +93,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   }
 
   Future<void> _onTapChangeLanguage(WidgetRef ref) async {
+    final isDarkTheme = ref.watch(themeProvider);
     switch (await showDialog<Language>(
         context: context,
         builder: (BuildContext context) {
@@ -105,7 +106,12 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                 },
                 child: ListTile(
                     leading: AppImages.usFlag(),
-                    title: Text(Language.english.toLanguageString())),
+                    title: Text(
+                      Language.english.toLanguageString(),
+                      style: TextStyle(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ),
+                    )),
               ),
               SimpleDialogOption(
                 onPressed: () {
@@ -113,7 +119,12 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                 },
                 child: ListTile(
                     leading: AppImages.vnFlag(),
-                    title: Text(Language.vietnamese.toLanguageString())),
+                    title: Text(
+                      Language.vietnamese.toLanguageString(),
+                      style: TextStyle(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ),
+                    )),
               ),
             ],
           );
@@ -262,6 +273,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
 
   Widget buildListTile(Widget icon, String title,
       {Widget? trailing, Function()? onTap}) {
+    final darkTheme = ref.watch(themeProvider);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: const BoxDecoration(),
@@ -269,8 +281,9 @@ class ProfileViewState extends ConsumerState<ProfileView> {
         leading: icon,
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
+            color: darkTheme ? Colors.white : Colors.black,
           ),
         ),
         onTap: onTap,

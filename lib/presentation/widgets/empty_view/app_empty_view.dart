@@ -45,7 +45,16 @@ class AppEmptyView extends ConsumerWidget {
             onPressed: () {
               ref.read(mainMenuViewModelProvider.notifier).changeTab(0);
             },
-            child: const Text('Explore'),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).primaryColor,
+              ),
+            ),
+            child: const Text('Explore',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                )),
           )
         ],
       ),

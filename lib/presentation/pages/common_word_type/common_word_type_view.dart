@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_common_word_list_by_type.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
@@ -53,26 +54,29 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(commonWordTypeViewModelProvider);
+    final isDarkTheme = ref.watch(themeProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
             '${AppLocalizations.of(context)?.wordStartWith} ${alphabetList[type]}'),
       ),
       body: state.loadingStatus == LoadingStatus.success
-          ? _buildLoadingSuccessBody(state)
+          ? _buildLoadingSuccessBody(state, isDarkTheme)
           : state.loadingStatus == LoadingStatus.error
               ? const AppErrorView()
               : const AppLoadingIndicator(),
     );
   }
 
-  Widget _buildLoadingSuccessBody(CommonWordTypeState state) {
+  Widget _buildLoadingSuccessBody(CommonWordTypeState state, bool isDarkTheme) {
     return Column(
       children: [
         AppSearchBar(
-            onInitial: _viewModel.onSearchInitial,
-            onLoading: _viewModel.onSearchLoading,
-            onSearch: _viewModel.onSearch),
+          onInitial: _viewModel.onSearchInitial,
+          onLoading: _viewModel.onSearchLoading,
+          onSearch: _viewModel.onSearch,
+          isDarkTheme: isDarkTheme,
+        ),
         Expanded(
           child: state.searchLoadingStatus == LoadingStatus.success
               ? ListView.builder(
@@ -87,6 +91,7 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
                       trailing: _buildTrailingListTile(
                         commonWord.partOfSpeech,
                         commonWord.level,
+                        isDarkTheme,
                       ),
                     );
                   },
@@ -100,8 +105,8 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
                       title: commonWord.commonWord,
                       subtitle: commonWord.translation,
                       leading: _buildLeadingListTile(commonWord.commonWord),
-                      trailing: _buildTrailingListTile(
-                          commonWord.partOfSpeech, commonWord.level),
+                      trailing: _buildTrailingListTile(commonWord.partOfSpeech,
+                          commonWord.level, isDarkTheme),
                     );
                   },
                 ),
@@ -123,7 +128,8 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
     ));
   }
 
-  Widget _buildTrailingListTile(String partOfSpeech, String level) {
+  Widget _buildTrailingListTile(
+      String partOfSpeech, String level, bool isDarkTheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -131,13 +137,15 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
             style: TextStyle(
               fontSize: ScreenUtil().setSp(14),
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor,
+              color:
+                  isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
             )),
         const SizedBox(height: 4),
         Text(
           level,
           style: TextStyle(
             fontSize: ScreenUtil().setSp(12),
+            color: isDarkTheme ? Colors.white : Colors.grey,
           ),
         ),
       ],

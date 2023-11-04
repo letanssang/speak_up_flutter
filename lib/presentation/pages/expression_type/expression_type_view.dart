@@ -15,6 +15,7 @@ import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
+import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 
 final expressionTypeViewModelProvider = StateNotifierProvider.autoDispose<
     ExpressionTypeViewModel, ExpressionTypeState>(
@@ -81,9 +82,8 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
                 CustomIconButton(
                   height: 40,
                   width: 40,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.volume_up_outlined,
-                    color: Colors.grey[800],
                   ),
                   onPressed: () {
                     _viewModel.speak(expressionType.description);
@@ -92,9 +92,8 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
                 CustomIconButton(
                     height: 40,
                     width: 40,
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.translate_outlined,
-                      color: Colors.grey[800],
                     ),
                     onPressed: _viewModel.toggleTranslate),
                 Flexible(child: Container()),
@@ -105,39 +104,35 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
               shrinkWrap: true,
               itemCount: state.expressions.length,
               itemBuilder: (context, index) {
-                return Card(
-                  elevation: 3,
-                  color: isDarkTheme ? Colors.grey[850] : Colors.white,
-                  surfaceTintColor: Colors.white,
-                  child: ListTile(
-                    onTap: () {
-                      ref.read(appNavigatorProvider).navigateTo(
-                            AppRoutes.expression,
-                            arguments: state.expressions[index],
-                          );
-                    },
-                    leading: CircleAvatar(
-                        child: Text(
-                      formatIndexToString(index),
-                      style: TextStyle(
-                        fontSize: ScreenUtil().setSp(16),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-                    title: Text(state.expressions[index].name),
-                    subtitle: Text(state.expressions[index].translation),
-                    trailing:
-                        state.progressLoadingStatus == LoadingStatus.success &&
-                                state.isDoneList[index]
-                            ? Icon(
-                                Icons.check_outlined,
-                                size: ScreenUtil().setWidth(32),
-                                color: isDarkTheme
-                                    ? Colors.white
-                                    : Theme.of(context).primaryColor,
-                              )
-                            : null,
-                  ),
+                return AppListTile(
+                  index: index,
+                  onTap: () {
+                    ref.read(appNavigatorProvider).navigateTo(
+                          AppRoutes.expression,
+                          arguments: state.expressions[index],
+                        );
+                  },
+                  leading: CircleAvatar(
+                      child: Text(
+                    formatIndexToString(index),
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(16),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
+                  title: state.expressions[index].name,
+                  subtitle: state.expressions[index].translation,
+                  trailing:
+                      state.progressLoadingStatus == LoadingStatus.success &&
+                              state.isDoneList[index]
+                          ? Icon(
+                              Icons.check_outlined,
+                              size: ScreenUtil().setWidth(32),
+                              color: isDarkTheme
+                                  ? Colors.white
+                                  : Theme.of(context).primaryColor,
+                            )
+                          : null,
                 );
               },
             ),

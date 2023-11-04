@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 
-class AppBackButton extends StatelessWidget {
-  final Color color;
+class AppBackButton extends ConsumerWidget {
   final Function()? onPressed;
   final EdgeInsets? padding;
   final double? size;
+
   const AppBackButton({
     super.key,
-    this.color = Colors.black,
     this.onPressed,
     this.padding,
     this.size,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkTheme = ref.watch(themeProvider);
     return Padding(
       padding: padding ?? const EdgeInsets.only(left: 16.0),
       child: IconButton(
         icon: Icon(
           Icons.arrow_back_ios,
           size: size ?? 24,
-          color: color,
+          color: isDarkTheme ? Colors.white : Colors.black,
         ),
         onPressed: onPressed ??
             () {

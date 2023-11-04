@@ -40,6 +40,7 @@ class HomeView extends ConsumerStatefulWidget {
 
 class _HomeViewState extends ConsumerState<HomeView> {
   HomeViewModel get _viewModel => ref.read(homeViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -150,7 +151,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            color: isDarkTheme ? Colors.grey[800] : Colors.white,
+            color: isDarkTheme ? Colors.grey[850] : Colors.white,
             surfaceTintColor: Colors.white,
             elevation: 3,
             child: Column(
@@ -332,8 +333,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
-          border: Border.all(color: Colors.black54),
-          color: isDarkTheme ? const Color(0xFF605F5F) : Colors.white,
+          border: Border.all(
+              color: isDarkTheme ? Colors.grey[700]! : Colors.black54),
+          color: isDarkTheme ? Colors.grey[800] : Colors.white,
         ),
         child: Row(
           children: [

@@ -16,6 +16,7 @@ import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/learning_mode_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
+import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final phrasalVerbTypesViewModelProvider = StateNotifierProvider.autoDispose<
@@ -91,42 +92,27 @@ class _PhrasalVerbTypesViewState extends ConsumerState<PhrasalVerbTypesView> {
         return ListView.builder(
           itemCount: state.phrasalVerbTypes.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-              child: Card(
-                elevation: 3,
-                color: isDarkTheme ? Colors.grey[850] : Colors.white,
-                surfaceTintColor: Colors.white,
-                child: ListTile(
-                  onTap: () {
-                    showOptionButtonSheet(index);
-                  },
-                  leading: CircleAvatar(
-                      child: Text(
-                    formatIndexToString(index),
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(16),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-                  title: Text(
-                    language == Language.english
-                        ? state.phrasalVerbTypes[index].name
-                        : state.phrasalVerbTypes[index].translation,
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(16),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.play_circle_outline_outlined,
-                    size: ScreenUtil().setHeight(32),
-                    color: isDarkTheme
-                        ? Colors.white
-                        : Theme.of(context).primaryColor,
-                  ),
+            return AppListTile(
+              index: index,
+              onTap: () {
+                showOptionButtonSheet(index);
+              },
+              leading: CircleAvatar(
+                  child: Text(
+                formatIndexToString(index),
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
+                  fontWeight: FontWeight.bold,
                 ),
+              )),
+              title: language == Language.english
+                  ? state.phrasalVerbTypes[index].name
+                  : state.phrasalVerbTypes[index].translation,
+              trailing: Icon(
+                Icons.play_circle_outline_outlined,
+                size: ScreenUtil().setHeight(32),
+                color:
+                    isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
               ),
             );
           },

@@ -11,6 +11,7 @@ class AppListTile extends ConsumerWidget {
   final String? subtitle;
   final Widget? leading;
   final Widget? trailing;
+
   const AppListTile(
       {required this.index,
       this.title = '',
@@ -33,18 +34,20 @@ class AppListTile extends ConsumerWidget {
           onTap: onTap,
           leading: leading ??
               CircleAvatar(
-                  child: Text(
-                formatIndexToString(index),
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(16),
-                  fontWeight: FontWeight.bold,
+                child: Text(
+                  formatIndexToString(index),
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(16),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              )),
+              ),
           title: Text(
             title,
             style: TextStyle(
               fontSize: ScreenUtil().setSp(16),
               fontWeight: FontWeight.bold,
+              color: isDarkTheme ? Colors.white : Colors.black,
             ),
           ),
           subtitle: subtitle != null
@@ -52,6 +55,7 @@ class AppListTile extends ConsumerWidget {
                   subtitle!,
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(14),
+                    color: isDarkTheme ? Colors.grey[400] : Colors.grey[600],
                   ),
                 )
               : null,
@@ -59,8 +63,7 @@ class AppListTile extends ConsumerWidget {
               Icon(
                 Icons.play_circle_outline_outlined,
                 size: ScreenUtil().setWidth(32),
-                color:
-                    isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
+                color: Colors.grey[400],
               ),
         ),
       ),

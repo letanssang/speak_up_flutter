@@ -6,7 +6,6 @@ import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
-import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/tab_bars/app_tab_bar.dart';
 
 class LessonView extends ConsumerStatefulWidget {
@@ -58,13 +57,21 @@ class _LessonViewState extends ConsumerState<LessonView>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        margin: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.white),
-                        child: const AppBackButton(
-                          padding: EdgeInsets.zero,
-                          size: 20,
-                        )),
+                      margin: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.white),
+                      child: Padding(
+                        padding: EdgeInsets.zero,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            size: 20,
+                            color: Colors.black,
+                          ),
+                          onPressed: Navigator.of(context).pop,
+                        ),
+                      ),
+                    ),
                     Flexible(child: Container()),
                     Container(
                       width: ScreenUtil().screenWidth,

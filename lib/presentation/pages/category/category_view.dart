@@ -17,6 +17,7 @@ import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
+import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final categoryViewModelProvider =
@@ -35,8 +36,10 @@ class CategoryView extends ConsumerStatefulWidget {
 
 class _CategoryViewState extends ConsumerState<CategoryView> {
   Category category = Category.initial();
+
   CategoryViewModel get _viewModel =>
       ref.read(categoryViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -93,47 +96,28 @@ class _CategoryViewState extends ConsumerState<CategoryView> {
         itemCount: topics.length,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Card(
-              elevation: 3,
-              color: isDarkTheme ? Colors.grey[850] : Colors.white,
-              surfaceTintColor: Colors.white,
-              child: ListTile(
-                onTap: () {
-                  ref
-                      .read(appNavigatorProvider)
-                      .navigateTo(AppRoutes.topic, arguments: topics[index]);
-                },
-                leading: CircleAvatar(
-                    child: Text(
-                  formatIndexToString(index),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
-                title: Text(
-                  topics[index].topicName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  topics[index].translation,
-                  style: const TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.play_circle_outline_outlined,
-                  size: 32,
-                  color: isDarkTheme
-                      ? Colors.white
-                      : Theme.of(context).primaryColor,
-                ),
+          return AppListTile(
+            index: index,
+            onTap: () {
+              ref
+                  .read(appNavigatorProvider)
+                  .navigateTo(AppRoutes.topic, arguments: topics[index]);
+            },
+            leading: CircleAvatar(
+                child: Text(
+              formatIndexToString(index),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
+            )),
+            title: topics[index].topicName,
+            subtitle: topics[index].translation,
+            trailing: Icon(
+              Icons.play_circle_outline_outlined,
+              size: 32,
+              color:
+                  isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
             ),
           );
         },

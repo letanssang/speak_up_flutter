@@ -69,9 +69,7 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
             // plus padding top status bar
             top: MediaQuery.of(context).padding.top + 32,
             left: 10,
-            child: const AppBackButton(
-              color: Colors.white,
-            ),
+            child: const AppBackButton(),
           ),
         ],
       ),

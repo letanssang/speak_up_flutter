@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/utilities/enums/pronunciation_assessment_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/record_button.dart';
 
-class PronunciationButtons extends StatelessWidget {
+class PronunciationButtons extends ConsumerWidget {
   final String? recordPath;
   final Function()? onPlayRecord;
   final Function()? onRecordButtonTap;
@@ -20,7 +22,8 @@ class PronunciationButtons extends StatelessWidget {
       required this.pronunciationAssessmentStatus});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkTheme = ref.watch(themeProvider);
     return Row(
       children: [
         Flexible(child: Container()),
@@ -31,7 +34,7 @@ class PronunciationButtons extends StatelessWidget {
                 width: 64,
                 icon: AppIcons.playRecord(
                   size: 32,
-                  color: Colors.grey[800],
+                  color: isDarkTheme ? Colors.grey[300] : Colors.grey[800],
                 ),
               )
             : const SizedBox(
@@ -44,6 +47,7 @@ class PronunciationButtons extends StatelessWidget {
         RecordButton(
           buttonState: pronunciationAssessmentStatus.getButtonState(),
           onTap: onRecordButtonTap,
+          isDarkTheme: isDarkTheme,
         ),
         const SizedBox(
           width: 32,
@@ -56,7 +60,7 @@ class PronunciationButtons extends StatelessWidget {
                 icon: Icon(
                   Icons.navigate_next_outlined,
                   size: 32,
-                  color: Colors.grey[800],
+                  color: isDarkTheme ? Colors.grey[300] : Colors.grey[800],
                 ))
             : const SizedBox(
                 width: 64,

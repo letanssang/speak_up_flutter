@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 
-class AppTabBar extends StatelessWidget {
+class AppTabBar extends ConsumerWidget {
   final TabController tabController;
   final String titleTab1;
   final String titleTab2;
+
   const AppTabBar({
     super.key,
     required this.tabController,
@@ -12,12 +15,14 @@ class AppTabBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkTheme = ref.watch(themeProvider);
     return Container(
       height: 50,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: Colors.grey[350]),
+          borderRadius: BorderRadius.circular(20),
+          color: isDarkTheme ? Colors.grey[800] : Colors.grey[350]),
       child: TabBar(
         controller: tabController,
         indicator: BoxDecoration(
@@ -28,7 +33,7 @@ class AppTabBar extends StatelessWidget {
         indicatorPadding: EdgeInsets.zero,
         indicatorColor: Colors.transparent,
         labelColor: Colors.white,
-        unselectedLabelColor: Colors.black,
+        unselectedLabelColor: isDarkTheme ? Colors.white : Colors.black,
         tabs: [
           Tab(
             icon: Text(

@@ -130,9 +130,8 @@ class _PatternViewState extends ConsumerState<PatternView> {
                 CustomIconButton(
                   height: 40,
                   width: 40,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.volume_up_outlined,
-                    color: Colors.grey[800],
                     size: 20,
                   ),
                   onPressed: () {
@@ -142,9 +141,8 @@ class _PatternViewState extends ConsumerState<PatternView> {
                 CustomIconButton(
                     height: 40,
                     width: 40,
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.translate_outlined,
-                      color: Colors.grey[800],
                       size: 20,
                     ),
                     onPressed: _viewModel.toggleTranslate),

@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_phonetic_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_phonetic_list_use_case.dart';
@@ -129,6 +130,7 @@ class _IpaViewState extends ConsumerState<IpaView>
   }
 
   Widget buildPhoneticCard(Phonetic phonetic, bool isDone) {
+    final isDarkTheme = ref.watch(themeProvider);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
@@ -145,6 +147,7 @@ class _IpaViewState extends ConsumerState<IpaView>
               color: Theme.of(context).primaryColor,
               width: 1,
             ),
+            color: isDarkTheme ? Colors.grey[900] : Colors.white,
           ),
           child: Stack(
             children: [
@@ -161,6 +164,9 @@ class _IpaViewState extends ConsumerState<IpaView>
                         fontSize: ScreenUtil().setSp(24),
                         color: Theme.of(context).primaryColor,
                       ),
+                    ),
+                    const SizedBox(
+                      height: 4,
                     ),
                     Text(
                       phonetic.example.entries.first.key,

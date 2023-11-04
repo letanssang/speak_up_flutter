@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/quiz/quiz.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
+import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/text_to_speech/speak_from_text_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/quiz/quiz_state.dart';
@@ -20,6 +23,8 @@ final quizViewModelProvider =
     StateNotifierProvider.autoDispose<QuizViewModel, QuizState>(
   (ref) => QuizViewModel(
     injector.get<SpeakFromTextUseCase>(),
+    injector.get<PlayCongratsAudioUseCase>(),
+    injector.get<PlayCompleteAudioUseCase>(),
   ),
 );
 
@@ -32,7 +37,7 @@ class QuizView extends ConsumerStatefulWidget {
 
 class _QuizViewState extends ConsumerState<QuizView> {
   List<Quiz> _quizzes = [];
-
+  QuizViewModel get _viewModel => ref.read(quizViewModelProvider.notifier);
   @override
   void initState() {
     super.initState();
@@ -49,6 +54,11 @@ class _QuizViewState extends ConsumerState<QuizView> {
         (previous, next) {
       if (next == QuizAnswerCardStatus.after) {
         final state = ref.watch(quizViewModelProvider);
+        final isCorrectAnswer = state.chosenAnswerIndex ==
+            _quizzes[state.currentIndex].correctAnswerIndex;
+        if (isCorrectAnswer) {
+          _viewModel.playCongratsAudio();
+        }
         Future.delayed(
           const Duration(milliseconds: 500),
           () {
@@ -59,20 +69,17 @@ class _QuizViewState extends ConsumerState<QuizView> {
                 context: context,
                 builder: (_) {
                   return QuizResultBottomSheet(
-                    isCorrectAnswer: state.chosenAnswerIndex ==
-                        _quizzes[state.currentIndex].correctAnswerIndex,
+                    isCorrectAnswer: isCorrectAnswer,
                     onTap: () {
-                      ref.read(quizViewModelProvider.notifier).onNextQuestion();
+                      _viewModel.onNextQuestion();
                       Navigator.pop(context);
                       if (state.currentIndex < _quizzes.length - 1) {
-                        ref
-                            .read(quizViewModelProvider.notifier)
-                            .pageViewController
-                            .nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
+                        _viewModel.pageViewController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
                       } else {
+                        _viewModel.playCompleteAudio();
                         // title: number of correct answers / total number of questions
                         showCompleteBottomSheet(context,
                             title:
@@ -124,8 +131,9 @@ class _QuizViewState extends ConsumerState<QuizView> {
 
   Widget buildLoadingSuccessBody() {
     final state = ref.watch(quizViewModelProvider);
+    final isDarkTheme = ref.watch(themeProvider);
     return PageView.builder(
-      controller: ref.read(quizViewModelProvider.notifier).pageViewController,
+      controller: _viewModel.pageViewController,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: _quizzes.length,
       itemBuilder: (context, index) {
@@ -147,19 +155,18 @@ class _QuizViewState extends ConsumerState<QuizView> {
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(28),
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
+                      color: isDarkTheme
+                          ? Colors.white
+                          : Theme.of(context).primaryColor,
                     )),
                 const SizedBox(height: 16.0),
                 CustomIconButton(
                   icon: Icon(
                     Icons.volume_up_outlined,
-                    size: 32,
-                    color: Colors.grey[800],
+                    size: ScreenUtil().setWidth(24),
                   ),
                   onPressed: () {
-                    ref
-                        .read(quizViewModelProvider.notifier)
-                        .speak(_quizzes[index].question);
+                    _viewModel.speak(_quizzes[index].question);
                   },
                 ),
                 Flexible(child: Container()),
@@ -184,10 +191,8 @@ class _QuizViewState extends ConsumerState<QuizView> {
                         isCorrectAnswer: quiz.correctAnswerIndex == optionIndex,
                         quizAnswerCardStatus: state.quizAnswerCardStatus,
                         onTap: () {
-                          ref
-                              .read(quizViewModelProvider.notifier)
-                              .onSelectedAnswerOption(
-                                  quiz.correctAnswerIndex, optionIndex);
+                          _viewModel.onSelectedAnswerOption(
+                              quiz.correctAnswerIndex, optionIndex);
                         },
                       );
                     },

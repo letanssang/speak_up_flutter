@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
@@ -55,6 +57,7 @@ class PronunciationPracticeViewArguments {
   final LessonEnum lessonEnum;
   final int? progress;
   final int? grandParentID;
+  final Sentence? sentence;
   final bool canUpdateProgress;
 
   PronunciationPracticeViewArguments({
@@ -62,6 +65,7 @@ class PronunciationPracticeViewArguments {
     required this.lessonEnum,
     this.progress,
     this.grandParentID,
+    this.sentence,
     this.canUpdateProgress = true,
   });
 }
@@ -80,6 +84,7 @@ class _PronunciationPracticeViewState
   LessonEnum lessonEnum = LessonEnum.pattern;
   int? progress;
   int? grandParentID;
+  Sentence? sentence;
   bool canUpdateProgress = true;
   late PageController _pageController;
 
@@ -103,8 +108,10 @@ class _PronunciationPracticeViewState
     lessonEnum = args.lessonEnum;
     progress = args.progress;
     grandParentID = args.grandParentID;
+    sentence = args.sentence;
     canUpdateProgress = args.canUpdateProgress;
-    await _viewModel.fetchSentenceList(parentID, lessonEnum);
+    await _viewModel.fetchSentenceList(parentID, lessonEnum,
+        sentence: sentence);
     _viewModel.speakCurrentSentence();
   }
 
@@ -138,6 +145,7 @@ class _PronunciationPracticeViewState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(pronunciationPracticeViewModelProvider);
+    final isDarkTheme = ref.read(themeProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -193,7 +201,6 @@ class _PronunciationPracticeViewState
                       icon: Icon(
                         Icons.volume_up_outlined,
                         size: ScreenUtil().setSp(20),
-                        color: Colors.grey[800],
                       ),
                       onPressed: () {
                         _viewModel
@@ -204,8 +211,8 @@ class _PronunciationPracticeViewState
                     CustomIconButton(
                       height: ScreenUtil().setHeight(40),
                       icon: AppIcons.snail(
-                        size: ScreenUtil().setSp(20),
-                        color: Colors.grey[800],
+                        size: ScreenUtil().setSp(16),
+                        color: isDarkTheme ? Colors.white : Colors.black,
                       ),
                       onPressed: () {
                         _viewModel.speakSlowly(
@@ -260,7 +267,9 @@ class _PronunciationPracticeViewState
           state.sentences[index].text,
           textAlign: TextAlign.left,
           style: TextStyle(
-            fontSize: ScreenUtil().setSp(20),
+            fontSize: state.sentences[index].text.length < 50
+                ? ScreenUtil().setSp(20)
+                : ScreenUtil().setSp(16),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -269,7 +278,9 @@ class _PronunciationPracticeViewState
             ? PronunciationScoreText(
                 words: state.speechSentence?.words ?? [],
                 recordPath: state.recordPath ?? '',
-                fontSize: ScreenUtil().setSp(20),
+                fontSize: state.sentences[index].text.length < 50
+                    ? ScreenUtil().setSp(20)
+                    : ScreenUtil().setSp(16),
               )
             : Text(
                 state.sentences[index].translation,

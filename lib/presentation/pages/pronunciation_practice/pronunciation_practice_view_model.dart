@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/domain/entities/lecture_process/lecture_process.dart';
+import 'package:speak_up/domain/entities/sentence/sentence.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
@@ -58,9 +59,17 @@ class PronunciationPracticeViewModel
     this.ref,
   ) : super(const PronunciationPracticeState());
 
-  Future<void> fetchSentenceList(int parentID, LessonEnum lessonEnum) async {
+  Future<void> fetchSentenceList(int parentID, LessonEnum lessonEnum,
+      {Sentence? sentence}) async {
     state = state.copyWith(loadingStatus: LoadingStatus.loading);
     try {
+      if (lessonEnum == LessonEnum.topic) {
+        state = state.copyWith(
+          sentences: [sentence!],
+          loadingStatus: LoadingStatus.success,
+        );
+        return;
+      }
       final sentences =
           await _getSentenceListByParentIDUseCase.run(parentID, lessonEnum);
       state = state.copyWith(

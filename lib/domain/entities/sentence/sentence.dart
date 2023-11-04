@@ -14,12 +14,4 @@ class Sentence {
     required this.parentID,
     required this.parentType,
   });
-
-  Sentence.initial()
-      : sentenceID = 0,
-        text = '',
-        translation = '',
-        audioEndpoint = '',
-        parentID = 0,
-        parentType = 0;
 }

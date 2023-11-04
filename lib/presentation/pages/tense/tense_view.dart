@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/tense/tense.dart';
 import 'package:speak_up/domain/entities/tense_usage/tense_usage.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_tense_form_list_from_tense_use_case.dart';
@@ -13,7 +15,6 @@ import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final tenseViewModelProvider =
     StateNotifierProvider.autoDispose<TenseViewModel, TenseState>(
@@ -145,6 +146,7 @@ class _TenseViewState extends ConsumerState<TenseView> {
   }
 
   Widget _buildFormTable(TenseState state) {
+    final isDarkTheme = ref.watch(themeProvider);
     return Center(
       child: Table(
         // first column width min
@@ -153,7 +155,7 @@ class _TenseViewState extends ConsumerState<TenseView> {
         children: [
           TableRow(
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: isDarkTheme ? Colors.grey[700] : Colors.grey[300],
             ),
             children: [
               const SizedBox(),
@@ -174,18 +176,21 @@ class _TenseViewState extends ConsumerState<TenseView> {
             ],
           ),
           TableRow(children: [
-            _buildFistCell(AppLocalizations.of(context)!.positive, context),
+            _buildFistCell(
+                AppLocalizations.of(context)!.positive, context, isDarkTheme),
             ...state.tenseForms
                 .map((e) => _buildTableCell(e.positive, e.positiveExample)),
           ]),
           TableRow(children: [
-            _buildFistCell(AppLocalizations.of(context)!.negative, context),
+            _buildFistCell(
+                AppLocalizations.of(context)!.negative, context, isDarkTheme),
             ...state.tenseForms.map(
               (e) => _buildTableCell(e.negative, e.negativeExample),
             ),
           ]),
           TableRow(children: [
-            _buildFistCell(AppLocalizations.of(context)!.question, context),
+            _buildFistCell(
+                AppLocalizations.of(context)!.question, context, isDarkTheme),
             ...state.tenseForms.map(
               (e) => _buildTableCell(e.question, e.questionExample),
             ),
@@ -217,7 +222,7 @@ Widget _buildTableCell(String structure, String example) {
   );
 }
 
-Widget _buildFistCell(String text, BuildContext context) {
+Widget _buildFistCell(String text, BuildContext context, isDarkTheme) {
   return TableCell(
     child: Padding(
       padding: const EdgeInsets.all(8.0),
@@ -225,7 +230,7 @@ Widget _buildFistCell(String text, BuildContext context) {
         text,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).primaryColor,
+          color: isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
         ),
       ),
     ),

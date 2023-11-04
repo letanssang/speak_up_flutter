@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/phrasal_verb_type/phrasal_verb_type.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_phrasal_verb_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_phrasal_verb_list_by_type_use_case.dart';
@@ -121,6 +122,7 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
   }
 
   Widget buildCardItem(PhrasalVerbState state, int phrasalVerbIndex) {
+    final isDarkTheme = ref.watch(themeProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 32,
@@ -152,7 +154,9 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
                 ? const Color(0XFF6B3D90)
                 : state.progress == phrasalVerbIndex
                     ? Theme.of(context).primaryColor
-                    : Colors.grey,
+                    : isDarkTheme
+                        ? Colors.grey[700]
+                        : Colors.grey,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(

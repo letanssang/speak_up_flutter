@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/phonetic/phonetic.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_asset_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
+import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -53,6 +55,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = ref.watch(themeProvider);
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
@@ -87,18 +90,20 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      IconButton(
-                          onPressed: () {
-                            String audioPath =
-                                'audios/ipa/${phonetic.phoneticID}.mp3';
-                            injector
-                                .get<PlayAudioFromAssetUseCase>()
-                                .run(audioPath);
-                          },
-                          icon: Icon(
-                            Icons.volume_up,
-                            size: 32,
-                          )),
+                      CustomIconButton(
+                        height: 40,
+                        icon: const Icon(
+                          Icons.volume_up_outlined,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          String audioPath =
+                              'audios/ipa/${phonetic.phoneticID}.mp3';
+                          injector
+                              .get<PlayAudioFromAssetUseCase>()
+                              .run(audioPath);
+                        },
+                      ),
                     ],
                   ),
 
@@ -147,7 +152,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: ScreenUtil().setSp(18),
-                              color: Colors.black,
+                              color: isDarkTheme ? Colors.white : Colors.black,
                             ),
                           ),
                         ],

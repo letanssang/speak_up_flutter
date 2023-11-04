@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_flash_card_list_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
@@ -52,6 +53,7 @@ class _SavedFlashCardsViewState extends ConsumerState<SavedFlashCardsView> {
   }
 
   Widget buildLoadingSuccessfulBody(SavedFlashCardsState state) {
+    final isDarkTheme = ref.watch(themeProvider);
     return state.flashCardList.length > 1
         ? Column(
             children: [
@@ -72,10 +74,15 @@ class _SavedFlashCardsViewState extends ConsumerState<SavedFlashCardsView> {
                       ),
                     )),
                     title: Text(state.flashCardList[index].frontText,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: isDarkTheme ? Colors.white : Colors.black,
                         )),
-                    subtitle: Text(state.flashCardList[index].backText),
+                    subtitle: Text(state.flashCardList[index].backText,
+                        style: TextStyle(
+                          color:
+                              isDarkTheme ? Colors.grey[400] : Colors.grey[600],
+                        )),
                   ),
                 ),
               ),

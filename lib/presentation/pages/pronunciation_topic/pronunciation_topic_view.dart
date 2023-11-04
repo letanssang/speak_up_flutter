@@ -93,6 +93,7 @@ class _PronunciationTopicViewState
                   isDarkTheme,
                   sentences[state.currentIndex * 2],
                 ),
+                const SizedBox(height: 16),
                 Text('Speak this sentence to answer the question: ',
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(16),
@@ -118,7 +119,6 @@ class _PronunciationTopicViewState
                       icon: Icon(
                         Icons.volume_up_outlined,
                         size: ScreenUtil().setSp(20),
-                        color: Colors.grey[800],
                       ),
                       onPressed: _viewModel.speakCurrentAnswer,
                     ),
@@ -128,7 +128,6 @@ class _PronunciationTopicViewState
                       icon: Icon(
                         Icons.translate_outlined,
                         size: ScreenUtil().setSp(20),
-                        color: Colors.grey[800],
                       ),
                       onPressed: _viewModel.onTranslateButtonTap,
                     ),
@@ -192,7 +191,7 @@ class _PronunciationTopicViewState
             color: Theme.of(context).primaryColor,
             width: 1,
           ),
-          color: isDarkTheme ? Colors.grey[200] : Colors.white,
+          color: isDarkTheme ? Colors.grey[700] : Colors.white,
           boxShadow: [
             BoxShadow(
               color: isDarkTheme
@@ -212,7 +211,7 @@ class _PronunciationTopicViewState
         child: Text(
           sentence.text,
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
             fontSize: ScreenUtil().setSp(18),
             fontWeight: FontWeight.bold,
           ),

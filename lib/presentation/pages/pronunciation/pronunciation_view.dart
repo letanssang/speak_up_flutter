@@ -206,10 +206,9 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
             Flexible(
               child: CustomIconButton(
                 height: 40,
-                icon: Icon(
+                icon: const Icon(
                   Icons.volume_up_outlined,
                   size: 20,
-                  color: Colors.grey[800],
                 ),
                 onPressed: () {
                   _viewModel.speak(state.wordList[index].word);

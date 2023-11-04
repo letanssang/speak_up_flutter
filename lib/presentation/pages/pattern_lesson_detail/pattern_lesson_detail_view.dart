@@ -12,6 +12,7 @@ import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson
 import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
+import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 
 final patternLessonDetailViewModelProvider = StateNotifierProvider.autoDispose<
@@ -56,48 +57,33 @@ class _PatternLessonDetailViewState
         return ListView.builder(
           itemCount: state.sentencePatterns.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-              child: Card(
-                elevation: 3,
-                color: isDarkTheme ? Colors.grey[850] : Colors.white,
-                surfaceTintColor: Colors.white,
-                child: ListTile(
-                  onTap: () {
-                    ref.read(appNavigatorProvider).navigateTo(
-                          AppRoutes.pattern,
-                          arguments: state.sentencePatterns[index],
-                        );
-                  },
-                  leading: CircleAvatar(
-                      child: Text(
-                    formatIndexToString(index),
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(16),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-                  title: Text(
-                    state.sentencePatterns[index].name,
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(16),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  trailing:
-                      state.progressLoadingStatus == LoadingStatus.success &&
-                              state.isDoneList[index]
-                          ? Icon(
-                              Icons.check_outlined,
-                              size: ScreenUtil().setSp(32),
-                              color: isDarkTheme
-                                  ? Colors.white
-                                  : Theme.of(context).primaryColor,
-                            )
-                          : null,
+            return AppListTile(
+              index: index,
+              onTap: () {
+                ref.read(appNavigatorProvider).navigateTo(
+                      AppRoutes.pattern,
+                      arguments: state.sentencePatterns[index],
+                    );
+              },
+              leading: CircleAvatar(
+                  child: Text(
+                formatIndexToString(index),
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
+                  fontWeight: FontWeight.bold,
                 ),
-              ),
+              )),
+              title: state.sentencePatterns[index].name,
+              trailing: state.progressLoadingStatus == LoadingStatus.success &&
+                      state.isDoneList[index]
+                  ? Icon(
+                      Icons.check_outlined,
+                      size: ScreenUtil().setSp(32),
+                      color: isDarkTheme
+                          ? Colors.white
+                          : Theme.of(context).primaryColor,
+                    )
+                  : null,
             );
           },
         );

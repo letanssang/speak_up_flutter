@@ -7,11 +7,13 @@ class AppSearchBar extends StatefulWidget {
   final VoidCallback onInitial;
   final VoidCallback onLoading;
   final Future<void> Function(String value) onSearch;
+  final bool isDarkTheme;
   const AppSearchBar({
     super.key,
     required this.onInitial,
     required this.onLoading,
     required this.onSearch,
+    this.isDarkTheme = false,
   });
 
   @override
@@ -37,7 +39,7 @@ class _AppSearchBarState extends State<AppSearchBar> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.grey[200],
+        color: widget.isDarkTheme ? Colors.grey[700] : Colors.grey[200],
       ),
       child: Row(
         children: [

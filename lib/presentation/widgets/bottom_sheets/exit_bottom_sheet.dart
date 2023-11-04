@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void showExitBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -23,8 +24,9 @@ class ExitBottomSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Wrap(
       children: [
-        SizedBox(
+        Container(
           width: ScreenUtil().screenWidth,
+          color: ref.watch(themeProvider) ? Colors.grey[900] : Colors.white,
           child: Column(children: [
             const SizedBox(
               height: 32,
