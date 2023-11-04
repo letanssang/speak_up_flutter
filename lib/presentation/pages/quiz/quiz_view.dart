@@ -37,7 +37,9 @@ class QuizView extends ConsumerStatefulWidget {
 
 class _QuizViewState extends ConsumerState<QuizView> {
   List<Quiz> _quizzes = [];
+
   QuizViewModel get _viewModel => ref.read(quizViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -83,7 +85,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
                         // title: number of correct answers / total number of questions
                         showCompleteBottomSheet(context,
                             title:
-                                'You got ${state.correctAnswerNumber}/${_quizzes.length} correct answers');
+                                '${AppLocalizations.of(context)!.youGot} ${state.correctAnswerNumber}/${_quizzes.length} ${AppLocalizations.of(context)!.correctAnswers}');
                       }
                     },
                     title: _quizzes[state.currentIndex].question,

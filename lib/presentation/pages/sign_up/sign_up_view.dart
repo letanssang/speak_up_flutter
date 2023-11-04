@@ -58,8 +58,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Your account has been created successfully'),
+            title: Text(AppLocalizations.of(context)!.success),
+            content: Text(AppLocalizations.of(context)!
+                .yourAccountHasBeenCreatedSuccessfully),
             actions: [
               TextButton(
                 onPressed: () {

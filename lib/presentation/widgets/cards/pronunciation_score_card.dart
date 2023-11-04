@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speak_up/presentation/utilities/common/phoneme_color.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_circular_percent_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PronunciationScoreCard extends StatelessWidget {
   final double pronunciationScore;
@@ -39,7 +40,7 @@ class PronunciationScoreCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Pronunciation score',
+                    AppLocalizations.of(context)!.pronunciationScore,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -54,19 +55,19 @@ class PronunciationScoreCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AppLinearPercentIndicator(
-                  title: 'Accuracy',
+                  title: AppLocalizations.of(context)!.accuracy,
                   percent: accuracyScore / 100,
                   lineHeight: 10,
                   progressColor: getPhonemeColor(accuracyScore),
                 ),
                 AppLinearPercentIndicator(
-                  title: 'Fluency',
+                  title: AppLocalizations.of(context)!.fluency,
                   percent: fluencyScore / 100,
                   lineHeight: 10,
                   progressColor: getPhonemeColor(fluencyScore),
                 ),
                 AppLinearPercentIndicator(
-                  title: 'Completeness',
+                  title: AppLocalizations.of(context)!.completeness,
                   percent: completenessScore / 100,
                   lineHeight: 10,
                   progressColor: getPhonemeColor(completenessScore),

@@ -140,7 +140,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                       Flexible(
                         child: Text(
                           state.pronunciationAssessmentStatus
-                              .getAssistantText(),
+                              .getAssistantText(context),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
@@ -11,7 +12,7 @@ class AboutView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: const Text('About'),
+        title: Text(AppLocalizations.of(context)!.about),
       ),
       body: SingleChildScrollView(
         child: SizedBox(
@@ -38,7 +39,7 @@ class AboutView extends StatelessWidget {
                 height: 32,
               ),
               Text(
-                'Made by motchugacon',
+                '${AppLocalizations.of(context)!.developedBy} motchugacon',
                 style: TextStyle(
                   fontSize: ScreenUtil().setSp(18),
                   fontWeight: FontWeight.bold,
@@ -48,10 +49,13 @@ class AboutView extends StatelessWidget {
                 height: 32,
               ),
               Text(
-                'Contact me for any problem:',
+                AppLocalizations.of(context)!.contactMeForAnyProblems,
                 style: TextStyle(
                   fontSize: ScreenUtil().setSp(16),
                 ),
+              ),
+              const SizedBox(
+                height: 8,
               ),
               Text('letan.ssang@gmail.com',
                   style: TextStyle(

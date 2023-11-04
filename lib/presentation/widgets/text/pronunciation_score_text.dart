@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/domain/entities/speech_word/speech_word.dart';
 import 'package:speak_up/presentation/utilities/common/phoneme_color.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PronunciationScoreText extends StatefulWidget {
   final List<SpeechWord> words;
@@ -117,7 +118,7 @@ class _PronunciationScoreTextState extends State<PronunciationScoreText>
                 ],
               ),
               TableRow(children: [
-                buildFirstCell('Score'),
+                buildFirstCell(AppLocalizations.of(context)!.score),
                 ...word.phonemes.map((e) => TableCell(
                       child: Text(
                         e.accuracyScore.toInt().toString(),

@@ -14,6 +14,7 @@ import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/empty_view/app_empty_view.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final savedFlashCardsViewModelProvider = StateNotifierProvider.autoDispose<
         SavedFlashCarsViewModel, SavedFlashCardsState>(
@@ -93,7 +94,7 @@ class _SavedFlashCardsViewState extends ConsumerState<SavedFlashCardsView> {
                         arguments: state.flashCardList,
                       );
                 },
-                text: 'Practice now',
+                text: AppLocalizations.of(context)!.practiceNow,
               ),
               const SizedBox(
                 height: 16,

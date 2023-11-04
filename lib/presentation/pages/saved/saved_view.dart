@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/pages/saved_flashcards/saved_flashcards_view.dart';
@@ -16,6 +17,7 @@ class SavedView extends ConsumerStatefulWidget {
 class _SavedViewState extends ConsumerState<SavedView>
     with TickerProviderStateMixin {
   late TabController _tabController;
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
@@ -42,7 +44,7 @@ class _SavedViewState extends ConsumerState<SavedView>
           children: [
             AppTabBar(
               tabController: _tabController,
-              titleTab1: 'Saved',
+              titleTab1: AppLocalizations.of(context)!.saved,
               titleTab2: 'Flashcards',
             ),
             Flexible(

@@ -63,7 +63,7 @@ class LearningModeBottomSheet extends ConsumerWidget {
                   Icons.book,
                   color: Colors.white,
                 ),
-                AppLocalizations.of(context)!.lecture,
+                AppLocalizations.of(context)!.speakingPractice,
                 isDarkTheme,
                 onTap: onTapLecture),
             buildOptionItem(

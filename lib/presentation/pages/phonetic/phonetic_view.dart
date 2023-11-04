@@ -12,6 +12,7 @@ import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PhoneticView extends ConsumerStatefulWidget {
   const PhoneticView({super.key});
@@ -168,7 +169,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                             AppRoutes.pronunciation,
                             arguments: phonetic.phoneticID);
                       },
-                      text: 'Practice now',
+                      text: AppLocalizations.of(context)!.practiceNow,
                     ),
                   ),
                 ],

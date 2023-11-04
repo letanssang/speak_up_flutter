@@ -225,7 +225,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             width: 16,
           ),
           Text(
-            'Hi ${user.displayName}',
+            '${AppLocalizations.of(context)!.hi} ${user.displayName}',
             style: TextStyle(
               fontSize: ScreenUtil().setSp(20),
               fontWeight: FontWeight.bold,

@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
+
 import 'button_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 PronunciationAssessmentStatus getPronunciationAssessmentStatus(double score) {
   if (score >= 80) {
@@ -40,22 +43,22 @@ extension PronunciationAssessmentStatusExtension
     }
   }
 
-  String getAssistantText() {
+  String getAssistantText(BuildContext context) {
     switch (this) {
       case PronunciationAssessmentStatus.initial:
-        return 'Tap to record';
+        return AppLocalizations.of(context)!.tapToRecord;
       case PronunciationAssessmentStatus.recording:
-        return 'I am listening...';
+        return AppLocalizations.of(context)!.iAmListening;
       case PronunciationAssessmentStatus.inProgress:
-        return 'Wait a moment';
+        return AppLocalizations.of(context)!.waitAMoment;
       case PronunciationAssessmentStatus.wellDone:
-        return 'You speak like a native speaker!';
+        return AppLocalizations.of(context)!.youSpeakLikeANativeSpeaker;
       case PronunciationAssessmentStatus.tryAgain:
-        return 'Try again! You can do it!';
+        return AppLocalizations.of(context)!.tryAgainYouCanDoIt;
       case PronunciationAssessmentStatus.failed:
-        return 'Sorry, I can\'t hear you.';
+        return AppLocalizations.of(context)!.sorryIDidntCatchThat;
       default:
-        return 'Tap to record';
+        return AppLocalizations.of(context)!.tapToRecord;
     }
   }
 

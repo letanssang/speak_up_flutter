@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/presentation/resources/app_colors.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuizResultBottomSheet extends ConsumerWidget {
   final bool isCorrectAnswer;
@@ -99,7 +99,7 @@ class QuizResultBottomSheet extends ConsumerWidget {
                     ),
                   CustomButton(
                     marginVertical: 32,
-                    text: 'Next',
+                    text: AppLocalizations.of(context)!.next,
                     buttonColor: isCorrectAnswer
                         ? AppColors.quizResultCorrect
                         : AppColors.quizResultIncorrect,

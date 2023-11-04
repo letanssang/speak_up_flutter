@@ -22,6 +22,7 @@ import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indi
 import 'package:speak_up/presentation/widgets/text/pronunciation_score_text.dart';
 
 import 'pronunciation_topic_view_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final pronunciationTopicProvider = StateNotifierProvider.autoDispose<
         PronunciationTopicViewModel, PronunciationTopicState>(
@@ -52,7 +53,6 @@ class _PronunciationTopicViewState
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.delayed(
       Duration.zero,
@@ -94,7 +94,8 @@ class _PronunciationTopicViewState
                   sentences[state.currentIndex * 2],
                 ),
                 const SizedBox(height: 16),
-                Text('Speak this sentence to answer the question: ',
+                Text(
+                    '${AppLocalizations.of(context)!.speakThisSentenceToAnswerTheQuestion}: ',
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(16),
                     )),

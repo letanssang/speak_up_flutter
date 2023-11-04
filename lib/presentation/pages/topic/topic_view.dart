@@ -148,7 +148,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             buildCustomButton(
-              'Repeat',
+              AppLocalizations.of(context)!.repeat,
               onTap: _viewModel.onTapRepeatButton,
               isTurnOn: state.isRepeated,
             ),
@@ -166,7 +166,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
                     )),
               ),
             ),
-            buildCustomButton('Speak', onTap: () {
+            buildCustomButton(AppLocalizations.of(context)!.speak, onTap: () {
               _viewModel.onPaused();
               ref.read(appNavigatorProvider).navigateTo(
                     AppRoutes.pronunciationTopic,

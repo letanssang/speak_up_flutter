@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/domain/entities/pattern/sentence_pattern.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_sentence_list_by_parent_id_use_case.dart';
@@ -10,6 +12,7 @@ import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_state.dart';
 import 'package:speak_up/presentation/pages/pattern/pattern_view_model.dart';
 import 'package:speak_up/presentation/pages/pronunciation_practice/pronunciation_practice_view.dart';
+import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/lesson_enum.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
@@ -71,6 +74,7 @@ class _PatternViewState extends ConsumerState<PatternView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(patternViewModelProvider);
+    final language = ref.watch(appLanguageProvider);
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
@@ -98,9 +102,9 @@ class _PatternViewState extends ConsumerState<PatternView> {
               children: [
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) {
-                    return const Center(
-                        child: Text('Dialogue',
-                            style: TextStyle(
+                    return Center(
+                        child: Text(AppLocalizations.of(context)!.dialogue,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             )));
@@ -153,9 +157,13 @@ class _PatternViewState extends ConsumerState<PatternView> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Text(
-                state.isTranslated
-                    ? pattern.descriptionTranslation
-                    : pattern.description,
+                language == Language.english
+                    ? state.isTranslated
+                        ? pattern.descriptionTranslation
+                        : pattern.description
+                    : state.isTranslated
+                        ? pattern.description
+                        : pattern.descriptionTranslation,
                 textAlign: TextAlign.justify,
                 style: const TextStyle(
                   fontSize: 18,
@@ -177,7 +185,7 @@ class _PatternViewState extends ConsumerState<PatternView> {
                       shouldReplace: true,
                     );
               },
-              text: 'Practice now',
+              text: AppLocalizations.of(context)!.practiceNow,
             ),
           ),
           const SizedBox(height: 16),

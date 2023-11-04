@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
@@ -21,7 +22,7 @@ class AppEmptyView extends ConsumerWidget {
             height: 32,
           ),
           Text(
-            'Nothing here',
+            AppLocalizations.of(context)!.nothingHere,
             style: TextStyle(
               fontSize: ScreenUtil().setSp(28),
               fontWeight: FontWeight.bold,
@@ -30,8 +31,7 @@ class AppEmptyView extends ConsumerWidget {
           const SizedBox(
             height: 16,
           ),
-          Text(
-              'We found nothing in your saved list!\n Let\'s explore and save something.',
+          Text(AppLocalizations.of(context)!.letExploreAndSaveSomeThings,
               textAlign: TextAlign.center,
               maxLines: 2,
               style: TextStyle(
@@ -50,7 +50,7 @@ class AppEmptyView extends ConsumerWidget {
                 Theme.of(context).primaryColor,
               ),
             ),
-            child: const Text('Explore',
+            child: Text(AppLocalizations.of(context)!.explore,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,

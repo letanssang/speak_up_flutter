@@ -28,6 +28,8 @@ class MainMenuView extends ConsumerWidget {
     return Scaffold(
         body: _pageOptions[state.currentTabIndex],
         bottomNavigationBar: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
           currentIndex: state.currentTabIndex,
           onTap: (index) {
             ref.read(mainMenuViewModelProvider.notifier).changeTab(index);

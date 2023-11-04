@@ -19,6 +19,7 @@ import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final categoryViewModelProvider =
     StateNotifierProvider.autoDispose<CategoryViewModel, CategoryState>(
@@ -78,7 +79,7 @@ class _CategoryViewState extends ConsumerState<CategoryView> {
         _buildCategoryHeader(),
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text('Topic:',
+          child: Text('${AppLocalizations.of(context)!.topic}:',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(18),
                 fontWeight: FontWeight.bold,
