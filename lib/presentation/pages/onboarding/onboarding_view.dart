@@ -69,12 +69,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setWidth(8),
+                            vertical: ScreenUtil().setHeight(4)),
                         child: Text(language.toLanguageShortString(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.black,
-                              fontSize: 16,
+                              fontSize: ScreenUtil().setSp(16),
                               fontWeight: FontWeight.bold,
                             )),
                       ),

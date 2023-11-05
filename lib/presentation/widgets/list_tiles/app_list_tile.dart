@@ -31,13 +31,18 @@ class AppListTile extends ConsumerWidget {
         color: isDarkTheme ? Colors.grey[850] : Colors.white,
         surfaceTintColor: Colors.white,
         child: ListTile(
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(8),
+            vertical: ScreenUtil().setHeight(4),
+          ),
           onTap: onTap,
           leading: leading ??
               CircleAvatar(
+                radius: ScreenUtil().setWidth(20),
                 child: Text(
                   formatIndexToString(index),
                   style: TextStyle(
-                    fontSize: ScreenUtil().setSp(16),
+                    fontSize: ScreenUtil().setSp(14),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -62,8 +67,10 @@ class AppListTile extends ConsumerWidget {
           trailing: trailing ??
               Icon(
                 Icons.play_circle_outline_outlined,
-                size: ScreenUtil().setWidth(32),
-                color: Colors.grey[400],
+                size: ScreenUtil().setWidth(24),
+                color: isDarkTheme
+                    ? Colors.grey[400]
+                    : Theme.of(context).primaryColor,
               ),
         ),
       ),

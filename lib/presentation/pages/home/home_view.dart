@@ -108,16 +108,20 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 AppLocalizations.of(context)!.viewAll,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
+                  fontSize: ScreenUtil().setSp(14),
                 ),
               ),
             ),
           ],
         ),
+        SizedBox(
+          height: ScreenUtil().setHeight(4),
+        ),
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxHeight: ScreenUtil().screenHeight < 800
-                ? ScreenUtil().screenHeight * 0.38
-                : ScreenUtil().screenHeight * 0.33,
+            maxHeight: ScreenUtil().screenHeight < 700
+                ? ScreenUtil().screenHeight * 0.4
+                : ScreenUtil().screenHeight * 0.36,
           ),
           child: state.lessonsLoadingStatus == LoadingStatus.success
               ? ListView.builder(
@@ -213,7 +217,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   );
             },
             child: CircleAvatar(
-              radius: 20,
+              radius: ScreenUtil().setHeight(20),
               child: ClipOval(
                 child: user.photoURL != null
                     ? Image.network(user.photoURL!)
@@ -235,7 +239,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
           IconButton(
             onPressed: null,
             icon: Icon(Icons.notifications_outlined,
-                color: Theme.of(context).iconTheme.color),
+                color: Theme.of(context).iconTheme.color,
+                size: ScreenUtil().setHeight(24)),
           )
         ],
       ),
@@ -274,10 +279,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   AppLocalizations.of(context)!.viewAll,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
+                    fontSize: ScreenUtil().setSp(14),
                   ),
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: ScreenUtil().setHeight(4),
           ),
           state.categoriesLoadingStatus == LoadingStatus.success
               ? SingleChildScrollView(
@@ -329,8 +338,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
             .navigateTo(AppRoutes.category, arguments: category);
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        padding: const EdgeInsets.all(8.0),
+        margin: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(8),
+            vertical: ScreenUtil().setHeight(4)),
+        padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
           border: Border.all(
@@ -347,8 +358,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
               language == Language.english
                   ? category.name
                   : category.translation,
-              style:
-                  TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+              style: TextStyle(
+                  color: isDarkTheme ? Colors.white : Colors.black,
+                  fontSize: ScreenUtil().setSp(14)),
             ),
           ],
         ),
@@ -374,6 +386,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
             Flexible(child: Container())
           ],
+        ),
+        SizedBox(
+          height: ScreenUtil().setHeight(4),
         ),
         state.youtubeVideoListsLoadingStatus == LoadingStatus.success
             ? SizedBox(

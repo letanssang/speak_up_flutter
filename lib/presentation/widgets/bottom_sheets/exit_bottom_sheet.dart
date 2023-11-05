@@ -32,8 +32,8 @@ class ExitBottomSheet extends ConsumerWidget {
               height: 32,
             ),
             Text(AppLocalizations.of(context)!.areYouSure,
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(20),
                   fontWeight: FontWeight.bold,
                 )),
             const SizedBox(
@@ -42,8 +42,6 @@ class ExitBottomSheet extends ConsumerWidget {
             CustomButton(
                 text: AppLocalizations.of(context)!.exit,
                 fontWeight: FontWeight.bold,
-                textSize: 16,
-                marginVertical: 16,
                 onTap: () {
                   Navigator.of(context).pop();
                   ref.read(appNavigatorProvider).pop();
@@ -54,8 +52,9 @@ class ExitBottomSheet extends ConsumerWidget {
                 },
                 child: Text(
                   AppLocalizations.of(context)!.cancel,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: ScreenUtil().setSp(16),
+                      fontWeight: FontWeight.bold),
                 )),
             const SizedBox(
               height: 32,

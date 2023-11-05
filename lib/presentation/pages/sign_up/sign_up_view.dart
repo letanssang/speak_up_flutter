@@ -123,8 +123,8 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                     child: Text(
                       textAlign: TextAlign.left,
                       AppLocalizations.of(context)!.createYourAccount,
-                      style: const TextStyle(
-                        fontSize: 24,
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(24),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -165,9 +165,8 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 errorMaxLines: 2,
                 context: context,
               ),
-              Center(
-                  child: CustomButton(
-                marginVertical: 30,
+              CustomButton(
+                marginVertical: ScreenUtil().setHeight(16),
                 onTap: () {
                   if (!_formKey.currentState!.validate()) return;
                   ref
@@ -179,12 +178,12 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 },
                 text: AppLocalizations.of(context)!.continueButton,
                 buttonState: state.loadingStatus.buttonState,
-              )),
+              ),
               Center(
                 child: Text(
                   AppLocalizations.of(context)!.alreadyHaveAnAccount,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(14),
                   ),
                 ),
               ),

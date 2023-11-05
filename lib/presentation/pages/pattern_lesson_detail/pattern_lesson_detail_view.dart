@@ -9,7 +9,6 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson_detail_state.dart';
 import 'package:speak_up/presentation/pages/pattern_lesson_detail/pattern_lesson_detail_view_model.dart';
-import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
@@ -35,6 +34,7 @@ class _PatternLessonDetailViewState
     extends ConsumerState<PatternLessonDetailView> {
   PatternLessonDetailViewModel get _viewModel =>
       ref.read(patternLessonDetailViewModelProvider.notifier);
+
   @override
   initState() {
     super.initState();
@@ -65,20 +65,12 @@ class _PatternLessonDetailViewState
                       arguments: state.sentencePatterns[index],
                     );
               },
-              leading: CircleAvatar(
-                  child: Text(
-                formatIndexToString(index),
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(16),
-                  fontWeight: FontWeight.bold,
-                ),
-              )),
               title: state.sentencePatterns[index].name,
               trailing: state.progressLoadingStatus == LoadingStatus.success &&
                       state.isDoneList[index]
                   ? Icon(
                       Icons.check_outlined,
-                      size: ScreenUtil().setSp(32),
+                      size: ScreenUtil().setSp(24),
                       color: isDarkTheme
                           ? Colors.white
                           : Theme.of(context).primaryColor,

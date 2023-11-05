@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 
 class AppTabBar extends ConsumerWidget {
@@ -18,7 +19,7 @@ class AppTabBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkTheme = ref.watch(themeProvider);
     return Container(
-      height: 50,
+      height: ScreenUtil().setHeight(50),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -38,10 +39,18 @@ class AppTabBar extends ConsumerWidget {
           Tab(
             icon: Text(
               titleTab1,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(12),
+              ),
             ),
           ),
           Tab(
-            icon: Text(titleTab2),
+            icon: Text(
+              titleTab2,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(12),
+              ),
+            ),
           ),
         ],
       ),

@@ -4,7 +4,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class AppLinearPercentIndicator extends StatelessWidget {
   final String? title;
-  final double lineHeight;
+  final double? lineHeight;
   final double percent;
   final Color backgroundColor;
   final Color? progressColor;
@@ -14,7 +14,7 @@ class AppLinearPercentIndicator extends StatelessWidget {
   const AppLinearPercentIndicator(
       {super.key,
       this.title,
-      this.lineHeight = 14.0,
+      this.lineHeight,
       this.percent = 0.5,
       this.backgroundColor = Colors.grey,
       this.progressColor,
@@ -28,16 +28,16 @@ class AppLinearPercentIndicator extends StatelessWidget {
         if (title != null)
           Text(
             title!,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 12,
+              fontSize: ScreenUtil().setSp(12),
             ),
           ),
         Padding(
           padding: padding,
           child: LinearPercentIndicator(
             animateFromLastPercent: true,
-            lineHeight: lineHeight,
+            lineHeight: lineHeight ?? ScreenUtil().setHeight(16),
             percent: percent,
             backgroundColor: Colors.grey,
             progressColor: progressColor ?? Theme.of(context).primaryColor,

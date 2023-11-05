@@ -78,7 +78,10 @@ class _PatternViewState extends ConsumerState<PatternView> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: Text(pattern.name),
+        title: Text(pattern.name,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(16),
+            )),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -103,11 +106,14 @@ class _PatternViewState extends ConsumerState<PatternView> {
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) {
                     return Center(
-                        child: Text(AppLocalizations.of(context)!.dialogue,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            )));
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(AppLocalizations.of(context)!.dialogue,
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ));
                   },
                   isExpanded: state.isOpenedDialog,
                   body: Container(
@@ -117,8 +123,8 @@ class _PatternViewState extends ConsumerState<PatternView> {
                       pattern.dialogue,
                       maxLines: 10,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(14),
                       ),
                     ),
                   ),
@@ -132,22 +138,22 @@ class _PatternViewState extends ConsumerState<PatternView> {
               children: [
                 Flexible(child: Container()),
                 CustomIconButton(
-                  height: 40,
-                  width: 40,
-                  icon: const Icon(
+                  height: ScreenUtil().setHeight(40),
+                  width: ScreenUtil().setWidth(40),
+                  icon: Icon(
                     Icons.volume_up_outlined,
-                    size: 20,
+                    size: ScreenUtil().setHeight(18),
                   ),
                   onPressed: () {
                     _viewModel.speak(pattern.name);
                   },
                 ),
                 CustomIconButton(
-                    height: 40,
-                    width: 40,
-                    icon: const Icon(
+                    height: ScreenUtil().setHeight(40),
+                    width: ScreenUtil().setWidth(40),
+                    icon: Icon(
                       Icons.translate_outlined,
-                      size: 20,
+                      size: ScreenUtil().setHeight(18),
                     ),
                     onPressed: _viewModel.toggleTranslate),
                 Flexible(child: Container()),
@@ -165,8 +171,8 @@ class _PatternViewState extends ConsumerState<PatternView> {
                         ? pattern.description
                         : pattern.descriptionTranslation,
                 textAlign: TextAlign.justify,
-                style: const TextStyle(
-                  fontSize: 18,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(14),
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -11,7 +11,6 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/expression_type/expression_type_state.dart';
 import 'package:speak_up/presentation/pages/expression_type/expression_type_view_model.dart';
-import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
@@ -61,7 +60,10 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
     return Scaffold(
         appBar: AppBar(
           leading: const AppBackButton(),
-          title: Text(expressionType.name),
+          title: Text(expressionType.name,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16),
+              )),
         ),
         body: Column(
           children: [
@@ -80,20 +82,22 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
               children: [
                 Flexible(child: Container()),
                 CustomIconButton(
-                  height: 40,
-                  width: 40,
-                  icon: const Icon(
+                  height: ScreenUtil().setHeight(40),
+                  width: ScreenUtil().setWidth(40),
+                  icon: Icon(
                     Icons.volume_up_outlined,
+                    size: ScreenUtil().setWidth(18),
                   ),
                   onPressed: () {
                     _viewModel.speak(expressionType.description);
                   },
                 ),
                 CustomIconButton(
-                    height: 40,
-                    width: 40,
-                    icon: const Icon(
+                    height: ScreenUtil().setHeight(40),
+                    width: ScreenUtil().setWidth(40),
+                    icon: Icon(
                       Icons.translate_outlined,
+                      size: ScreenUtil().setWidth(18),
                     ),
                     onPressed: _viewModel.toggleTranslate),
                 Flexible(child: Container()),
@@ -112,14 +116,6 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
                           arguments: state.expressions[index],
                         );
                   },
-                  leading: CircleAvatar(
-                      child: Text(
-                    formatIndexToString(index),
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(16),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
                   title: state.expressions[index].name,
                   subtitle: state.expressions[index].translation,
                   trailing:
@@ -127,7 +123,7 @@ class _ExpressionTypeViewState extends ConsumerState<ExpressionTypeView> {
                               state.isDoneList[index]
                           ? Icon(
                               Icons.check_outlined,
-                              size: ScreenUtil().setWidth(32),
+                              size: ScreenUtil().setWidth(24),
                               color: isDarkTheme
                                   ? Colors.white
                                   : Theme.of(context).primaryColor,

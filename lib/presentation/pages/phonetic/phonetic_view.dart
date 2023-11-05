@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
@@ -12,7 +13,6 @@ import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PhoneticView extends ConsumerStatefulWidget {
   const PhoneticView({super.key});
@@ -60,7 +60,10 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: Text(phonetic.phonetic),
+        title: Text(phonetic.phonetic,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(16),
+            )),
       ),
       body: phonetic.youtubeVideoId.isEmpty
           ? const Center(
@@ -86,16 +89,16 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                     children: [
                       Text(
                         phonetic.phonetic,
-                        style: const TextStyle(
-                          fontSize: 32,
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(24),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       CustomIconButton(
-                        height: 40,
-                        icon: const Icon(
+                        height: ScreenUtil().setHeight(40),
+                        icon: Icon(
                           Icons.volume_up_outlined,
-                          size: 20,
+                          size: ScreenUtil().setHeight(18),
                         ),
                         onPressed: () {
                           String audioPath =
@@ -117,15 +120,15 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                         children: [
                           Text(
                             '${entry.key}: ',
-                            style: const TextStyle(
-                              fontSize: 16,
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(16),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             entry.value,
-                            style: const TextStyle(
-                              fontSize: 16,
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(16),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -138,7 +141,7 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 32, horizontal: 16),
+                        vertical: 16, horizontal: 16),
                     child: RichText(
                       text: TextSpan(
                         text: 'Mẹo: ',
@@ -146,13 +149,14 @@ class _PhoneticViewState extends ConsumerState<PhoneticView> {
                           fontWeight: FontWeight.bold,
                           fontSize: ScreenUtil().setSp(18),
                           color: Theme.of(context).primaryColor,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         children: [
                           TextSpan(
                             text: phonetic.description,
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontSize: ScreenUtil().setSp(18),
+                              fontSize: ScreenUtil().setSp(14),
                               color: isDarkTheme ? Colors.white : Colors.black,
                             ),
                           ),

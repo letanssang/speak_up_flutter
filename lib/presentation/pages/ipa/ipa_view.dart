@@ -68,16 +68,29 @@ class _IpaViewState extends ConsumerState<IpaView>
         leading: AppBackButton(onPressed: () {
           ref.read(mainMenuViewModelProvider.notifier).changeTab(0);
         }),
-        title: const Text('IPA'),
+        title: Text(
+          'IPA',
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(16),
+          ),
+        ),
         bottom: TabBar(
           controller: _tabController,
           tabs: [
             Tab(
-              text: AppLocalizations.of(context)!.vowels,
-            ),
+                child: Text(
+              AppLocalizations.of(context)!.vowels,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(12),
+              ),
+            )),
             Tab(
-              text: AppLocalizations.of(context)!.consonants,
-            ),
+                child: Text(
+              AppLocalizations.of(context)!.consonants,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(12),
+              ),
+            )),
           ],
         ),
       ),
@@ -145,7 +158,7 @@ class _IpaViewState extends ConsumerState<IpaView>
             borderRadius: BorderRadius.circular(16.0),
             border: Border.all(
               color: Theme.of(context).primaryColor,
-              width: 1,
+              width: ScreenUtil().setWidth(1),
             ),
             color: isDarkTheme ? Colors.grey[900] : Colors.white,
           ),
@@ -154,8 +167,8 @@ class _IpaViewState extends ConsumerState<IpaView>
               Center(
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 8,
+                    SizedBox(
+                      height: ScreenUtil().setHeight(8),
                     ),
                     Text(
                       phonetic.phonetic,
@@ -165,11 +178,15 @@ class _IpaViewState extends ConsumerState<IpaView>
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    const SizedBox(
-                      height: 4,
+                    SizedBox(
+                      height: ScreenUtil().setHeight(4),
                     ),
                     Text(
                       phonetic.example.entries.first.key,
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(16),
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ),
                     ),
                   ],
                 ),

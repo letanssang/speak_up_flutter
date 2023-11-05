@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
@@ -22,7 +23,6 @@ import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indi
 import 'package:speak_up/presentation/widgets/text/pronunciation_score_text.dart';
 
 import 'pronunciation_topic_view_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final pronunciationTopicProvider = StateNotifierProvider.autoDispose<
         PronunciationTopicViewModel, PronunciationTopicState>(
@@ -119,7 +119,7 @@ class _PronunciationTopicViewState
                       height: ScreenUtil().setHeight(40),
                       icon: Icon(
                         Icons.volume_up_outlined,
-                        size: ScreenUtil().setSp(20),
+                        size: ScreenUtil().setHeight(18),
                       ),
                       onPressed: _viewModel.speakCurrentAnswer,
                     ),
@@ -128,7 +128,7 @@ class _PronunciationTopicViewState
                       height: ScreenUtil().setHeight(40),
                       icon: Icon(
                         Icons.translate_outlined,
-                        size: ScreenUtil().setSp(20),
+                        size: ScreenUtil().setHeight(18),
                       ),
                       onPressed: _viewModel.onTranslateButtonTap,
                     ),
@@ -148,7 +148,7 @@ class _PronunciationTopicViewState
                   completenessScore:
                       state.speechSentence?.completenessScore ?? 0,
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: ScreenUtil().setHeight(16)),
                 PronunciationButtons(
                     recordPath: state.recordPath,
                     onPlayRecord: _viewModel.playRecord,
@@ -156,7 +156,7 @@ class _PronunciationTopicViewState
                     onNextButtonTap: onNextButtonTap,
                     pronunciationAssessmentStatus:
                         state.pronunciationAssessmentStatus),
-                const SizedBox(height: 32),
+                SizedBox(height: ScreenUtil().setHeight(16)),
               ],
             ),
     );
@@ -178,10 +178,10 @@ class _PronunciationTopicViewState
 
   Widget _buildMessage(bool isDarkTheme, Sentence sentence) {
     return Padding(
-      padding: const EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: 16,
         bottom: 16,
-        left: 48,
+        left: ScreenUtil().setWidth(48),
         right: 0,
       ),
       child: Container(

@@ -12,7 +12,10 @@ class AboutView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: Text(AppLocalizations.of(context)!.about),
+        title: Text(AppLocalizations.of(context)!.about,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(16),
+            )),
       ),
       body: SingleChildScrollView(
         child: SizedBox(

@@ -170,12 +170,13 @@ class _PronunciationPracticeViewState
                   height: 16,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
                     children: [
                       AppImages.questioner(
-                        width: 48,
-                        height: 48,
+                        width: ScreenUtil().setWidth(48),
+                        height: ScreenUtil().setHeight(48),
                       ),
                       const SizedBox(
                         width: 16,
@@ -184,8 +185,8 @@ class _PronunciationPracticeViewState
                         child: Text(
                           state.pronunciationAssessmentStatus
                               .getAssistantText(context),
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(14),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -200,7 +201,7 @@ class _PronunciationPracticeViewState
                       height: ScreenUtil().setHeight(40),
                       icon: Icon(
                         Icons.volume_up_outlined,
-                        size: ScreenUtil().setSp(20),
+                        size: ScreenUtil().setHeight(18),
                       ),
                       onPressed: () {
                         _viewModel
@@ -211,7 +212,7 @@ class _PronunciationPracticeViewState
                     CustomIconButton(
                       height: ScreenUtil().setHeight(40),
                       icon: AppIcons.snail(
-                        size: ScreenUtil().setSp(16),
+                        size: ScreenUtil().setHeight(16),
                         color: isDarkTheme ? Colors.white : Colors.black,
                       ),
                       onPressed: () {
@@ -242,7 +243,7 @@ class _PronunciationPracticeViewState
                   completenessScore:
                       state.speechSentence?.completenessScore ?? 0,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 PronunciationButtons(
                     recordPath: state.recordPath,
                     onPlayRecord: _viewModel.playRecord,
@@ -250,7 +251,7 @@ class _PronunciationPracticeViewState
                     onNextButtonTap: onNextButtonTap,
                     pronunciationAssessmentStatus:
                         state.pronunciationAssessmentStatus),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
               ],
             )
           : state.loadingStatus == LoadingStatus.loading
@@ -262,7 +263,7 @@ class _PronunciationPracticeViewState
   Widget _buildExampleItem(PronunciationPracticeState state, int index) {
     return Column(
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Text(
           state.sentences[index].text,
           textAlign: TextAlign.left,

@@ -67,16 +67,28 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            title: Text(AppLocalizations.of(context)!.success),
-            content: Text(AppLocalizations.of(context)!
-                .yourProfileInformationHasBeenUpdated),
+            title: Text(
+              AppLocalizations.of(context)!.success,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16),
+              ),
+            ),
+            content: Text(
+                AppLocalizations.of(context)!
+                    .yourProfileInformationHasBeenUpdated,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(14),
+                )),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop('dialog');
                   ref.read(appNavigatorProvider).pop();
                 },
-                child: const Text('OK'),
+                child: Text('OK',
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(14),
+                    )),
               ),
             ],
           ),
@@ -91,7 +103,12 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
       if (next.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(getAppErrorMessage(next, context)),
+            content: Text(
+              getAppErrorMessage(next, context),
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(14),
+              ),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -108,7 +125,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     return Scaffold(
         appBar: AppBar(
           leading: const AppBackButton(),
-          title: Text(AppLocalizations.of(context)!.personalInformation),
+          title: Text(AppLocalizations.of(context)!.personalInformation,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16),
+              )),
         ),
         body: Form(
           key: _formKey,
@@ -121,7 +141,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: CircleAvatar(
-                      radius: 32,
+                      radius: ScreenUtil().setSp(24),
                       child: ClipOval(
                         child: user!.photoURL != null
                             ? Image.network(user?.photoURL! ?? '')

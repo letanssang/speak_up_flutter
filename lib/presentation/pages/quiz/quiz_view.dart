@@ -109,21 +109,15 @@ class _QuizViewState extends ConsumerState<QuizView> {
           onPressed: () {
             showExitBottomSheet(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.close_outlined,
-            size: 32,
+            size: ScreenUtil().setHeight(24),
           ),
         ),
         title: AppLinearPercentIndicator(
           percent:
               _quizzes.isNotEmpty ? state.currentIndex / _quizzes.length : 0,
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.volume_up_outlined),
-          ),
-        ],
       ),
       body: _quizzes.isNotEmpty
           ? buildLoadingSuccessBody()
@@ -163,9 +157,11 @@ class _QuizViewState extends ConsumerState<QuizView> {
                     )),
                 const SizedBox(height: 16.0),
                 CustomIconButton(
+                  height: ScreenUtil().setHeight(40),
+                  width: ScreenUtil().setWidth(40),
                   icon: Icon(
                     Icons.volume_up_outlined,
-                    size: ScreenUtil().setWidth(24),
+                    size: ScreenUtil().setWidth(18),
                   ),
                   onPressed: () {
                     _viewModel.speak(_quizzes[index].question);
@@ -177,12 +173,12 @@ class _QuizViewState extends ConsumerState<QuizView> {
                       maxHeight: ScreenUtil().screenHeight * 0.5),
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 5.0,
-                      mainAxisSpacing: 5.0,
-                      childAspectRatio: 0.9,
+                      crossAxisSpacing: ScreenUtil().setWidth(8),
+                      mainAxisSpacing: ScreenUtil().setHeight(8),
+                      childAspectRatio: ScreenUtil().screenWidth /
+                          (ScreenUtil().screenHeight * 0.5),
                     ),
                     itemCount: 4,
                     itemBuilder: (context, optionIndex) {

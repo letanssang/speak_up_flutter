@@ -63,8 +63,9 @@ class ProfileViewState extends ConsumerState<ProfileView> {
               ),
               child: Text(
                 AppLocalizations.of(context)!.yes,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.red,
+                  fontSize: ScreenUtil().setSp(14.0),
                 ),
               ),
               onPressed: () async {
@@ -77,11 +78,17 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                 });
               },
             ),
+            const SizedBox(width: 8),
             TextButton(
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: Text(AppLocalizations.of(context)!.no),
+              child: Text(
+                AppLocalizations.of(context)!.no,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(14.0),
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -98,7 +105,12 @@ class ProfileViewState extends ConsumerState<ProfileView> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: Text(AppLocalizations.of(context)!.selectLanguage),
+            title: Text(
+              AppLocalizations.of(context)!.selectLanguage,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16.0),
+              ),
+            ),
             children: <Widget>[
               SimpleDialogOption(
                 onPressed: () {
@@ -110,6 +122,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                       Language.english.toLanguageString(),
                       style: TextStyle(
                         color: isDarkTheme ? Colors.white : Colors.black,
+                        fontSize: ScreenUtil().setSp(14.0),
                       ),
                     )),
               ),
@@ -123,6 +136,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                       Language.vietnamese.toLanguageString(),
                       style: TextStyle(
                         color: isDarkTheme ? Colors.white : Colors.black,
+                        fontSize: ScreenUtil().setSp(14.0),
                       ),
                     )),
               ),
@@ -155,13 +169,17 @@ class ProfileViewState extends ConsumerState<ProfileView> {
               ref.read(mainMenuViewModelProvider.notifier).changeTab(0);
             },
           ),
-          title: Text(AppLocalizations.of(context)!.accountSettings),
+          title: Text(AppLocalizations.of(context)!.accountSettings,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16),
+              )),
           actions: [
             IconButton(
               onPressed: () async {
                 await _buildLogoutDialogBuilder(context);
               },
-              icon: const Icon(Icons.logout, color: Colors.red, size: 24.0),
+              icon: Icon(Icons.logout,
+                  color: Colors.red, size: ScreenUtil().setHeight(24)),
             ),
           ],
         ),
@@ -177,7 +195,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                       Padding(
                         padding: const EdgeInsets.all(32.0),
                         child: CircleAvatar(
-                          radius: 32,
+                          radius: ScreenUtil().setHeight(24),
                           child: ClipOval(
                             child: user?.photoURL != null
                                 ? Image.network(user!.photoURL!)
@@ -279,10 +297,13 @@ class ProfileViewState extends ConsumerState<ProfileView> {
       decoration: const BoxDecoration(),
       child: ListTile(
         leading: icon,
+        contentPadding: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(8),
+            vertical: ScreenUtil().setHeight(4)),
         title: Text(
           title,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: ScreenUtil().setSp(16),
             color: darkTheme ? Colors.white : Colors.black,
           ),
         ),

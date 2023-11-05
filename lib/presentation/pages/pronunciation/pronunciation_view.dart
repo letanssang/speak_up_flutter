@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_audio_from_file_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_complete_audio_use_case.dart';
 import 'package:speak_up/domain/use_cases/audio_player/play_congrats_audio_use_case.dart';
@@ -109,9 +110,9 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
           onPressed: () {
             showExitBottomSheet(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.close_outlined,
-            size: 32,
+            size: ScreenUtil().setHeight(24),
           ),
         ),
         title: AppLinearPercentIndicator(
@@ -131,8 +132,8 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                   child: Row(
                     children: [
                       AppImages.questioner(
-                        width: 48,
-                        height: 48,
+                        width: ScreenUtil().setWidth(48),
+                        height: ScreenUtil().setHeight(48),
                       ),
                       const SizedBox(
                         width: 16,
@@ -141,8 +142,8 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                         child: Text(
                           state.pronunciationAssessmentStatus
                               .getAssistantText(context),
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(14),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -167,7 +168,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                   completenessScore:
                       state.speechSentence?.completenessScore ?? 0,
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: ScreenUtil().setHeight(16)),
                 PronunciationButtons(
                     recordPath: state.recordPath,
                     onPlayRecord: _viewModel.playRecord,
@@ -175,7 +176,7 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
                     onNextButtonTap: onNextButtonTap,
                     pronunciationAssessmentStatus:
                         state.pronunciationAssessmentStatus),
-                const SizedBox(height: 32),
+                SizedBox(height: ScreenUtil().setHeight(16)),
               ],
             )
           : state.loadingStatus == LoadingStatus.loading
@@ -187,8 +188,8 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
   Widget _buildExampleItem(PronunciationState state, int index) {
     return Column(
       children: [
-        const SizedBox(
-          height: 32,
+        SizedBox(
+          height: ScreenUtil().setHeight(16),
         ),
         Row(
           children: [
@@ -197,18 +198,18 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 state.wordList[index].word,
-                style: const TextStyle(
-                  fontSize: 32,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(32),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             Flexible(
               child: CustomIconButton(
-                height: 40,
-                icon: const Icon(
+                height: ScreenUtil().setHeight(40),
+                icon: Icon(
                   Icons.volume_up_outlined,
-                  size: 20,
+                  size: ScreenUtil().setHeight(18),
                 ),
                 onPressed: () {
                   _viewModel.speak(state.wordList[index].word);
@@ -217,27 +218,21 @@ class _PronunciationViewState extends ConsumerState<PronunciationView> {
             ),
           ],
         ),
-        const SizedBox(
-          height: 16,
+        SizedBox(
+          height: ScreenUtil().setHeight(16),
         ),
-        Text(
-          state.wordList[index].translation,
-          style: const TextStyle(
-            fontSize: 16,
-          ),
-        ),
-        const SizedBox(
-          height: 32,
-        ),
-        if (state.speechSentence?.words != null)
-          PronunciationScoreText(
-            words: state.speechSentence?.words ?? [],
-            recordPath: state.recordPath ?? '',
-            fontSize: 32,
-          ),
-        const SizedBox(
-          height: 32,
-        ),
+        state.speechSentence?.words == null
+            ? Text(
+                state.wordList[index].translation,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
+                ),
+              )
+            : PronunciationScoreText(
+                words: state.speechSentence?.words ?? [],
+                recordPath: state.recordPath ?? '',
+                fontSize: ScreenUtil().setSp(32),
+              ),
         Flexible(child: Container()),
       ],
     );

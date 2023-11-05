@@ -40,8 +40,8 @@ class CompleteBottomSheet extends ConsumerWidget {
               height: 32,
             ),
             Text(AppLocalizations.of(context)!.congratulations,
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(20),
                   fontWeight: FontWeight.bold,
                   color: AppColors.quizResultCorrect,
                 )),
@@ -49,15 +49,16 @@ class CompleteBottomSheet extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(title!,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(14),
                       fontWeight: FontWeight.bold,
                     )),
               ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: AppImages.congrats(
-                height: 128,
+                height: ScreenUtil().setHeight(128),
                 boxFit: BoxFit.fitHeight,
               ),
             ),
@@ -67,14 +68,12 @@ class CompleteBottomSheet extends ConsumerWidget {
             CustomButton(
                 text: AppLocalizations.of(context)!.exit,
                 fontWeight: FontWeight.bold,
-                textSize: 16,
-                marginVertical: 16,
                 onTap: () {
                   Navigator.of(context).pop();
                   ref.read(appNavigatorProvider).pop();
                 }),
             const SizedBox(
-              height: 32,
+              height: 16,
             ),
           ]),
         ),

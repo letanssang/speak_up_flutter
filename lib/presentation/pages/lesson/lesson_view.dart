@@ -57,19 +57,17 @@ class _LessonViewState extends ConsumerState<LessonView>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      margin: const EdgeInsets.all(8),
+                      margin: EdgeInsets.all(ScreenUtil().setHeight(8)),
+                      padding: EdgeInsets.all(ScreenUtil().setHeight(3)),
                       decoration: const BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
-                      child: Padding(
-                        padding: EdgeInsets.zero,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            size: 20,
-                            color: Colors.black,
-                          ),
-                          onPressed: Navigator.of(context).pop,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          size: ScreenUtil().setHeight(20),
+                          color: Colors.black,
                         ),
+                        onPressed: Navigator.of(context).pop,
                       ),
                     ),
                     Flexible(child: Container()),
@@ -127,8 +125,8 @@ class _LessonViewState extends ConsumerState<LessonView>
           language == Language.english
               ? lesson.description
               : lesson.descriptionTranslation,
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(18),
           ),
         ),
       ),

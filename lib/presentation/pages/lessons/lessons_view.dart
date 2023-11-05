@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
@@ -27,7 +28,12 @@ class _LessonsViewState extends ConsumerState<LessonsView> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: Text(AppLocalizations.of(context)!.featuredCourses),
+        title: Text(
+          AppLocalizations.of(context)!.featuredCourses,
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(16),
+          ),
+        ),
       ),
       body: ListView.builder(
         itemCount: lessons.length,
@@ -65,8 +71,8 @@ class _LessonsViewState extends ConsumerState<LessonsView> {
               borderRadius: BorderRadius.circular(8),
               child: Image.asset(
                 lessons[index].imageURL,
-                width: 100,
-                height: 100,
+                width: ScreenUtil().setWidth(100),
+                height: ScreenUtil().setHeight(100),
                 fit: BoxFit.cover,
               ),
             ),
@@ -81,8 +87,8 @@ class _LessonsViewState extends ConsumerState<LessonsView> {
                     language == Language.english
                         ? lessons[index].name
                         : lessons[index].translation,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(16),
                       fontWeight: FontWeight.bold,
                     ),
                   ),

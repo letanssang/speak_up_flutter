@@ -35,6 +35,7 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
 
   FlashCardsViewModel get _viewModel =>
       ref.read(flashCardsViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -67,9 +68,9 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
           onPressed: () {
             showExitBottomSheet(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.close_outlined,
-            size: 32,
+            size: ScreenUtil().setHeight(24),
           ),
         ),
         title: AppLinearPercentIndicator(
@@ -77,12 +78,6 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
               ? state.currentIndex / flashCards.length
               : 0,
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.volume_up_outlined),
-          ),
-        ],
       ),
       body: flashCards.isNotEmpty
           ? buildLoadingSuccessBody(state, context)
@@ -159,7 +154,9 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                     },
                     child: Container(
                       width: ScreenUtil().screenWidth * 0.35,
-                      height: 64,
+                      padding: EdgeInsets.symmetric(
+                        vertical: ScreenUtil().setHeight(16),
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(16),
@@ -200,6 +197,9 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                     },
                     child: Container(
                       width: ScreenUtil().screenWidth * 0.35,
+                      padding: EdgeInsets.symmetric(
+                        vertical: ScreenUtil().setHeight(16),
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(16),
@@ -207,7 +207,6 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                         ),
                         color: Theme.of(context).primaryColor,
                       ),
-                      height: 64,
                       child: Center(
                           child: Text(
                         AppLocalizations.of(context)!.iGotIt,
@@ -244,8 +243,8 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
               child: Container(),
             ),
             if (direction == SwipeDirection.left)
-              const SizedBox(
-                width: 128,
+              SizedBox(
+                width: ScreenUtil().screenWidth * 0.2,
               ),
             Transform.rotate(
               angle: direction == SwipeDirection.left ? 0.1 : -0.1,
@@ -263,15 +262,15 @@ class _FlashCardsViewState extends ConsumerState<FlashCardsView> {
                   text,
                   style: TextStyle(
                     color: color,
-                    fontSize: 32,
+                    fontSize: ScreenUtil().setSp(24),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
             if (direction == SwipeDirection.right)
-              const SizedBox(
-                width: 64,
+              SizedBox(
+                width: ScreenUtil().screenWidth * 0.2,
               ),
             Flexible(
               child: Container(),

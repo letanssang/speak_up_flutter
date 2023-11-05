@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/presentation/utilities/common/phoneme_color.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_circular_percent_indicator.dart';
 import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PronunciationScoreCard extends StatelessWidget {
   final double pronunciationScore;
@@ -31,19 +32,19 @@ class PronunciationScoreCard extends StatelessWidget {
               children: [
                 AppCircularPercentIndicator(
                   title: pronunciationScore.toInt().toString(),
-                  titleSize: 40,
+                  titleSize: ScreenUtil().setSp(40),
                   percent: pronunciationScore / 100,
-                  radius: 64,
-                  lineWidth: 16,
+                  radius: ScreenUtil().setWidth(64),
+                  lineWidth: ScreenUtil().setWidth(16),
                   progressColor: getPhonemeColor(pronunciationScore),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     AppLocalizations.of(context)!.pronunciationScore,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: ScreenUtil().setSp(16),
                     ),
                   ),
                 ),
@@ -57,19 +58,19 @@ class PronunciationScoreCard extends StatelessWidget {
                 AppLinearPercentIndicator(
                   title: AppLocalizations.of(context)!.accuracy,
                   percent: accuracyScore / 100,
-                  lineHeight: 10,
+                  lineHeight: ScreenUtil().setHeight(10),
                   progressColor: getPhonemeColor(accuracyScore),
                 ),
                 AppLinearPercentIndicator(
                   title: AppLocalizations.of(context)!.fluency,
                   percent: fluencyScore / 100,
-                  lineHeight: 10,
+                  lineHeight: ScreenUtil().setHeight(10),
                   progressColor: getPhonemeColor(fluencyScore),
                 ),
                 AppLinearPercentIndicator(
                   title: AppLocalizations.of(context)!.completeness,
                   percent: completenessScore / 100,
-                  lineHeight: 10,
+                  lineHeight: ScreenUtil().setHeight(10),
                   progressColor: getPhonemeColor(completenessScore),
                 ),
               ],

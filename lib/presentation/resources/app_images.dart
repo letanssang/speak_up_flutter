@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppImages {
   AppImages._private();
@@ -148,8 +149,8 @@ class AppImages {
       {double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/active_lifestyle.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -157,8 +158,8 @@ class AppImages {
   static Widget art({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/art.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -166,8 +167,8 @@ class AppImages {
   static Widget business({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/business.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -184,8 +185,8 @@ class AppImages {
   static Widget dining({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/dining.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -193,8 +194,8 @@ class AppImages {
   static Widget entertainment({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/entertainment.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -202,8 +203,8 @@ class AppImages {
   static Widget fashion({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/fashion.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -211,8 +212,8 @@ class AppImages {
   static Widget festivities({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/festivities.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -220,8 +221,8 @@ class AppImages {
   static Widget health({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/health.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -229,8 +230,8 @@ class AppImages {
   static Widget literature({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/literature.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -239,8 +240,8 @@ class AppImages {
       {double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/memorable_events.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -249,8 +250,8 @@ class AppImages {
       {double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/online_presence.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -259,8 +260,8 @@ class AppImages {
       {double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/personal_development.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -268,8 +269,8 @@ class AppImages {
   static Widget relationship({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/relationship.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -277,8 +278,8 @@ class AppImages {
   static Widget technology({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/technology.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -286,8 +287,8 @@ class AppImages {
   static Widget travel({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/travel.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }
@@ -295,8 +296,8 @@ class AppImages {
   static Widget urbanLife({double? width, double? height, BoxFit? boxFit}) {
     return Image.asset(
       '$_categoriesImagesPath/urban_life.png',
-      width: width ?? 100,
-      height: height ?? 100,
+      width: width ?? ScreenUtil().setWidth(100),
+      height: height ?? ScreenUtil().setHeight(100),
       fit: boxFit,
     );
   }

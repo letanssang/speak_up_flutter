@@ -64,12 +64,6 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
     return Scaffold(
         appBar: AppBar(
           leading: const AppBackButton(),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.bookmark_border_outlined),
-            ),
-          ],
         ),
         body: state.loadingStatus == LoadingStatus.success
             ? CustomScrollView(
@@ -229,10 +223,8 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
   Padding buildHeader(PhrasalVerbState state, Language language) {
     final percent = percentCalculate(state.progress, state.phrasalVerbs.length);
     return Padding(
-      padding: const EdgeInsets.only(
-        top: 16,
-        left: 32,
-        right: 32,
+      padding: EdgeInsets.all(
+        ScreenUtil().setWidth(16),
       ),
       child: Column(
         children: [
@@ -253,6 +245,9 @@ class _PhrasalVerbViewState extends ConsumerState<PhrasalVerbView> {
               AppCircularPercentIndicator(
                 title: '${percent.toStringAsFixed(0)}%',
                 percent: percent / 100,
+                radius: ScreenUtil().setWidth(32),
+                lineWidth: ScreenUtil().setWidth(8),
+                titleSize: ScreenUtil().setSp(14),
               ),
             ],
           ),

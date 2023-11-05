@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
@@ -11,7 +10,6 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/idiom_types/idiom_types_state.dart';
 import 'package:speak_up/presentation/pages/idiom_types/idiom_types_view_model.dart';
-import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/learning_mode_bottom_sheet.dart';
@@ -38,6 +36,7 @@ class IdiomTypesView extends ConsumerStatefulWidget {
 class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
   IdiomTypesViewModel get _viewModel =>
       ref.read(idiomTypesViewModelProvider.notifier);
+
   @override
   void initState() {
     super.initState();
@@ -102,23 +101,9 @@ class _IdiomTypesViewState extends ConsumerState<IdiomTypesView> {
               onTap: () {
                 showOptionButtonSheet(index);
               },
-              leading: CircleAvatar(
-                  child: Text(
-                formatIndexToString(index),
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(16),
-                  fontWeight: FontWeight.bold,
-                ),
-              )),
               title: language == Language.english
                   ? state.idiomTypes[index].name
                   : state.idiomTypes[index].translation,
-              trailing: Icon(
-                Icons.play_circle_outline_outlined,
-                size: ScreenUtil().setWidth(32),
-                color:
-                    isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
-              ),
             );
           },
         );

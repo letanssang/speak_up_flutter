@@ -96,7 +96,12 @@ class _ChangePasswordViewState extends ConsumerState<ChangePasswordView> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: Text(AppLocalizations.of(context)!.changePassword),
+        title: Text(
+          AppLocalizations.of(context)!.changePassword,
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(16),
+          ),
+        ),
       ),
       body: Form(
         key: _formKey,

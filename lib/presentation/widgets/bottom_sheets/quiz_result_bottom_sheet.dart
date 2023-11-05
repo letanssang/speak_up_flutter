@@ -42,15 +42,15 @@ class QuizResultBottomSheet extends ConsumerWidget {
                   Row(
                     children: [
                       isCorrectAnswer
-                          ? const Icon(
+                          ? Icon(
                               Icons.check_circle_outline_rounded,
                               color: AppColors.quizResultCorrect,
-                              size: 28,
+                              size: ScreenUtil().setHeight(32),
                             )
-                          : const Icon(
+                          : Icon(
                               Icons.cancel_outlined,
                               color: AppColors.quizResultIncorrect,
-                              size: 28,
+                              size: ScreenUtil().setHeight(32),
                             ),
                       const SizedBox(
                         width: 8,

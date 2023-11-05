@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
@@ -64,9 +65,13 @@ class _ExpressionViewState extends ConsumerState<ExpressionView> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: Text(language == Language.english
-            ? expression.name
-            : expression.translation),
+        title: Text(
+            language == Language.english
+                ? expression.name
+                : expression.translation,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(16),
+            )),
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? _buildLoadingSuccessBody(state, isDarkTheme)
@@ -92,6 +97,7 @@ class _ExpressionViewState extends ConsumerState<ExpressionView> {
                   icon: Icon(
                     Icons.volume_up_outlined,
                     color: isDarkTheme ? Colors.white : Colors.black,
+                    size: ScreenUtil().setSp(24),
                   ),
                   onPressed: () {
                     _viewModel.playAudio(state.sentences[index].audioEndpoint);

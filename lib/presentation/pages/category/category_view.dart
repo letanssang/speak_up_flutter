@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
@@ -11,7 +12,6 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/category/category_state.dart';
 import 'package:speak_up/presentation/pages/category/category_view_model.dart';
-import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/constant/category_icon_list.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
@@ -19,7 +19,6 @@ import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
 import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final categoryViewModelProvider =
     StateNotifierProvider.autoDispose<CategoryViewModel, CategoryState>(
@@ -104,22 +103,8 @@ class _CategoryViewState extends ConsumerState<CategoryView> {
                   .read(appNavigatorProvider)
                   .navigateTo(AppRoutes.topic, arguments: topics[index]);
             },
-            leading: CircleAvatar(
-                child: Text(
-              formatIndexToString(index),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            )),
             title: topics[index].topicName,
             subtitle: topics[index].translation,
-            trailing: Icon(
-              Icons.play_circle_outline_outlined,
-              size: 32,
-              color:
-                  isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
-            ),
           );
         },
       ),
@@ -137,13 +122,13 @@ class _CategoryViewState extends ConsumerState<CategoryView> {
         Column(
           children: [
             Text(category.name,
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(22),
                   fontWeight: FontWeight.bold,
                 )),
             Text(category.translation,
-                style: const TextStyle(
-                  fontSize: 18,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(18),
                 )),
           ],
         )

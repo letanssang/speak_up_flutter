@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_flash_card_list_use_case.dart';
@@ -8,13 +8,12 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/saved_flashcards/saved_flashcards_state.dart';
 import 'package:speak_up/presentation/pages/saved_flashcards/saved_flashcards_view_model.dart';
-import 'package:speak_up/presentation/utilities/common/convert.dart';
 import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_button.dart';
 import 'package:speak_up/presentation/widgets/empty_view/app_empty_view.dart';
 import 'package:speak_up/presentation/widgets/error_view/app_error_view.dart';
+import 'package:speak_up/presentation/widgets/list_tiles/app_list_tile.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final savedFlashCardsViewModelProvider = StateNotifierProvider.autoDispose<
         SavedFlashCarsViewModel, SavedFlashCardsState>(
@@ -60,30 +59,12 @@ class _SavedFlashCardsViewState extends ConsumerState<SavedFlashCardsView> {
             children: [
               Flexible(
                 child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
-                  ),
                   itemCount: state.flashCardList.length - 1,
-                  itemBuilder: (context, index) => ListTile(
-                    leading: CircleAvatar(
-                        child: Text(
-                      formatIndexToString(index),
-                      style: TextStyle(
-                        fontSize: ScreenUtil().setSp(16),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-                    title: Text(state.flashCardList[index].frontText,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: isDarkTheme ? Colors.white : Colors.black,
-                        )),
-                    subtitle: Text(state.flashCardList[index].backText,
-                        style: TextStyle(
-                          color:
-                              isDarkTheme ? Colors.grey[400] : Colors.grey[600],
-                        )),
+                  itemBuilder: (context, index) => AppListTile(
+                    index: index,
+                    title: state.flashCardList[index].frontText,
+                    subtitle: state.flashCardList[index].backText,
+                    trailing: const SizedBox(),
                   ),
                 ),
               ),

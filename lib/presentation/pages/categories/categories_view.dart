@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_language_provider.dart';
 import 'package:speak_up/data/providers/app_navigator_provider.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
@@ -20,14 +21,17 @@ class CategoriesView extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: Text(AppLocalizations.of(context)!.categories),
+        title: Text(AppLocalizations.of(context)!.categories,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(16),
+            )),
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
+          mainAxisSpacing: ScreenUtil().setHeight(8),
+          crossAxisSpacing: ScreenUtil().setWidth(8),
         ),
         itemCount: categoryImageList.length,
         itemBuilder: (BuildContext context, int index) {
@@ -60,8 +64,8 @@ class CategoriesView extends ConsumerWidget {
               language == Language.english
                   ? category.name
                   : category.translation,
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(14),
                 fontWeight: FontWeight.bold,
               ),
             ),

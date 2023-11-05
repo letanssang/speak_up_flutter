@@ -98,7 +98,10 @@ class _TopicViewState extends ConsumerState<TopicView> {
       appBar: AppBar(
         leading: const AppBackButton(),
         title: Text(
-            language == Language.english ? topic.topicName : topic.translation),
+            language == Language.english ? topic.topicName : topic.translation,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(16),
+            )),
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? buildBodySuccess(state, isDarkTheme)
@@ -143,7 +146,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
           ),
         ),
         const AppDivider(),
-        Flexible(
+        Expanded(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -156,13 +159,13 @@ class _TopicViewState extends ConsumerState<TopicView> {
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
                 backgroundColor: Theme.of(context).primaryColor,
-                radius: 32,
+                radius: ScreenUtil().setHeight(32),
                 child: IconButton(
                     onPressed: _viewModel.onTapPlayButton,
                     icon: Icon(
                       state.isPlayingPlaylist ? Icons.pause : Icons.play_arrow,
                       color: Colors.white,
-                      size: 32,
+                      size: ScreenUtil().setHeight(32),
                     )),
               ),
             ),
@@ -276,10 +279,10 @@ class _TopicViewState extends ConsumerState<TopicView> {
     final isPlaying = state.currentPlayingIndex == index;
     return Padding(
       padding: EdgeInsets.only(
-        top: 16,
-        bottom: 16,
-        left: isQuestioner ? 48 : 0,
-        right: isQuestioner ? 0 : 48,
+        top: ScreenUtil().setHeight(16),
+        bottom: ScreenUtil().setHeight(16),
+        left: isQuestioner ? ScreenUtil().setWidth(48) : 0,
+        right: isQuestioner ? 0 : ScreenUtil().setWidth(48),
       ),
       child: InkWell(
         onTap: () {
@@ -339,7 +342,11 @@ class _TopicViewState extends ConsumerState<TopicView> {
                   sentence.translation,
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(14),
-                    color: isDarkTheme ? Colors.grey[400] : Colors.grey[800],
+                    color: isPlaying
+                        ? Colors.grey[100]
+                        : isDarkTheme
+                            ? Colors.grey[400]
+                            : Colors.grey[800],
                   ),
                   textAlign: TextAlign.justify,
                 ),
@@ -356,19 +363,19 @@ class _TopicViewState extends ConsumerState<TopicView> {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomIconButton(
-          height: 40,
-          width: 40,
+          height: ScreenUtil().setHeight(40),
+          width: ScreenUtil().setWidth(40),
           onPressed: () {
             _viewModel.onTapExpandedTranslation(index);
           },
           icon: Icon(
             Icons.translate,
-            size: ScreenUtil().setSp(20),
+            size: ScreenUtil().setHeight(18),
           ),
         ),
         CustomIconButton(
-          height: 40,
-          width: 40,
+          height: ScreenUtil().setHeight(40),
+          width: ScreenUtil().setWidth(40),
           onPressed: () {
             ref
                 .read(appNavigatorProvider)
@@ -381,7 +388,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
           },
           icon: Icon(
             Icons.mic,
-            size: ScreenUtil().setSp(20),
+            size: ScreenUtil().setHeight(18),
           ),
         ),
       ],

@@ -1,11 +1,13 @@
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/speech_word/speech_word.dart';
 import 'package:speak_up/presentation/utilities/common/phoneme_color.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class PronunciationScoreText extends StatefulWidget {
+class PronunciationScoreText extends ConsumerStatefulWidget {
   final List<SpeechWord> words;
   final double fontSize;
   final String recordPath;
@@ -17,10 +19,11 @@ class PronunciationScoreText extends StatefulWidget {
       this.fontSize = 16});
 
   @override
-  State<PronunciationScoreText> createState() => _PronunciationScoreTextState();
+  ConsumerState<PronunciationScoreText> createState() =>
+      _PronunciationScoreTextState();
 }
 
-class _PronunciationScoreTextState extends State<PronunciationScoreText>
+class _PronunciationScoreTextState extends ConsumerState<PronunciationScoreText>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
@@ -86,9 +89,10 @@ class _PronunciationScoreTextState extends State<PronunciationScoreText>
   }
 
   Widget buildWordTooltipMenu(SpeechWord word) {
+    final isDarkTheme = ref.watch(themeProvider);
     return Card(
       elevation: 4,
-      color: Colors.white,
+      color: isDarkTheme ? Colors.grey[800] : Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -102,7 +106,7 @@ class _PronunciationScoreTextState extends State<PronunciationScoreText>
                   ...word.phonemes.map(
                     (e) => TableCell(
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: EdgeInsets.all(ScreenUtil().setWidth(16)),
                         child: Text(
                           e.phoneme,
                           textAlign: TextAlign.center,
@@ -142,7 +146,13 @@ class _PronunciationScoreTextState extends State<PronunciationScoreText>
     return TableCell(
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Text(title),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: ScreenUtil().setSp(16),
+          ),
+        ),
       ),
     );
   }

@@ -57,7 +57,6 @@ class _FlashCardItemState extends State<FlashCardItem> {
               Color(0xFF2A0C4E),
               Color(0xFF3C1D74),
               Color(0xFF50248F),
-              Color(0xFF8A5AC7),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -73,8 +72,8 @@ class _FlashCardItemState extends State<FlashCardItem> {
           children: [
             Text(widget.tapBackDescription,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
                   color: Colors.white70,
                 )),
             Expanded(
@@ -83,8 +82,8 @@ class _FlashCardItemState extends State<FlashCardItem> {
                   child: Text(
                     isTranslated ? widget.backTranslation : widget.backText,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 24,
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(24),
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -102,6 +101,7 @@ class _FlashCardItemState extends State<FlashCardItem> {
                       color: Colors.white,
                       size: ScreenUtil().setWidth(32),
                     )),
+                SizedBox(width: ScreenUtil().setWidth(16)),
                 IconButton(
                     onPressed: () {
                       setState(() {
@@ -133,7 +133,6 @@ class _FlashCardItemState extends State<FlashCardItem> {
               Color(0xFF2A0C4E),
               Color(0xFF3C1D74),
               Color(0xFF50248F),
-              Color(0xFF8A5AC7),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

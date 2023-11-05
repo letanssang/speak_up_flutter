@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/presentation/utilities/enums/button_state.dart';
 
 class CustomButton extends StatelessWidget {
-  final double height;
+  final double? height;
   final double? width;
   final String text;
   final Color buttonColor;
@@ -18,7 +18,7 @@ class CustomButton extends StatelessWidget {
 
   const CustomButton({
     super.key,
-    this.height = 50,
+    this.height,
     this.width,
     required this.text,
     this.buttonColor = const Color(0xFF50248F),
@@ -37,9 +37,12 @@ class CustomButton extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: ScreenUtil().setWidth(8),
-        vertical: ScreenUtil().setHeight(marginVertical),
+        vertical:
+            ScreenUtil().setHeight(ScreenUtil().setHeight(marginVertical)),
       ),
-      height: height,
+      height: height != null
+          ? ScreenUtil().setHeight(height!)
+          : ScreenUtil().setHeight(50),
       width: width ?? ScreenUtil().screenWidth * 0.8,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

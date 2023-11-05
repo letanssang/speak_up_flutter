@@ -35,7 +35,9 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      margin: EdgeInsets.symmetric(
+          horizontal: ScreenUtil().setWidth(24),
+          vertical: ScreenUtil().setHeight(8)),
       width: width ?? ScreenUtil().screenWidth * 0.8,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,8 +47,8 @@ class CustomTextField extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Text(
                 aboveText!,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
                 ),
               ),
             ),

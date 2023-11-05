@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/presentation/resources/app_icons.dart';
 import 'package:speak_up/presentation/utilities/enums/pronunciation_assessment_status.dart';
@@ -30,16 +31,16 @@ class PronunciationButtons extends ConsumerWidget {
         recordPath != null
             ? CustomIconButton(
                 onPressed: onPlayRecord,
-                height: 64,
-                width: 64,
+                height: ScreenUtil().setHeight(64),
+                width: ScreenUtil().setWidth(64),
                 icon: AppIcons.playRecord(
-                  size: 32,
+                  size: ScreenUtil().setSp(32),
                   color: isDarkTheme ? Colors.grey[300] : Colors.grey[800],
                 ),
               )
-            : const SizedBox(
-                width: 64,
-                height: 64,
+            : SizedBox(
+                width: ScreenUtil().setWidth(64),
+                height: ScreenUtil().setHeight(64),
               ),
         const SizedBox(
           width: 32,
@@ -54,17 +55,17 @@ class PronunciationButtons extends ConsumerWidget {
         ),
         pronunciationAssessmentStatus.canMoveToNext()
             ? CustomIconButton(
-                height: 64,
-                width: 64,
+                height: ScreenUtil().setHeight(64),
+                width: ScreenUtil().setWidth(64),
                 onPressed: onNextButtonTap,
                 icon: Icon(
                   Icons.navigate_next_outlined,
-                  size: 32,
+                  size: ScreenUtil().setSp(32),
                   color: isDarkTheme ? Colors.grey[300] : Colors.grey[800],
                 ))
-            : const SizedBox(
-                width: 64,
-                height: 64,
+            : SizedBox(
+                width: ScreenUtil().setWidth(64),
+                height: ScreenUtil().setHeight(64),
               ),
         Flexible(child: Container()),
       ],

@@ -52,7 +52,7 @@ class AppEmptyView extends ConsumerWidget {
             ),
             child: Text(AppLocalizations.of(context)!.explore,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: ScreenUtil().setSp(16),
                   color: Colors.white,
                 )),
           )

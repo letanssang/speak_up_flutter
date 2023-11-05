@@ -63,12 +63,6 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
     return Scaffold(
         appBar: AppBar(
           leading: const AppBackButton(),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.bookmark_border_outlined),
-            ),
-          ],
         ),
         body: state.loadingStatus == LoadingStatus.success
             ? CustomScrollView(
@@ -230,10 +224,8 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
   Padding buildHeader(IdiomState state, Language language) {
     final percent = percentCalculate(state.progress, state.idioms.length);
     return Padding(
-      padding: const EdgeInsets.only(
-        top: 16,
-        left: 32,
-        right: 32,
+      padding: EdgeInsets.all(
+        ScreenUtil().setWidth(32),
       ),
       child: Column(
         children: [
@@ -253,7 +245,10 @@ class _IdiomViewState extends ConsumerState<IdiomView> {
               ),
               AppCircularPercentIndicator(
                 title: '${percent.toStringAsFixed(0)}%',
+                titleSize: ScreenUtil().setSp(14),
                 percent: percent / 100,
+                radius: ScreenUtil().setWidth(32),
+                lineWidth: ScreenUtil().setWidth(8),
               ),
             ],
           ),

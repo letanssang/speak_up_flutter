@@ -58,7 +58,11 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${AppLocalizations.of(context)?.wordStartWith} ${alphabetList[type]}'),
+          '${AppLocalizations.of(context)?.wordStartWith} ${alphabetList[type]}',
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(16),
+          ),
+        ),
       ),
       body: state.loadingStatus == LoadingStatus.success
           ? _buildLoadingSuccessBody(state, isDarkTheme)
@@ -130,25 +134,11 @@ class _CommonWordTypeViewState extends ConsumerState<CommonWordTypeView> {
 
   Widget _buildTrailingListTile(
       String partOfSpeech, String level, bool isDarkTheme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(partOfSpeech,
-            style: TextStyle(
-              fontSize: ScreenUtil().setSp(14),
-              fontWeight: FontWeight.bold,
-              color:
-                  isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
-            )),
-        const SizedBox(height: 4),
-        Text(
-          level,
-          style: TextStyle(
-            fontSize: ScreenUtil().setSp(12),
-            color: isDarkTheme ? Colors.white : Colors.grey,
-          ),
-        ),
-      ],
-    );
+    return Text('$partOfSpeech - $level',
+        style: TextStyle(
+          fontSize: ScreenUtil().setSp(14),
+          fontWeight: FontWeight.bold,
+          color: isDarkTheme ? Colors.white : Theme.of(context).primaryColor,
+        ));
   }
 }

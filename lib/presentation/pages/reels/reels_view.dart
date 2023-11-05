@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:speak_up/domain/entities/youtube_video/youtube_video.dart';
-import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class ReelsView extends ConsumerStatefulWidget {
@@ -69,7 +68,21 @@ class _ReelsViewState extends ConsumerState<ReelsView> {
             // plus padding top status bar
             top: MediaQuery.of(context).padding.top + 32,
             left: 10,
-            child: const AppBackButton(),
+            child: Padding(
+              padding: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
+              child: CircleAvatar(
+                radius: ScreenUtil().setHeight(22),
+                backgroundColor: Colors.white,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    size: ScreenUtil().setHeight(20),
+                    color: Colors.black,
+                  ),
+                  onPressed: Navigator.of(context).pop,
+                ),
+              ),
+            ),
           ),
         ],
       ),
