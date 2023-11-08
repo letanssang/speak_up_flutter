@@ -226,4 +226,11 @@ class PronunciationPracticeViewModel
           pronunciationAssessmentStatus: PronunciationAssessmentStatus.failed);
     }
   }
+
+  @override
+  void dispose() {
+    _stopAudioUseCase.run();
+    timer?.cancel();
+    super.dispose();
+  }
 }

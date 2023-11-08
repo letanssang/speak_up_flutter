@@ -22,9 +22,10 @@ class SpeechWord {
   @JsonKey(name: 'ErrorType')
   final String errorType;
   @JsonKey(name: 'Syllables')
-  final List<Syllable> syllables;
+  final List<Syllable>? syllables;
   @JsonKey(name: 'Phonemes')
-  final List<Phoneme> phonemes;
+  final List<Phoneme>? phonemes;
+
   SpeechWord({
     required this.word,
     required this.offset,
@@ -38,5 +39,6 @@ class SpeechWord {
 
   factory SpeechWord.fromJson(Map<String, dynamic> json) =>
       _$SpeechWordFromJson(json);
+
   Map<String, dynamic> toJson() => _$SpeechWordToJson(this);
 }

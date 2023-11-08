@@ -71,14 +71,15 @@ class _PronunciationScoreTextState extends ConsumerState<PronunciationScoreText>
             fontSize: widget.fontSize,
           ),
           children: [
-            ...word.phonemes.map(
-              (phoneme) => TextSpan(
-                text: phoneme.phoneme,
-                style: TextStyle(
-                  color: getPhonemeColor(phoneme.accuracyScore),
+            if (word.phonemes != null)
+              ...word.phonemes!.map(
+                (phoneme) => TextSpan(
+                  text: phoneme.phoneme,
+                  style: TextStyle(
+                    color: getPhonemeColor(phoneme.accuracyScore),
+                  ),
                 ),
               ),
-            ),
             const TextSpan(
               text: ' ',
             )
@@ -103,12 +104,31 @@ class _PronunciationScoreTextState extends ConsumerState<PronunciationScoreText>
               TableRow(
                 children: [
                   const SizedBox(),
-                  ...word.phonemes.map(
-                    (e) => TableCell(
-                      child: Padding(
-                        padding: EdgeInsets.all(ScreenUtil().setWidth(16)),
+                  if (word.phonemes != null)
+                    ...word.phonemes!.map(
+                      (e) => TableCell(
+                        child: Padding(
+                          padding: EdgeInsets.all(ScreenUtil().setWidth(16)),
+                          child: Text(
+                            e.phoneme,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: getPhonemeColor(e.accuracyScore),
+                              fontSize: ScreenUtil().setSp(20),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              TableRow(children: [
+                buildFirstCell(AppLocalizations.of(context)!.score),
+                if (word.phonemes != null)
+                  ...word.phonemes!.map((e) => TableCell(
                         child: Text(
-                          e.phoneme,
+                          e.accuracyScore.toInt().toString(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -116,24 +136,7 @@ class _PronunciationScoreTextState extends ConsumerState<PronunciationScoreText>
                             fontSize: ScreenUtil().setSp(20),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              TableRow(children: [
-                buildFirstCell(AppLocalizations.of(context)!.score),
-                ...word.phonemes.map((e) => TableCell(
-                      child: Text(
-                        e.accuracyScore.toInt().toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: getPhonemeColor(e.accuracyScore),
-                          fontSize: ScreenUtil().setSp(20),
-                        ),
-                      ),
-                    )),
+                      )),
               ]),
             ],
           ),

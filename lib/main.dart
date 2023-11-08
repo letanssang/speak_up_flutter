@@ -60,7 +60,7 @@ class MyApp extends ConsumerWidget {
                   navigator.pop();
                   return false;
                 }
-                return true;
+                return false;
               },
               child: Navigator(
                 key: ref.read(appNavigatorProvider).navigatorKey,

@@ -170,7 +170,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
               ),
             ),
             buildCustomButton(AppLocalizations.of(context)!.speak, onTap: () {
-              _viewModel.onPaused();
+              _viewModel.onPauseDialog();
               ref.read(appNavigatorProvider).navigateTo(
                     AppRoutes.pronunciationTopic,
                     arguments: state.sentences,
@@ -377,6 +377,7 @@ class _TopicViewState extends ConsumerState<TopicView> {
           height: ScreenUtil().setHeight(40),
           width: ScreenUtil().setWidth(40),
           onPressed: () {
+            _viewModel.onPauseDialog();
             ref
                 .read(appNavigatorProvider)
                 .navigateTo(AppRoutes.pronunciationPractice,

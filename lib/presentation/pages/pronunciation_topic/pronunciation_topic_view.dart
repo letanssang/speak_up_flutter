@@ -15,11 +15,13 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/pronunciation_topic/pronunciation_topic_state.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/widgets/bottom_sheets/complete_bottom_sheet.dart';
+import 'package:speak_up/presentation/widgets/bottom_sheets/exit_bottom_sheet.dart';
 import 'package:speak_up/presentation/widgets/buttons/app_back_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/custom_icon_button.dart';
 import 'package:speak_up/presentation/widgets/buttons/pronunciation_buttons.dart';
 import 'package:speak_up/presentation/widgets/cards/pronunciation_score_card.dart';
 import 'package:speak_up/presentation/widgets/loading_indicator/app_loading_indicator.dart';
+import 'package:speak_up/presentation/widgets/percent_indicator/app_linear_percent_indicator.dart';
 import 'package:speak_up/presentation/widgets/text/pronunciation_score_text.dart';
 
 import 'pronunciation_topic_view_model.dart';
@@ -67,7 +69,7 @@ class _PronunciationTopicViewState
   }
 
   void onNextButtonTap() {
-    if (_viewModel.currentIndex < sentences.length ~/ 2) {
+    if (_viewModel.currentIndex < sentences.length ~/ 2 - 1) {
       _viewModel.onNextButtonTap();
       _viewModel.speakCurrentQuestion();
     } else {
@@ -82,7 +84,20 @@ class _PronunciationTopicViewState
     final isDarkTheme = ref.read(themeProvider);
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBackButton(),
+        leading: IconButton(
+          onPressed: () {
+            showExitBottomSheet(context);
+          },
+          icon: const Icon(
+            Icons.close_outlined,
+            size: 32,
+          ),
+        ),
+        title: AppLinearPercentIndicator(
+          percent: sentences.isNotEmpty
+              ? state.currentIndex / (sentences.length ~/ 2)
+              : 0,
+        ),
       ),
       body: sentences.isEmpty
           ? const AppLoadingIndicator()
@@ -107,7 +122,10 @@ class _PronunciationTopicViewState
                         : sentences[state.currentIndex * 2 + 1].text,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: ScreenUtil().setSp(20),
+                      fontSize:
+                          sentences[state.currentIndex * 2 + 1].text.length < 50
+                              ? ScreenUtil().setSp(20)
+                              : ScreenUtil().setSp(16),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -138,7 +156,10 @@ class _PronunciationTopicViewState
                   PronunciationScoreText(
                     words: state.speechSentence?.words ?? [],
                     recordPath: state.recordPath ?? '',
-                    fontSize: ScreenUtil().setSp(20),
+                    fontSize:
+                        sentences[state.currentIndex * 2 + 1].text.length < 50
+                            ? ScreenUtil().setSp(20)
+                            : ScreenUtil().setSp(16),
                   ),
                 Flexible(child: Container()),
                 PronunciationScoreCard(

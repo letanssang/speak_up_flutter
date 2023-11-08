@@ -9,6 +9,6 @@ class StopAudioUseCase implements FutureOutputUseCase<void> {
   @override
   Future<void> run() async {
     await injector.get<AudioPlayerRepository>().stopAudio();
-    await injector.get<TextToSpeechRepository>().stopSpeaking();
+    await injector.get<TextToSpeechRepository>().pauseSpeaking();
   }
 }

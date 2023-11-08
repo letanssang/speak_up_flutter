@@ -23,8 +23,8 @@ class TextToSpeechRepository {
     await _flutterTts.speak(text);
   }
 
-  Future<void> stopSpeaking() async {
-    await _flutterTts.stop();
+  Future<void> pauseSpeaking() async {
+    await _flutterTts.pause();
   }
 
   Future<void> speakFromTextSlowly(String text) async {

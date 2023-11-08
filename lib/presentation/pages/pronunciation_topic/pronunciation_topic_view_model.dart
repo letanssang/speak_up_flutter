@@ -77,7 +77,7 @@ class PronunciationTopicViewModel
       isStoppedRecording: false,
     );
     try {
-      _stopAudioUseCase.run();
+      _audioPlayer.stop();
       await _startRecordingUseCase.run();
       final seconds =
           countWordInSentence(state.sentences[state.currentIndex * 2 + 1].text);
@@ -149,5 +149,12 @@ class PronunciationTopicViewModel
 
   void onTranslateButtonTap() {
     state = state.copyWith(isTranslatedAnswer: !state.isTranslatedAnswer);
+  }
+
+  @override
+  void dispose() {
+    _stopAudioUseCase.run();
+    timer?.cancel();
+    super.dispose();
   }
 }

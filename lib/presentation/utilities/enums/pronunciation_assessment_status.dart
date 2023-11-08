@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'button_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 PronunciationAssessmentStatus getPronunciationAssessmentStatus(double score) {
   if (score >= 80) {
