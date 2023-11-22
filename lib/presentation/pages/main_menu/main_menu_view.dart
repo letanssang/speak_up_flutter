@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speak_up/presentation/pages/chat/chat_view.dart';
 import 'package:speak_up/presentation/pages/home/home_view.dart';
 import 'package:speak_up/presentation/pages/ipa/ipa_view.dart';
 import 'package:speak_up/presentation/pages/profile/profile_view.dart';
@@ -16,6 +17,7 @@ final mainMenuViewModelProvider =
 List<Widget> _pageOptions = <Widget>[
   const HomeView(),
   const IpaView(),
+  const ChatView(),
   const SavedView(),
   const ProfileView()
 ];
@@ -50,7 +52,15 @@ class MainMenuView extends ConsumerWidget {
                 Icons.record_voice_over,
                 size: ScreenUtil().setHeight(24),
               ),
-              label: 'Phonetic.',
+              label: 'Phonetic',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                //icon relate talk conversation
+                Icons.chat,
+                size: ScreenUtil().setHeight(24),
+              ),
+              label: 'Chat',
             ),
             BottomNavigationBarItem(
               icon: Icon(

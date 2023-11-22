@@ -12,12 +12,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_up/data/local/database_services/database_manager.dart';
 import 'package:speak_up/data/local/preference_services/shared_preferences_manager.dart';
 import 'package:speak_up/data/remote/azure_speech_client/azure_speech_client.dart';
+import 'package:speak_up/data/remote/open_ai_client/open_ai_client.dart';
 import 'package:speak_up/data/remote/youtube_client/youtube_client.dart';
 import 'package:speak_up/data/repositories/account_settings/account_settings_repository.dart';
 import 'package:speak_up/data/repositories/audio_player/audio_player_repository.dart';
 import 'package:speak_up/data/repositories/authentication/authentication_repository.dart';
 import 'package:speak_up/data/repositories/firestore/firestore_repository.dart';
 import 'package:speak_up/data/repositories/local_database/local_database_repository.dart';
+import 'package:speak_up/data/repositories/open_ai/open_ai_repository.dart';
 import 'package:speak_up/data/repositories/record/record_repository.dart';
 import 'package:speak_up/data/repositories/speech_to_text/speech_to_text_repository.dart';
 import 'package:speak_up/data/repositories/text_to_speech/text_to_speech_repository.dart';
@@ -69,6 +71,7 @@ import 'package:speak_up/domain/use_cases/local_database/get_tense_list_use_case
 import 'package:speak_up/domain/use_cases/local_database/get_tense_usage_list_from_tense_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_topic_list_from_category_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_word_list_by_phonetic_id_use_case.dart';
+import 'package:speak_up/domain/use_cases/open_ai/get_message_response_from_open_ai_use_case.dart';
 import 'package:speak_up/domain/use_cases/pronunciation_assessment/get_pronunciation_assessment_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/start_recording_use_case.dart';
 import 'package:speak_up/domain/use_cases/record/stop_recording_use_case.dart';
@@ -122,13 +125,21 @@ class AppModules {
     azureSpeechDio.options.queryParameters['format'] = 'detailed';
 
     azureSpeechDio.interceptors.add(LoggingInterceptor());
+    final openAIDio = Dio();
+    openAIDio.options.headers['Content-Type'] = 'application/json';
+    openAIDio.options.headers['Authorization'] =
+        'Bearer ${dotenv.env['OPEN_AI_KEY']}';
 
+    openAIDio.interceptors.add(LoggingInterceptor());
     // Database Manager
     injector.registerLazySingleton<DatabaseManager>(() => DatabaseManager());
 
     // Azure Speech client
     injector.registerLazySingleton<AzureSpeechClient>(
         () => AzureSpeechClient(azureSpeechDio));
+
+    // OpenAI Client
+    injector.registerLazySingleton<OpenAIClient>(() => OpenAIClient(openAIDio));
 
     // SharedPreferences client
     injector.registerSingletonAsync<SharedPreferences>(() async {
@@ -164,6 +175,10 @@ class AppModules {
     // Youtube Client
     injector
         .registerLazySingleton<YoutubeClient>(() => YoutubeClient(youtubeDio));
+
+    // OpenAI Repository
+    injector.registerLazySingleton<OpenAIRepository>(
+        () => OpenAIRepository(injector.get<OpenAIClient>()));
 
     // Account settings repository
     injector.registerLazySingleton<AccountSettingsRepository>(() =>
@@ -208,6 +223,10 @@ class AppModules {
     // Pronunciation Assessment Repository
     injector.registerLazySingleton<SpeechToTextRepository>(
         () => SpeechToTextRepository(injector.get<AzureSpeechClient>()));
+
+    // Get message response from open ai use case
+    injector.registerLazySingleton<GetMessageResponseFromOpenAIUseCase>(
+        () => GetMessageResponseFromOpenAIUseCase());
 
     // Get app theme use case
     injector
