@@ -42,6 +42,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.2
   custom_pop_up_menu: ^1.2.4
+  flutter_chat_list: ^1.0.6
 
 
   # Local Data Storage

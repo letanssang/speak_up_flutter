@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:speak_up/data/models/open_ai/open_ai_message_response.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
+import 'package:speak_up/domain/entities/message/message.dart';
+import 'package:speak_up/domain/use_cases/firestore/messages/get_messages_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/messages/update_messages_use_case.dart';
 import 'package:speak_up/domain/use_cases/open_ai/get_message_response_from_open_ai_use_case.dart';
 import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/chat/chat_state.dart';
@@ -12,6 +15,8 @@ import 'package:speak_up/presentation/resources/app_images.dart';
 final chatViewModelProvider = StateNotifierProvider<ChatViewModel, ChatState>(
   (ref) => ChatViewModel(
     injector<GetMessageResponseFromOpenAIUseCase>(),
+    injector<UpdateMessagesUseCase>(),
+    injector<GetMessagesUseCase>(),
   ),
 );
 
@@ -46,7 +51,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
               margin: EdgeInsets.only(
                 top: ScreenUtil().setHeight(
                     ScreenUtil().setHeight(16) + ScreenUtil().statusBarHeight),
-                bottom: ScreenUtil().setHeight(ScreenUtil().setHeight(16)),
+                bottom: ScreenUtil().setHeight(ScreenUtil().setHeight(8)),
                 left: ScreenUtil().setWidth(16),
                 right: ScreenUtil().setWidth(16),
               ),
@@ -71,11 +76,15 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     ),
                   )),
                   SizedBox(width: ScreenUtil().setWidth(8)),
-                  //more vert icon
-                  IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {},
-                  ),
+                  //more vert options
+                  PopupMenuButton(itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        onTap: _viewModel.clearMessages,
+                        child: Text('Clear Chat'),
+                      ),
+                    ];
+                  }),
                 ],
               ),
             ),
@@ -89,12 +98,14 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     topRight: Radius.circular(ScreenUtil().setWidth(32)),
                   ),
                 ),
-                child: ListView.builder(
-                  //messages example
-                  itemCount: state.messages.length,
-                  itemBuilder: (context, index) {
-                    final message = state.messages[index];
-                    return _buildMessage(index, message, isDarkTheme);
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: ChatList(
+                  msgCount: state.messages.length,
+                  onMsgKey: (int index) => ValueKey(index).toString(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildMessage(
+                        state.messages[state.messages.length - 1 - index],
+                        isDarkTheme);
                   },
                 ),
               ),
@@ -127,6 +138,9 @@ class _ChatViewState extends ConsumerState<ChatView> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
+                              onTapOutside: (event) {
+                                FocusScope.of(context).unfocus();
+                              },
                               controller: _viewModel.textEditingController,
                               decoration: const InputDecoration(
                                 hintText: 'Type a message',
@@ -158,7 +172,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
     );
   }
 
-  Widget _buildMessage(int index, Message message, bool isDarkTheme) {
+  Widget _buildMessage(Message message, bool isDarkTheme) {
     final isChatBot = message.role == 'system' || message.role == 'assistant';
     return Padding(
       padding: EdgeInsets.only(

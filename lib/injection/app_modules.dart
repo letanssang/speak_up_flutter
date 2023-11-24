@@ -47,6 +47,8 @@ import 'package:speak_up/domain/use_cases/authentication/update_password_use_cas
 import 'package:speak_up/domain/use_cases/firestore/add_flash_card_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/messages/get_messages_use_case.dart';
+import 'package:speak_up/domain/use_cases/firestore/messages/update_messages_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_expression_done_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_idiom_progress_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/progress/get_pattern_done_list_use_case.dart';
@@ -223,6 +225,11 @@ class AppModules {
     // Pronunciation Assessment Repository
     injector.registerLazySingleton<SpeechToTextRepository>(
         () => SpeechToTextRepository(injector.get<AzureSpeechClient>()));
+    // Update messages use case
+    injector.registerLazySingleton<UpdateMessagesUseCase>(
+        () => UpdateMessagesUseCase());
+    injector
+        .registerLazySingleton<GetMessagesUseCase>(() => GetMessagesUseCase());
 
     // Get message response from open ai use case
     injector.registerLazySingleton<GetMessageResponseFromOpenAIUseCase>(

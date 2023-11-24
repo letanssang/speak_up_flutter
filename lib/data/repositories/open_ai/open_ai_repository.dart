@@ -1,5 +1,5 @@
-import 'package:speak_up/data/models/open_ai/open_ai_message_response.dart';
 import 'package:speak_up/data/remote/open_ai_client/open_ai_client.dart';
+import 'package:speak_up/domain/entities/message/message.dart';
 
 class OpenAIRepository {
   final OpenAIClient _openAIClient;
