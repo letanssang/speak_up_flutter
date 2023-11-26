@@ -5,7 +5,6 @@ import 'package:speak_up/presentation/pages/chat/chat_view.dart';
 import 'package:speak_up/presentation/pages/home/home_view.dart';
 import 'package:speak_up/presentation/pages/ipa/ipa_view.dart';
 import 'package:speak_up/presentation/pages/profile/profile_view.dart';
-import 'package:speak_up/presentation/pages/saved/saved_view.dart';
 
 import 'main_menu_state.dart';
 import 'main_menu_view_model.dart';
@@ -18,7 +17,6 @@ List<Widget> _pageOptions = <Widget>[
   const HomeView(),
   const IpaView(),
   const ChatView(),
-  const SavedView(),
   const ProfileView()
 ];
 
@@ -61,13 +59,6 @@ class MainMenuView extends ConsumerWidget {
                 size: ScreenUtil().setHeight(24),
               ),
               label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.bookmark,
-                size: ScreenUtil().setHeight(24),
-              ),
-              label: 'Saved',
             ),
             BottomNavigationBarItem(
               icon: Icon(
