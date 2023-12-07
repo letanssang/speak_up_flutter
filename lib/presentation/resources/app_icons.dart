@@ -84,17 +84,6 @@ class AppIcons {
     );
   }
 
-  static Widget notification({
-    Color? color,
-    double? size,
-  }) {
-    return SvgIcon.from(
-      '$_iconsPath/notification.svg',
-      color: color,
-      size: size,
-    );
-  }
-
   static Widget snail({
     Color? color,
     double? size,

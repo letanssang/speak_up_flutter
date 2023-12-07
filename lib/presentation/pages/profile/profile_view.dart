@@ -232,16 +232,6 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                               .read(appNavigatorProvider)
                               .navigateTo(AppRoutes.changePassword);
                         }),
-                      buildListTile(AppIcons.notification(size: 48),
-                          AppLocalizations.of(context)!.notification,
-                          trailing: Switch(
-                            value: state.enableNotification,
-                            onChanged: (value) {
-                              ref
-                                  .read(profileViewModelProvider.notifier)
-                                  .switchNotification(value);
-                            },
-                          )),
                       buildListTile(AppIcons.darkMode(size: 48),
                           AppLocalizations.of(context)!.darkMode,
                           trailing: Switch(

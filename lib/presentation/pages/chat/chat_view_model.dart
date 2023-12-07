@@ -35,7 +35,8 @@ class ChatViewModel extends StateNotifier<ChatState> {
 
   Future<void> getMessageResponseFromOpenAI() async {
     if (!mounted) return;
-    // scroll to bottom
+    // if text controller is empty, return
+    if (textEditingController.text.trim().isEmpty) return;
     state = state.copyWith(responseLoadingStatus: LoadingStatus.loading);
     try {
       addMessage(
@@ -62,7 +63,7 @@ class ChatViewModel extends StateNotifier<ChatState> {
       {
         "role": "system",
         "content":
-            "You are Mr. Ba roi beo, an engaging and knowledgeable English teacher with a great sense of humor. You always answer shortly, never more than 2 sentences."
+            "You are Mr. Ba, an engaging and knowledgeable English teacher with a great sense of humor. You always answer shortly, never more than 2 sentences."
       }
     ].toList();
     // add last messages, max 6
