@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_lesson_list_use_case.dart';
@@ -11,13 +10,11 @@ class HomeViewModel extends StateNotifier<HomeState> {
   final GetLessonListUseCase _getLessonListUseCase;
   final GetCategoryListUseCase _getCategoryListUseCase;
   final GetYoutubePLayListIdListUseCase _getYoutubePLayListIdListUseCase;
-  final GetFlashCardListUseCase _getFlashCardListUseCase;
   final GetYoutubePlaylistByIdUseCase _getYoutubePlaylistByIdUseCase;
 
   HomeViewModel(
     this._getLessonListUseCase,
     this._getCategoryListUseCase,
-    this._getFlashCardListUseCase,
     this._getYoutubePLayListIdListUseCase,
     this._getYoutubePlaylistByIdUseCase,
   ) : super(const HomeState());
@@ -51,22 +48,6 @@ class HomeViewModel extends StateNotifier<HomeState> {
       );
     } catch (e) {
       state = state.copyWith(categoriesLoadingStatus: LoadingStatus.error);
-      rethrow;
-    }
-  }
-
-  Future<void> getFlashCardList() async {
-    if (!mounted) return;
-    state = state.copyWith(flashCardsLoadingStatus: LoadingStatus.loading);
-    try {
-      final flashCards = await _getFlashCardListUseCase.run();
-      if (!mounted) return;
-      state = state.copyWith(
-        flashCardsLoadingStatus: LoadingStatus.success,
-        flashCards: flashCards,
-      );
-    } catch (e) {
-      state = state.copyWith(flashCardsLoadingStatus: LoadingStatus.error);
       rethrow;
     }
   }

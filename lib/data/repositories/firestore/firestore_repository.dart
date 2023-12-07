@@ -229,29 +229,4 @@ class FirestoreRepository {
     }
     return flashCardList;
   }
-
-  Future<void> updateMessages(
-      List<Map<String, dynamic>> messagesMap, String uid) {
-    return _firestore
-        .collection('messages')
-        .doc(uid)
-        .set({'messages': messagesMap});
-  }
-
-  Future<List<Map<String, dynamic>>> getMessages(String uid) async {
-    final snapshot = await _firestore.collection('messages').doc(uid).get();
-    if (snapshot.exists) {
-      List<Map<String, dynamic>> messagesMap = [];
-      for (var message in snapshot.data()!['messages']) {
-        messagesMap.add(message);
-      }
-
-      // if length > 50, then just get last 50 messages
-      return messagesMap.length > 50
-          ? messagesMap.sublist(messagesMap.length - 50)
-          : messagesMap;
-    } else {
-      return [];
-    }
-  }
 }

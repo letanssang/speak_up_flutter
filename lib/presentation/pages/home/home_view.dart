@@ -9,7 +9,6 @@ import 'package:speak_up/data/providers/app_theme_provider.dart';
 import 'package:speak_up/domain/entities/category/category.dart';
 import 'package:speak_up/domain/entities/lesson/lesson.dart';
 import 'package:speak_up/domain/entities/youtube_video/youtube_video.dart';
-import 'package:speak_up/domain/use_cases/firestore/get_flash_card_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/firestore/get_youtube_playlist_id_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_category_list_use_case.dart';
 import 'package:speak_up/domain/use_cases/local_database/get_lesson_list_use_case.dart';
@@ -28,7 +27,6 @@ final homeViewModelProvider =
         (ref) => HomeViewModel(
               injector.get<GetLessonListUseCase>(),
               injector.get<GetCategoryListUseCase>(),
-              injector.get<GetFlashCardListUseCase>(),
               injector.get<GetYoutubePLayListIdListUseCase>(),
               injector.get<GetYoutubePlaylistByIdUseCase>(),
             ));
@@ -54,7 +52,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Future<void> _init() async {
     await _viewModel.getCategoryList();
     await _viewModel.getLessonList();
-    await _viewModel.getFlashCardList();
     await _viewModel.getYoutubeVideoLists();
   }
 
@@ -78,96 +75,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
             buildBanner(),
             buildCategories(state),
             buildExplore(state),
-            buildFlashCards(state),
             buildReels(state)
           ],
         ),
       ),
     );
-  }
-
-  Widget buildFlashCards(HomeState state) {
-    return Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-            child: Text(
-              AppLocalizations.of(context)!.review,
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(18),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              ref.read(appNavigatorProvider).navigateTo(
-                    AppRoutes.flashCards,
-                    arguments: state.flashCards,
-                  );
-            },
-            child: Text(
-              AppLocalizations.of(context)!.practiceNow,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: ScreenUtil().setSp(14),
-              ),
-            ),
-          ),
-        ],
-      ),
-      SizedBox(
-        height: ScreenUtil().screenHeight * 0.2,
-        child: PageView.builder(
-            itemCount: state.flashCards.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              final flashCard = state.flashCards[index];
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  color: Theme.of(context).primaryColor,
-                  elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Center(
-                          child: Text(flashCard.frontText,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: ScreenUtil().setSp(20))),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Center(
-                          child: Text(flashCard.backText,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: ScreenUtil().setSp(14))),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }),
-      ),
-    ]);
   }
 
   Widget buildExplore(HomeState state) {
