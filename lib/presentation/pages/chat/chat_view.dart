@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_list/chat_list.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speak_up/data/providers/app_theme_provider.dart';
@@ -11,6 +12,7 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/pages/chat/chat_state.dart';
 import 'package:speak_up/presentation/pages/chat/chat_view_model.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
+import 'package:speak_up/presentation/utilities/enums/loading_status.dart';
 
 final chatViewModelProvider = StateNotifierProvider<ChatViewModel, ChatState>(
   (ref) => ChatViewModel(
@@ -44,14 +46,14 @@ class _ChatViewState extends ConsumerState<ChatView> {
     final isDarkTheme = ref.watch(themeProvider);
     return Scaffold(
       body: Container(
-        color: Colors.grey[300],
+        color: isDarkTheme ? Colors.grey[800] : Colors.grey[300],
         child: Column(
           children: [
             Container(
               margin: EdgeInsets.only(
                 top: ScreenUtil().setHeight(
                     ScreenUtil().setHeight(16) + ScreenUtil().statusBarHeight),
-                bottom: ScreenUtil().setHeight(ScreenUtil().setHeight(8)),
+                bottom: ScreenUtil().setHeight(ScreenUtil().setHeight(16)),
                 left: ScreenUtil().setWidth(16),
                 right: ScreenUtil().setWidth(16),
               ),
@@ -60,10 +62,8 @@ class _ChatViewState extends ConsumerState<ChatView> {
                 children: [
                   //avatar
                   CircleAvatar(
-                    radius: ScreenUtil().setWidth(ScreenUtil().setWidth(28)),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(48),
-                        child: AppImages.chatbot()),
+                    radius: ScreenUtil().setWidth(ScreenUtil().setWidth(24)),
+                    child: AppImages.chatbot(),
                   ),
                   SizedBox(width: ScreenUtil().setWidth(8)),
                   // name
@@ -81,7 +81,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     return [
                       PopupMenuItem(
                         onTap: _viewModel.clearMessages,
-                        child: Text('Clear Chat'),
+                        child: Text(AppLocalizations.of(context)!.clearChat),
                       ),
                     ];
                   }),
@@ -89,31 +89,44 @@ class _ChatViewState extends ConsumerState<ChatView> {
               ),
             ),
             Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(ScreenUtil().setWidth(32)),
-                    topRight: Radius.circular(ScreenUtil().setWidth(32)),
+              child: Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: isDarkTheme ? Colors.grey[850] : Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(ScreenUtil().setWidth(32)),
+                        topRight: Radius.circular(ScreenUtil().setWidth(32)),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ChatList(
+                      msgCount: state.messages.length,
+                      onMsgKey: (int index) => ValueKey(index).toString(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildMessage(
+                            state.messages[state.messages.length - 1 - index],
+                            isDarkTheme);
+                      },
+                    ),
                   ),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: ChatList(
-                  msgCount: state.messages.length,
-                  onMsgKey: (int index) => ValueKey(index).toString(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildMessage(
-                        state.messages[state.messages.length - 1 - index],
-                        isDarkTheme);
-                  },
-                ),
+                  if (state.responseLoadingStatus == LoadingStatus.loading)
+                    Positioned(
+                      bottom: 16,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Text(AppLocalizations.of(context)!.waitAMoment),
+                      ),
+                    ),
+                ],
               ),
             ),
             Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
+              decoration: BoxDecoration(
+                color: isDarkTheme ? Colors.grey[800] : Colors.white,
+                boxShadow: const [
                   BoxShadow(
                     spreadRadius: 1,
                     blurRadius: 4,
@@ -127,7 +140,8 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     child: Container(
                       margin: EdgeInsets.all(ScreenUtil().setWidth(8)),
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color:
+                            isDarkTheme ? Colors.grey[850] : Colors.grey[200],
                         borderRadius: BorderRadius.circular(32),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -142,15 +156,12 @@ class _ChatViewState extends ConsumerState<ChatView> {
                                 FocusScope.of(context).unfocus();
                               },
                               controller: _viewModel.textEditingController,
-                              decoration: const InputDecoration(
-                                hintText: 'Type a message',
+                              decoration: InputDecoration(
+                                hintText:
+                                    AppLocalizations.of(context)!.typeAMessage,
                                 border: InputBorder.none,
                               ),
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.mic),
-                            onPressed: () {},
                           ),
                         ],
                       ),
@@ -185,7 +196,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(
-            color: Theme.of(context).primaryColor,
+            color: Colors.grey,
             width: 1,
           ),
           color: isChatBot

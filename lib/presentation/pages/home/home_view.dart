@@ -18,6 +18,7 @@ import 'package:speak_up/injection/injector.dart';
 import 'package:speak_up/presentation/navigation/app_routes.dart';
 import 'package:speak_up/presentation/pages/home/home_state.dart';
 import 'package:speak_up/presentation/pages/home/home_view_model.dart';
+import 'package:speak_up/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:speak_up/presentation/resources/app_images.dart';
 import 'package:speak_up/presentation/utilities/constant/category_icon_list.dart';
 import 'package:speak_up/presentation/utilities/enums/language.dart';
@@ -119,7 +120,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         ],
       ),
       SizedBox(
-        height: ScreenUtil().screenHeight * 0.2,
+        height: ScreenUtil().screenHeight * 0.25,
         child: PageView.builder(
             itemCount: state.flashCards.length,
             scrollDirection: Axis.horizontal,
@@ -325,8 +326,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
           ),
           const Spacer(),
           IconButton(
-            onPressed: null,
-            icon: Icon(Icons.notifications_outlined,
+            onPressed: () {
+              ref.read(mainMenuViewModelProvider.notifier).changeTab(3);
+            },
+            icon: Icon(Icons.settings_outlined,
                 color: Theme.of(context).iconTheme.color,
                 size: ScreenUtil().setHeight(24)),
           )
