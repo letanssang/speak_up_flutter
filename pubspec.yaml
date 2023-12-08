@@ -81,6 +81,9 @@ dependencies:
   # YouTube Player
   youtube_player_iframe: ^4.0.4
 
+  #Testing
+  device_preview: ^1.1.0
+
 
 
 dev_dependencies:

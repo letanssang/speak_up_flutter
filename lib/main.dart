@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,8 +28,11 @@ void main() async {
   await injector.allReady();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const ProviderScope(
+        child: MyApp(),
+      ), // Wrap your app
     ),
   );
   FlutterNativeSplash.remove();
@@ -46,6 +51,7 @@ class MyApp extends ConsumerWidget {
         builder: (context, child) {
           return MaterialApp(
             title: 'Speak Up',
+            debugShowCheckedModeBanner: false,
             themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
             theme: getAppLightTheme(),
             darkTheme: getAppDarkTheme(),
