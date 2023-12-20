@@ -28,9 +28,9 @@ graph TD;
 
 - **Cloud Services**:
   + Firebase: Authentication, Firestore Database, ...
-  + Google Cloud: Speech To Text, Text To Speech,...
+  + Microsoft Azure: Pronunciation Assessment
 
-- **API Integration**: Youtube API, Words API.
+- **API Integration**: Youtube API, OpenAI API.
 
 - **Local Data Storage**: Shared Preferences, SQLite.
 
@@ -49,7 +49,7 @@ To run this app locally, follow these steps:
 4. Feel free to reach out to me to obtain the `keys.env` file  and paste it into `assets/keys/` directory
 or create new one with this format:
 ```
-WORDS_API_KEY=....
+AZURE_SPEECH_KEY=....
 OPEN_AI_KEY=...
 ```
 
@@ -78,9 +78,8 @@ OPEN_AI_KEY=...
 
 - **Reels and Learning**: Enjoy learning English while watching entertaining reels and videos.
 
-- **Word Definitions**: Easily look up the meanings of words and expand your vocabulary.
+- **Chatbot**: A chatbot based on ChatGPT.
 
-- **Bookmark and Review**: Save noteworthy lessons for later review, ensuring you never miss important content.
 
 ## Screenshots
 <img src="https://github.com/letanssang/speak_up_flutter/assets/67082439/caf3d3a9-2d8d-416e-b5b3-174313b457b3" width=375/>
