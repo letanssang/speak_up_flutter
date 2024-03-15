@@ -46,8 +46,7 @@ To run this app locally, follow these steps:
 2. Open the project in Android Studio or your preferred IDE.
 
 3. Ensure you have the necessary Flutter environment set up.
-4. Feel free to reach out to me to obtain the `keys.env` file  and paste it into `assets/keys/` directory
-or create new one with this format:
+4. Create `keys.env` file  and paste it into `assets/keys/` directory with this format:
 ```
 AZURE_SPEECH_KEY=....
 OPEN_AI_KEY=...
@@ -88,7 +87,10 @@ OPEN_AI_KEY=...
 <img src="https://github.com/letanssang/speak_up_flutter/assets/67082439/eb4c455a-330b-42a6-bd77-de48a39b7e05" width=375/>
 <img src="https://github.com/letanssang/speak_up_flutter/assets/67082439/02ac12c7-0949-45a8-85c7-c36c19ce5010" width=375/>
 <img src="https://github.com/letanssang/speak_up_flutter/assets/67082439/233685eb-4e52-4d47-88fa-e51355994228" width=375/>
-
+<img src="https://github.com/letanssang/speak_up_flutter/assets/67082439/1c9af9fb-618b-4235-bf11-cbab2472c643" width=375/>
+<img src="https://github.com/letanssang/speak_up_flutter/assets/67082439/1a25bf98-0297-4312-8ad6-39c40c95bb71" width=375/>
+<img src="https://github.com/letanssang/speak_up_flutter/assets/67082439/b50a6383-0a66-4c01-b2f1-2daec9809710" width=375/>
+<img src="https://github.com/letanssang/speak_up_flutter/assets/67082439/2eb4c191-49c8-41be-ac5c-40766b4a099f" width=375/>
 
 ## Author
 
